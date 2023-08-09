@@ -16,7 +16,6 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "customers")
-//@Inheritance(strategy = InheritanceType.JOINED)
 public class Customer {
 
     @Id
