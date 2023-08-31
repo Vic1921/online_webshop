@@ -5,10 +5,10 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data2:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Qweaszqweasz01
+      POSTGRES_PASSWORD: password
       POSTGRES_DB: online_shop
 
   mongo:
@@ -29,11 +29,11 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/online_shop
       SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: Qweaszqweasz01
+      SPRING_DATASOURCE_PASSWORD: password
       SPRING_DATA_MONGODB_URI: mongodb://mongo:password@mongo:27017/online_shop
 
 
 
 volumes:
-  postgres_data:
+  postgres_data2:
   mongo_data:
