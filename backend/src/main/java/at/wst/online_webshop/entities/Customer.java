@@ -32,4 +32,16 @@ public class Customer {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    @OneToOne
+    @JoinColumn(name = "cart_id", nullable = false)
+    private ShoppingCart shoppingCart;
+
+    @OneToMany(mappedBy = "customer")
+    private List<Review> reviews;
+
+    @OneToMany(mappedBy = "customer")
+    private List<Order> orders;
 }

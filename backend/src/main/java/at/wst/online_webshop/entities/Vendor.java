@@ -18,5 +18,11 @@ public class Vendor {
     @Column(name = "vendor_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long vendorId;
+
+    @Column(name = "vendor_name", nullable = false)
+    private String vendorName;
+
+    @Column(name = "vendor_address", nullable = false)
+    private String vendorAddress;
 }
 
