@@ -36,7 +36,7 @@ public class Customer {
     private String name;
 
     @OneToOne
-    @JoinColumn(name = "cart_id", nullable = false)
+    @JoinColumn(name = "cart_id")
     private ShoppingCart shoppingCart;
 
     @OneToMany(mappedBy = "customer")
@@ -44,4 +44,15 @@ public class Customer {
 
     @OneToMany(mappedBy = "customer")
     private List<Order> orders;
+
+    @OneToOne
+    @JoinColumn(name = "recommended_by")
+    private Customer recommendedBy;
+
+    public Customer(String name, String email, String password, String address) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.address = address;
+    }
 }
