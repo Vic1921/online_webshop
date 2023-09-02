@@ -13,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "cart_ids")
+@Table(name = "shopping_cart")
 public class ShoppingCart {
     @Id
     @Column(name = "cart_id", nullable = false)

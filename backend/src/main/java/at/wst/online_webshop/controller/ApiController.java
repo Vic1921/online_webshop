@@ -2,6 +2,7 @@ package at.wst.online_webshop.controller;
 
 import at.wst.online_webshop.services.DBFiller;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +18,7 @@ public class ApiController {
         return 1L;
     }
 
-    @PostMapping("/fill")
+    @GetMapping("/fill")
     public String fillDB() {
         dbFiller.fillDB();
         return "DB filled";
