@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -39,7 +40,7 @@ public class Customer {
     @JoinColumn(name = "cart_id")
     private ShoppingCart shoppingCart;
 
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer", orphanRemoval = true) // weak entity
     private List<Review> reviews;
 
     @OneToMany(mappedBy = "customer")
