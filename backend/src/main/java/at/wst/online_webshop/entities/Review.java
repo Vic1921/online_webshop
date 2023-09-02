@@ -33,4 +33,10 @@ public class Review {
     @Column(name = "review_comment", nullable = false)
     private String reviewComment;
 
+    public Review(Product product, Customer customer, int rating, String comment) {
+        this.product = product;
+        this.customer = customer;
+        this.reviewRating = rating;
+        this.reviewComment = comment;
+    }
 }

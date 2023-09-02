@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -32,4 +33,11 @@ public class Order {
 
     @ManyToMany(mappedBy = "orders")
     private List<Product> products;
+
+    public Order(Date orderDate, double totalPrice, Customer customer, List<Product> products) {
+        this.orderDate = orderDate.toString();
+        this.orderTotalMount = totalPrice;
+        this.customer = customer;
+        this.products = products;
+    }
 }

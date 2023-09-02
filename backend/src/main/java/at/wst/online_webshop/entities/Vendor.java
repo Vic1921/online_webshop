@@ -24,5 +24,13 @@ public class Vendor {
 
     @Column(name = "vendor_address", nullable = false)
     private String vendorAddress;
+
+    @OneToOne(mappedBy = "vendor")
+    private Product product;
+
+    public Vendor(String name, String address) {
+        this.vendorName = name;
+        this.vendorAddress = address;
+    }
 }
 

@@ -34,7 +34,7 @@ public class Product {
     private Integer productQuantity;
 
     @ManyToOne
-    @JoinColumn(name = "cart_id", nullable = false)
+    @JoinColumn(name = "cart_id")
     private ShoppingCart shoppingCart;
 
     @OneToMany(mappedBy = "product")
@@ -46,4 +46,16 @@ public class Product {
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "order_id"))
     private List<Order> orders;
+
+    @OneToOne
+    @JoinColumn(name = "vendor_id", nullable = false)
+    private Vendor vendor;
+
+    public Product(String name, double price, String sku, int quantity, Vendor vendor) {
+        this.productName = name;
+        this.productPrice = price;
+        this.productSKU = sku;
+        this.productQuantity = quantity;
+        this.vendor = vendor;
+    }
 }

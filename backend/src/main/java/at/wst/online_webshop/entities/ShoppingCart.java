@@ -28,4 +28,10 @@ public class ShoppingCart {
 
     @OneToMany(mappedBy = "shoppingCart")
     private List<Product> products;
+
+    public ShoppingCart(double totalPrice, Customer customer, List<Product> products) {
+        this.totalPrice = totalPrice;
+        this.customer = customer;
+        this.products = products;
+    }
 }
