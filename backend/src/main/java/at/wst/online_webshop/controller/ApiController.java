@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ApiController {
     private final DBFiller dbFiller;
 
-    @RequestMapping("/api/version")
+    @RequestMapping("/version")
     public Long apiVersion()   {
         return 1L;
     }

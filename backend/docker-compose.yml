@@ -8,7 +8,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Qweaszqweasz01
+      POSTGRES_PASSWORD: password
       POSTGRES_DB: online_shop
 
   mongo:
@@ -25,11 +25,14 @@ services:
   backend:
     image: wst
     ports:
-      - "8080:8080"
+      - "8089:8089"
+    depends_on:
+        - postgres
+        - mongo
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/online_shop
       SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: Qweaszqweasz01
+      SPRING_DATASOURCE_PASSWORD: password
       SPRING_DATA_MONGODB_URI: mongodb://mongo:password@mongo:27017/online_shop
 
 
