@@ -18,6 +18,11 @@ public class ApiController {
         return 1L;
     }
 
+    @GetMapping("/test")
+    public String test() {
+        return "Test";
+    }
+
     @GetMapping("/fill")
     public String fillDB() {
         dbFiller.fillDB();
