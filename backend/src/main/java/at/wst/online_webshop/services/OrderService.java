@@ -1,15 +1,16 @@
 package at.wst.online_webshop.services;
 
-import at.wst.online_webshop.dtos.CustomerDTO;
 import at.wst.online_webshop.dtos.OrderDTO;
 import at.wst.online_webshop.entities.Order;
 import at.wst.online_webshop.exception_handlers.OrderNotFoundException;
 import at.wst.online_webshop.repositories.CustomerRepository;
 import at.wst.online_webshop.repositories.OrderRepository;
 import at.wst.online_webshop.repositories.ShoppingCartRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import static at.wst.online_webshop.convertors.OrderConvertor.convertToDto;
+import static at.wst.online_webshop.convertors.OrderConvertor.convertToEntity;
 
 
 @Service
@@ -24,7 +25,6 @@ public class OrderService {
     @Autowired
     private CustomerRepository customerRepository;
 
-    private ModelMapper modelMapper = new ModelMapper();
 
 
     // Only for testing purposes
@@ -57,13 +57,4 @@ public class OrderService {
         return new OrderDTO();
     }
 
-    // DTO to Entity
-    private Order convertToEntity(OrderDTO orderDto) {
-        return modelMapper.map(orderDto, Order.class);
-    }
-
-    // Entity to DTO
-    private OrderDTO convertToDto(Order order) {
-        return modelMapper.map(order, OrderDTO.class);
-    }
 }
