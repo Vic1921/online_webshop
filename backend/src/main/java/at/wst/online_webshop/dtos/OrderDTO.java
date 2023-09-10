@@ -18,4 +18,11 @@ public class OrderDTO {
     private Double orderTotalMount;
     private Long customerId;
     private List<Long> productIds;
+
+    public OrderDTO(String orderDate, Double orderTotalMount, Long customerId, List<Long> productIds) {
+        this.orderDate = orderDate;
+        this.orderTotalMount = orderTotalMount;
+        this.customerId = customerId;
+        this.productIds = productIds;
+    }
 }

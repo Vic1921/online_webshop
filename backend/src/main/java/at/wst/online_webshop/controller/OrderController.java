@@ -21,7 +21,9 @@ public class OrderController {
 
         OrderDTO result = orderService.placeOrder(
                 request.getCustomerId(),
-                request.getShoppingCartId());
+                request.getShoppingCartId(),
+                request.getPaymentMethod(),
+                request.getShippingDetails());
 
         return ResponseEntity.ok(result);
     }

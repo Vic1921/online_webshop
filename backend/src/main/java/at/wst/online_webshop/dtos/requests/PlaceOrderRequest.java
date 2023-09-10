@@ -12,4 +12,6 @@ import lombok.Setter;
 public class PlaceOrderRequest {
     private Long customerId;
     private Long shoppingCartId;
+    private String paymentMethod;
+    private String shippingDetails;
 }
