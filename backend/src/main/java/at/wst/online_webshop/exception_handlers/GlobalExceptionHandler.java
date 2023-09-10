@@ -24,5 +24,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(responseBody, HttpStatus.NOT_FOUND);
     }
 
-    // TODO handle other exceptions as necessary
+    @ExceptionHandler(FailedOrderException.class)
+    public ResponseEntity<Object> handleFailedOrderException(FailedOrderException ex, WebRequest request) {
+        Map<String, Object> responseBody = new HashMap<>();
+
+        responseBody.put("timestamp", LocalDateTime.now());
+        responseBody.put("message", ex.getMessage());
+        responseBody.put("path", request.getDescription(true));
+
+        return new ResponseEntity<>(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 }
