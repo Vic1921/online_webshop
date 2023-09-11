@@ -39,7 +39,6 @@ public class OrderService {
     private ProductRepository productRepository;
 
 
-    // Only for testing purposes
     public OrderDTO createOrder(OrderDTO orderDTO) {
         Order order = convertToEntity(orderDTO);
         Order savedOrder = orderRepository.save(order);
@@ -74,17 +73,20 @@ public class OrderService {
 
         var products = productRepository.findAllById(shoppingCartDTO.getProductIds());
         double totalAmount = products.stream().mapToDouble(Product::getProductPrice).sum();
+
+        // createOrder saves the order to the database -> might create duplicate orders
         OrderDTO orderDTO = createOrder(new OrderDTO(LocalDateTime.now().toString(), totalAmount, customerId, shoppingCartDTO.getProductIds()));
 
-        // TODO - Update product quantities
+        // Update product quantities
         products.forEach(product -> {
             product.setProductQuantity(product.getProductQuantity() - 1);
             productRepository.save(product);
         });
 
-        // TODO - Save order to database
+        // Save order to database
         orderRepository.save(convertToEntity(orderDTO));
 
+        // Delete shopping cart and save
         shoppingCartRepository.deleteById(shoppingCartId);
         shoppingCartRepository.save(ShoppingCartConvertor.convertToEntity(shoppingCartDTO));
         return orderDTO;
