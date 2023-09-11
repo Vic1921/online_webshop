@@ -17,4 +17,8 @@ public class ShoppingCartDTO {
         private Double totalPrice;
         private Long customerId;
         private List<Long> productIds;
+
+        public void addProduct(Long productId){
+            this.productIds.add(productId);
+        }
 }

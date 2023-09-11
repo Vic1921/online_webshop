@@ -63,7 +63,7 @@ public class OrderService {
     // TODO - Test this method
     @Transactional
     public OrderDTO placeOrder(Long customerId, Long shoppingCartId, String paymentMethod, String shippingDetails) {
-        CustomerDTO customerDTO = CustomerConvertor.convertToDto(customerRepository.findById(customerId)
+        CustomerConvertor.convertToDto(customerRepository.findById(customerId)
                 .orElseThrow(() -> new FailedOrderException("Customer not found.")));
         ShoppingCartDTO shoppingCartDTO = ShoppingCartConvertor.convertToDto(shoppingCartRepository.findById(shoppingCartId)
                 .orElseThrow(() -> new FailedOrderException("Shopping cart not found.")));
@@ -74,8 +74,8 @@ public class OrderService {
         var products = productRepository.findAllById(shoppingCartDTO.getProductIds());
         double totalAmount = products.stream().mapToDouble(Product::getProductPrice).sum();
 
-        // createOrder saves the order to the database -> might create duplicate orders
-        OrderDTO orderDTO = createOrder(new OrderDTO(LocalDateTime.now().toString(), totalAmount, customerId, shoppingCartDTO.getProductIds()));
+        // create OrderDTO
+        OrderDTO orderDTO = new OrderDTO(LocalDateTime.now().toString(), totalAmount, customerId, shoppingCartDTO.getProductIds());
 
         // Update product quantities
         products.forEach(product -> {
