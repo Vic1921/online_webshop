@@ -84,11 +84,10 @@ public class OrderService {
         });
 
         // Save order to database
-        orderRepository.save(convertToEntity(orderDTO));
+        orderDTO = createOrder(orderDTO);
 
         // Delete shopping cart and save
         shoppingCartRepository.deleteById(shoppingCartId);
-        shoppingCartRepository.save(ShoppingCartConvertor.convertToEntity(shoppingCartDTO));
         return orderDTO;
     }
 
