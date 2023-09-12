@@ -1,6 +1,7 @@
 package at.wst.online_webshop.services;
 
 import at.wst.online_webshop.convertors.CustomerConvertor;
+import at.wst.online_webshop.convertors.ProductConvertor;
 import at.wst.online_webshop.convertors.ShoppingCartConvertor;
 import at.wst.online_webshop.dtos.ProductDTO;
 import at.wst.online_webshop.dtos.ShoppingCartDTO;
@@ -54,13 +55,17 @@ public class ShoppingCartService {
                 .orElseThrow(() -> new ShoppingCartNotFoundException(shoppingCartId)));
         CustomerConvertor.convertToDto(customerRepository.findById(customerId)
                 .orElseThrow(() -> new FailedOrderException("Customer not found.")));
+        ProductDTO productDTO = ProductConvertor.convertToDto(productRepository.findById(productId)
+                .orElseThrow(() -> new FailedOrderException("Product not found.")));
 
+        //  Subtract product quantity
+        productDTO.setProductQuantity(productDTO.getProductQuantity() - 1);
+
+        // Add product to shopping cart
         shoppingCartDTO.addProduct(productId);
 
+        // Update product
         shoppingCartDTO = updateShoppingCart(shoppingCartDTO);
-        shoppingCartRepository.save(ShoppingCartConvertor.convertToEntity(shoppingCartDTO));
-
-        // TODO - Subtract product quantity
 
         return shoppingCartDTO;
     }
