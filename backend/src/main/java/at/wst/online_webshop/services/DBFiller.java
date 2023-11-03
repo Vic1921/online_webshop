@@ -36,13 +36,23 @@ public class DBFiller {
         this.vendorRepository = vendorRepository;
     }
 
-    public void fillDB() {
+    public void clearAndFillDB() {
+        //clearDB();
         fillCustomers();
         fillVendors();
         fillProducts();
         fillOrders();
         fillReviews();
         fillShoppingCarts();
+    }
+
+    private void clearDB() {
+        customerRepository.deleteAll();
+        orderRepository.deleteAll();
+        productRepository.deleteAll();
+        reviewRepository.deleteAll();
+        shoppingCartRepository.deleteAll();
+        vendorRepository.deleteAll();
     }
 
     private void fillCustomers() {

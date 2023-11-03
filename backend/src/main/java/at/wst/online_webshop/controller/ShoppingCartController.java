@@ -24,6 +24,12 @@ public class ShoppingCartController {
         return ResponseEntity.ok(shoppingCartDTO);
     }
 
+    // Get all items from the shopping cart
+    @GetMapping("/get-items")
+    public ResponseEntity<ShoppingCartDTO> getItemsFromShoppingCart(Long id) {
+        ShoppingCartDTO shoppingCartDTO = shoppingCartService.getShoppingCartById(id);
+        return ResponseEntity.ok(shoppingCartDTO);
+    }
 
     // Create a new shopping cart
     @PostMapping("/create")
