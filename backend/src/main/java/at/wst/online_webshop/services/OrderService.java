@@ -2,13 +2,12 @@ package at.wst.online_webshop.services;
 
 import at.wst.online_webshop.convertors.CustomerConvertor;
 import at.wst.online_webshop.convertors.ShoppingCartConvertor;
-import at.wst.online_webshop.dtos.CustomerDTO;
 import at.wst.online_webshop.dtos.OrderDTO;
 import at.wst.online_webshop.dtos.ShoppingCartDTO;
 import at.wst.online_webshop.entities.Order;
 import at.wst.online_webshop.entities.Product;
-import at.wst.online_webshop.exception_handlers.FailedOrderException;
-import at.wst.online_webshop.exception_handlers.OrderNotFoundException;
+import at.wst.online_webshop.exceptions.FailedOrderException;
+import at.wst.online_webshop.exceptions.OrderNotFoundException;
 import at.wst.online_webshop.repositories.CustomerRepository;
 import at.wst.online_webshop.repositories.OrderRepository;
 import at.wst.online_webshop.repositories.ProductRepository;
