@@ -1,80 +1,5 @@
 <body>
-    <header class="hero-image">
-        <!-- Responsive navbar-->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-*">
-
-            <div class="container px-5" style="width:100%; height:100px">
-                <a class="navbar-brand" style="width:100px" href="#!">Icerberg Lounge</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                            <li class="nav-item"><a class="nav-link active" aria-current="page" href="https://wwwlab.cs.univie.ac.at/~vua36/index.php">Home</a></li>
-                            <li class="nav-item"><a class="nav-link active" aria-current="page" href="https://wwwlab.cs.univie.ac.at/~vua36/logged_in.php">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" style="color:white;" href="#!">About</a></li>
-                        <li class="nav-item"><a class="nav-link" style="color:white;" href="#!">Contact</a></li>
-                        <li class="nav-item"><a class="nav-link" style="color:white;" href="#!">Services</a></li>
-
-
-                    </ul>
-                    <div class="btn-group">
-                            <button class="button" onclick="openLogin()">Login</button>
-                            <button class="button" onclick="openSignUp()">Account erstellen</button>
-                            <button class="button" onclick="redirectOrders()">Warenrücksendungen und Bestellungen</button>
-                            <div class="dropdown">
-                                <button class="button" style="width:100px"></button>
-                                <div class="dropdown-content">
-                                    <div class="btn-group" style="display:block">
-                                        <button class="button" style="color:black" >Wunschzettel</button>
-                                        <button class="button" style="color:black" >Konten wechsel</button>
-                                        <button class="button" style="color:black" >Button1</button>
-                                        <button class="button" style="color:black" >Button2</button>
-                                        <form action="deleteAccount.php" method="POST">
-                                            <input type="hidden" name="user_id"/>
-                                            <input type="hidden" name="customer_id"/>
-                                            <button type="submit" name="delete_account" value="delete_account" class="button" style="color:black">Account löschen</button>
-                                        </form>
-                                        <button class="button" style="color:black" onclick="openChangePassword()">Passwort ändern</button>
-
-                                    </div>
-                                    <a class="button" style="color:black" href="s">Accountverwaltung</a>
-                                </div>
-                            </div>
-
-                            <form action="logout.php" method="get">
-                                <button class="button" formaction="logout.php">Sign out</button>
-                            </form>
-                        <button class="button" onclick="redirectShoppingCart()">
-
-                            <button type="button" onclick="redirectShoppingCart()" class="button">
-                                Einkaufswagen
-                                    <span class="badge badge-dark" style="background-color: rgba(0,0,0,.5);"></span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
-                                    <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
-                                </svg>
-                            </button>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </nav>
-
-        <div class="container px-5">
-            <div class="row gx-5 justify-content-center">
-                <div class="col-lg-6">
-                    <div class="text-center my-5">
-                        <h1 class="display-5 fw-bolder text-white mb-2">SKITOUREN WELT</h1>
-                        <p class="lead text-white mb-4">Alles was du für deine Skitour brauchst</p>
-                        <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
-                            <a class="btn btn-outline-light btn-lg px-4" href="#features">Skitouren Welt entdecken</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
-</body>
-
-<body>
+    <app-header></app-header>
     <!-- Features section-->
     <section class="py-5 border-bottom" id="features">
         <div class="container px-5 my-5">
@@ -119,22 +44,7 @@
                 </div>
 
                 <div class="col-lg-6 col-xl-4">
-                        <h2 class="h4 fw-bolder">Für dich empfohlen</h2>
-
-                        <p>Angepasst an deinen vergangenen Käufen</p>
-                        <div class="card mb-5 mb-xl-0" style="height: 500px">
-                            <div class="hero4-image">
-                                <div class="card-body p-5">
-                                    <div class="mb-3">
-                                        <img src="products/Trab-Gavia-85-Ride-10-Stelvio-85-B103704-00-320836.jpg" style="width:90%;height:400px; opacity:0">
-                                    </div>
-                                    <div class="d-grid"> <a class="text-center" style="color:white" href="#!">
-                                            Jetzt entdecken
-                                            <i class="bi bi-arrow-right"></i>
-                                        </a></div>
-                                </div>
-                            </div>
-                        </div>
+        
                         <h2 class="h4 fw-bolder">Die besten Tipps für den Schneeschuhkauf</h2>
                         <p>Eine Schneeschuh-Ausrüstung ist zwar im Vergleich mit anderen Wintersportarten kostengünstig in der Anschaffung, stellt aber natürlich trotzdem einen gewissen finanziellen Aufwand dar.</p>
                         <div class="card mb-5 mb-xl-0" style="height: 500px">
@@ -156,7 +66,6 @@
             </div>
         </div>
     </section>
-
     <!-- Pricing section-->
     <section class="bg-light py-5 border-bottom">
         <div class="container px-5 my-5">
@@ -171,7 +80,8 @@
                         <div class="card-body p-5">
                             <div class="small text-uppercase fw-bold text-muted">MARTINI CRISTALLO Wanderjacke</div>
                             <div class="mb-3">
-                                <img src="https://www.hervis.at/medias/sys_master/images/images/h1d/h5f/17415004061726/Martini-CRISTALLO-Da-3103251-00-401643.jpg" alt="Top seller" width="100%">
+                                <img src="https://www.hervis.at/medias/sys_master/images/images/h1d/h5f/17415004061726/Martini-CRISTALLO-Da-3103251-00-401643.jpg"
+                                    alt="Top seller" width="100%">
                                 <span class="display-4 fw-bold">€ 249,90</span>
                             </div>
                             <ul class="list-unstyled mb-4">
@@ -192,23 +102,24 @@
                                     elastische Einfassung an Kapuze
                                 </li>
                                 <li class="mb-2">
-                                <i class="bi bi-check text-primary"></i>
+                                    <i class="bi bi-check text-primary"></i>
                                     atmungsaktiv
                                 </li>
                                 <li class="mb-2">
-                                <i class="bi bi-check text-primary"></i>
+                                    <i class="bi bi-check text-primary"></i>
                                     feuchtigkeitsableitend
                                 </li>
                                 <li class="mb-2">
-                                <i class="bi bi-check text-primary"></i>
+                                    <i class="bi bi-check text-primary"></i>
                                     bietet optimale Bewegungsfreiheit
                                 </li>
                                 <li class="mb-2">
-                                <i class="bi bi-check text-primary"></i>
+                                    <i class="bi bi-check text-primary"></i>
                                     geringes Packmaß
                                 </li>
                             </ul>
-                            <div class="d-grid"><a class="btn btn-outline-primary" href="#!">Zum Einkaufswagen hinzufügen</a></div>
+                            <div class="d-grid"><a class="btn btn-outline-primary" href="#!">Zum Einkaufswagen
+                                    hinzufügen</a></div>
                         </div>
                     </div>
                 </div>
@@ -221,7 +132,8 @@
                                 MAMMUT AENERGY PANTS
                             </div>
                             <div class="mb-3">
-                                <img src="https://www.hervis.at/medias/sys_master/images/images/hda/hfc/17466414596126/Mammut-Aenergy-IN-Hybrid-Pants-3074895-00-404234.jpg" alt="Top seller" style="width:278px; height:423px">
+                                <img src="https://www.hervis.at/medias/sys_master/images/images/hda/hfc/17466414596126/Mammut-Aenergy-IN-Hybrid-Pants-3074895-00-404234.jpg"
+                                    alt="Top seller" style="width:278px; height:423px">
                                 <span class="display-4 fw-bold">€ 184,99</span>
                             </div>
                             <ul class="list-unstyled mb-4">
@@ -258,7 +170,8 @@
                                     Fair Wear
                                 </li>
                             </ul>
-                            <div class="d-grid"><a class="btn btn-primary" href="#!">Zum Einkaufswagen hinzufügen</a></div>
+                            <div class="d-grid"><a class="btn btn-primary" href="#!">Zum Einkaufswagen hinzufügen</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -268,7 +181,8 @@
                         <div class="card-body p-5">
                             <div class="small text-uppercase fw-bold text-muted">Transalp 82 inkl. Alpinst 8</div>
                             <div class="mb-3">
-                                <img src="https://www.hervis.at/medias/sys_master/images/images/h25/hfd/26950141345822/Fischer-Transalp-82-Alpinst-8-Transalp-82-B949730-00-437366.jpg" alt="Top seller" style="width:278px; height:423px">
+                                <img src="https://www.hervis.at/medias/sys_master/images/images/h25/hfd/26950141345822/Fischer-Transalp-82-Alpinst-8-Transalp-82-B949730-00-437366.jpg"
+                                    alt="Top seller" style="width:278px; height:423px">
                                 <span class="display-4 fw-bold">€ 809,99</span>
                             </div>
                             <ul class="list-unstyled mb-4">
@@ -301,11 +215,12 @@
                                     ALPINIST heel - U-bow soft,
                                 </li>
                                 <li class="mb-2">
-                                <i class="bi bi-check text-primary"></i>
+                                    <i class="bi bi-check text-primary"></i>
                                     geringes Packmaß
                                 </li>
                             </ul>
-                            <div class="d-grid"><a class="btn btn-outline-primary" href="#!">Zum Einkaufswagen hinzufügen</a></div>
+                            <div class="d-grid"><a class="btn btn-outline-primary" href="#!">Zum Einkaufswagen
+                                    hinzufügen</a></div>
                         </div>
                     </div>
                 </div>
@@ -330,9 +245,13 @@
                     <div class="card mb-4">
                         <div class="card-body p-4">
                             <div class="d-flex">
-                                <div class="flex-shrink-0"><i class="bi bi-chat-right-quote-fill text-primary fs-1"></i></div>
+                                <div class="flex-shrink-0"><i class="bi bi-chat-right-quote-fill text-primary fs-1"></i>
+                                </div>
                                 <div class="ms-4">
-                                    <p class="mb-1">Der von uns gewünschte Skihelm war in der Filiale in Liezen nicht mehr lagernd, die Verkäuferin war sehr freundlich und hat sofort nachgesehen, ob er online verfügbar ist und hat ihn dann für uns bestellt. Hat alles gut geklappt, haben den Helm noch rechtzeitig vor Weihnachten erhalten.</p>
+                                    <p class="mb-1">Der von uns gewünschte Skihelm war in der Filiale in Liezen nicht
+                                        mehr lagernd, die Verkäuferin war sehr freundlich und hat sofort nachgesehen, ob
+                                        er online verfügbar ist und hat ihn dann für uns bestellt. Hat alles gut
+                                        geklappt, haben den Helm noch rechtzeitig vor Weihnachten erhalten.</p>
                                     <div class="small text-muted">- Client Name, Location</div>
                                 </div>
                             </div>
@@ -342,9 +261,13 @@
                     <div class="card">
                         <div class="card-body p-4">
                             <div class="d-flex">
-                                <div class="flex-shrink-0"><i class="bi bi-chat-right-quote-fill text-primary fs-1"></i></div>
+                                <div class="flex-shrink-0"><i class="bi bi-chat-right-quote-fill text-primary fs-1"></i>
+                                </div>
                                 <div class="ms-4">
-                                    <p class="mb-1">Kostenloser Versand bei Abholung im Shop, gute Preise, Tolles Personal. Zudem hatte ich einmal etwas falsches als Zusatz zu einem Produkt bestellt und ohne etwas zu sagen, haben sie dennoch, das richtige montiert. Zwar musste ich die Differenz zahlen, aber dafür war es Top.</p>
+                                    <p class="mb-1">Kostenloser Versand bei Abholung im Shop, gute Preise, Tolles
+                                        Personal. Zudem hatte ich einmal etwas falsches als Zusatz zu einem Produkt
+                                        bestellt und ohne etwas zu sagen, haben sie dennoch, das richtige montiert. Zwar
+                                        musste ich die Differenz zahlen, aber dafür war es Top.</p>
                                     <div class="small text-muted">- Client Name, Location</div>
                                 </div>
                             </div>
