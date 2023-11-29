@@ -1,12 +1,21 @@
 package at.wst.online_webshop.services;
 
+import at.wst.online_webshop.dtos.CustomerDTO;
 import at.wst.online_webshop.dtos.requests.CreatingCustomerRequest;
 import at.wst.online_webshop.entities.Customer;
+import at.wst.online_webshop.exception_handlers.ExistingEmailException;
+import at.wst.online_webshop.exception_handlers.FailedSignUpException;
+import at.wst.online_webshop.exception_handlers.InvalidEmailException;
+import at.wst.online_webshop.exception_handlers.WeakPasswordException;
 import at.wst.online_webshop.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
+
+import static at.wst.online_webshop.convertors.CustomerConvertor.convertToDto;
+import static at.wst.online_webshop.convertors.CustomerConvertor.convertToEntity;
 
 @Service
 public class CustomerService {
@@ -22,24 +31,33 @@ public class CustomerService {
         return customerRepository.findAll();
     }
 
-    public Customer createCustomer(CreatingCustomerRequest customerRequest) {
+    @Transactional
+    public CustomerDTO signUp(CreatingCustomerRequest customerRequest) {
         //business logic and validity check
-        if(customerRequest.getName().isBlank()){
-            throw new IllegalArgumentException("Name cannot be empty");
+        if (customerRequest.getName().isBlank()) {
+            throw new FailedSignUpException("Name cannot be empty");
         }
 
-        if(customerRequest.getAddress().isBlank()){
-            throw new IllegalArgumentException("Address cannot be empty");
+        if (customerRequest.getAddress().isBlank()) {
+            throw new FailedSignUpException("Address cannot be empty");
         }
 
-        if(customerRepository.findByEmail(customerRequest.getEmail()).isPresent()){
-            throw new IllegalArgumentException("E-mail already used");
+        if (customerRepository.findByEmail(customerRequest.getEmail()).isPresent()) {
+            throw new ExistingEmailException("E-mail already used");
+        }
+
+        if (!isValidEmail(customerRequest.getEmail())) {
+            throw new InvalidEmailException("E-mail is not valid");
+        }
+
+        if (!isSecurePassword(customerRequest.getPassword())) {
+            throw new WeakPasswordException("Password is not secure");
         }
 
         Customer newCustomer = new Customer(customerRequest.getName(), customerRequest.getEmail(), customerRequest.getPassword(), customerRequest.getAddress());
 
-
-        return customerRepository.save(newCustomer);
+        customerRepository.save(newCustomer);
+        return convertToDto(newCustomer);
     }
 
     private boolean isValidEmail(String email){
