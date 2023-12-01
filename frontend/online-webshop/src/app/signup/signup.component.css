@@ -1,0 +1,86 @@
+    .form-popup {
+        display: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 800px;
+        /* adjust as per your needs */
+        height: 500px;
+        /* adjust as per your needs */
+        margin-left: -400px;
+        /* negative half of width above */
+        margin-top: -260px;
+        border: 3px solid #f1f1f1;
+        border-radius: 25px;
+        z-index: 9;
+        background-image: url("https://img.freepik.com/free-vector/paper-style-winter-wallpaper_23-2148713724.jpg?w=1380&t=st=1675352265~exp=1675352865~hmac=cbddce1f510e97b7a201eece50d81975af7f9caec3effd4794283dae605724b4");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    .form-container {
+        max-width: 50%;
+        padding: 4px;
+        border-radius: 25px;
+        background-color: transparent;
+    }
+
+    .input{
+        border-radius: 25px; 
+        opacity: 0.9;
+        color:black;
+    }
+
+    .form-popup-sign_in {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 800px;
+    /* adjust as per your needs */
+    height: 950px;
+    /* adjust as per your needs */
+    margin-left: -400px;
+    /* negative half of width above */
+    margin-top: -475px;
+    border: 3px solid #f1f1f1;
+    border-radius: 25px;
+    background-image: url("https://www.pixelstalk.net/wp-content/uploads/images2/Winter-Night-wallpaper-HD.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    z-index: 9;
+}
+
+.form-popup-change_password {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 800px;
+    /* adjust as per your needs */
+    height: 500px;
+    /* adjust as per your needs */
+    margin-left: -400px;
+    /* negative half of width above */
+    margin-top: -250px;
+    border: 3px solid #f1f1f1;
+    border-radius: 25px;
+    background: white;
+    z-index: 9;
+}
+
+.form-container-sign_in {
+    max-width: 100%;
+    padding: 6px;
+    border-radius: 25px;
+    background-color: transparent;
+}
+
+.form-container-change_password {
+    max-width: 100%;
+    padding: 6px;
+    background-color: whitesmoke;
+}
+
