@@ -6,6 +6,7 @@ import at.wst.online_webshop.dtos.requests.AuthenticationRequest;
 import at.wst.online_webshop.dtos.requests.CreatingCustomerRequest;
 import at.wst.online_webshop.exception_handlers.FailedSignUpException;
 import at.wst.online_webshop.security.JwtTokenUtil;
+import at.wst.online_webshop.services.CustomerDetailsService;
 import at.wst.online_webshop.services.CustomerService;
 import org.apache.coyote.Response;
 import org.infinispan.protostream.annotations.impl.HasProtoSchema;
@@ -39,6 +40,9 @@ public class CustomerController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private CustomerDetailsService customerDetailsService;
+
 
     //SignUp for a customer
     @PostMapping("/register")
@@ -46,7 +50,7 @@ public class CustomerController {
         try {
             CustomerDTO result = customerService.signUp(request);
             return ResponseEntity.ok(result);
-        } catch (FailedSignUpException e) {
+        } catch (Exception e) {
             // Handle other exceptions, e.g., unexpected errors
             logger.error("Exception during customer registration", e);
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -64,7 +68,7 @@ public class CustomerController {
         }
 
         //if authorization successful, generate JWT token
-        UserDetails userDetails = customerService.loadUserByEmail(request.getEmail());
+        UserDetails userDetails = customerDetailsService.loadUserByUsername(request.getEmail());
         System.out.println(userDetails);
         String token = jwtTokenUtil.generateToken(userDetails);
         Map<String, String> result = new HashMap<>();

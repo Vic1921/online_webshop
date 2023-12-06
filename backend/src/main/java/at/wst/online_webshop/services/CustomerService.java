@@ -85,14 +85,5 @@ public class CustomerService {
     return false;
     }
 
-    public UserDetails loadUserByEmail(String email) {
-        Optional<Customer> customer = customerRepository.findByEmail(email);
-
-        if(customer.isPresent()){
-            return new org.springframework.security.core.userdetails.User(customer.get().getEmail(), customer.get().getPassword(), new ArrayList<>());
-        }else{
-            throw new CustomerNotFoundException("User with email does not exist: " + customer.get().getEmail());
-        }
-    }
 
 }

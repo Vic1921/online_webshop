@@ -23,7 +23,7 @@ export class SignupComponent {
   onSubmit(): void {
     if (this.signupForm.valid) {
       const signupData = this.signupForm.value;
-
+      
       this.signupService.signUp(signupData).subscribe(
         response => {
           console.log('Register successful!', response);

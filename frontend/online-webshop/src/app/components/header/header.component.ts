@@ -18,4 +18,12 @@ export class HeaderComponent {
   navigateToSignup() {
     this.router.navigate(['/signup']);
   }
+
+  navigateToProduts() {
+    this.router.navigate(['/products']);
+  }
+
+  navigateToShoppingCart(){
+    this.router.navigate(['/shoppingcart']);
+  }
 }

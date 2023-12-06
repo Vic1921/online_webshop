@@ -1,7 +1,6 @@
 package at.wst.online_webshop.security;
 
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Date;
@@ -11,13 +10,13 @@ import java.util.function.Function;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-
+@Component
 public class JwtTokenUtil implements Serializable {
     private static final long serialVersionUID = -2550185165626007488L;
     private static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
@@ -73,13 +72,4 @@ public class JwtTokenUtil implements Serializable {
         System.out.println("email: " + email);
         return (email.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
-
-
-
-
-
-
-
-
-
 }
