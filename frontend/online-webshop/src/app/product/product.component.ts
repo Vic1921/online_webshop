@@ -3,8 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FooterComponent } from '../components/footer/footer.component';
 import { HeaderComponent } from '../components/header/header.component';
 import { ProductService } from '../product.service';
-import { DatabasefillerService } from '../databasefiller.service';
 import { switchMap } from 'rxjs';
+import { DbfillerService } from '../dbfiller.service';
+import { Product } from '../product';
 
 @Component({
   selector: 'app-product',
@@ -14,9 +15,9 @@ import { switchMap } from 'rxjs';
   styleUrl: './product.component.css'
 })
 export class ProductComponent implements OnInit{
-  products : any[] = [];
+  products : Product[] = [];
 
-  constructor(private productService : ProductService, private databaseFillerService : DatabasefillerService){}
+  constructor(private productService : ProductService, private databaseFillerService : DbfillerService){}
 
   ngOnInit(): void {
     this.databaseFillerService.fillDatabase().pipe(

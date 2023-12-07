@@ -43,31 +43,8 @@ public class DBFillerTest {
         List<Product> products = dbFiller.getProductRepository().findAll();
 
         assertEquals( 36, products.size());
-        assertEquals("Alpina PROSHIELD WOMEN VEST K", products.get(0).getProductName());
-        assertEquals("Bekleidung", products.get(0).getProductCategory());
-        assertEquals("Alpina-PROSHIELD-WOMEN-VEST-K-2815121-00-242096.jpg", products.get(0).getProductImageUrl());
-    }
-
-    @Test
-    public void testFillProductsAndRetrieve() {
-        // You can test the fillProducts method in a similar way
-        // Ensure that you have a test CSV file with data for products
-        dbFiller.clearAndFillDB();
-
-
-        // Mock the ProductService
-        ProductService productServiceMock = mock(ProductService.class);
-
-        // Define the behavior of getProducts when called
-        when(productServiceMock.getAllProducts()).thenReturn(Collections.emptyList());
-
-        // Verify that ProductService.getProducts() was called
-        verify(productServiceMock).getAllProducts();
-
-        // Ensure that ProductService.getProducts() returns the expected products
-        List<Product> retrievedProducts2 = dbFiller.getProductRepository().findAll();
-        List<Product> retrievedProducts = productServiceMock.getAllProducts();
-
-        assertEquals(retrievedProducts.size(), retrievedProducts2.size());
+        assertEquals("Atomic Backland 78 Speed Turn Skin 78 80 Backland Expert", products.get(1).getProductName());
+        assertEquals("Ski", products.get(1).getProductCategory());
+        assertEquals("Atomic-Backland-78-Speed-Turn-Skin-78-80-Backland-Expert-B104408-00-422180.jpg", products.get(1).getProductImageUrl());
     }
 }

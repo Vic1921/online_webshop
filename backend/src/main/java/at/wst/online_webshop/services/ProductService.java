@@ -18,9 +18,8 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Product> getAllProducts(){
-        System.out.println(productRepository.findAll());
         return this.productRepository.findAll();
     }
 }
