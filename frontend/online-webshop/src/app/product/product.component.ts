@@ -35,12 +35,13 @@ export class ProductComponent implements OnInit{
 
   getProductImageStyle(imageUrl: string): object {
     return {
-      'background-image': `url(${imageUrl})`,
+      'background-image': `url('./assets/images/products/${imageUrl}')`,
       'background-repeat': 'no-repeat',
       'background-size': 'cover',
       'background-position': 'center center'
     };
   }
+  
 
 
 }
