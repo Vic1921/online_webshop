@@ -50,8 +50,11 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests(req -> req
-                        .antMatchers("/api/users/customers/register").permitAll()
-                        .antMatchers("/api/users/customers/login").permitAll()
+                        .antMatchers("/api/customers/register").permitAll()
+                        .antMatchers("/api/customers/login").permitAll()
+                        .antMatchers(HttpMethod.GET, "/**").permitAll()
+                        .antMatchers("/api/products").permitAll()
+                        .antMatchers("/api/fill").permitAll()
                         .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated()
                 )

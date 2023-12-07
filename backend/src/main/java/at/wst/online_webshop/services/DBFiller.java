@@ -7,8 +7,12 @@ import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -21,13 +25,17 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Service
+@Transactional
 public class DBFiller {
     private static final int NUMBER_OF_CUSTOMERS = 100;
     private static final int NUMBER_OF_ORDERS = 100;
-    private static final int NUMBER_OF_PRODUCTS = 100;
+    private static final int NUMBER_OF_PRODUCTS = 36;
     private static final int NUMBER_OF_REVIEWS = 10;
     private static final int NUMBER_OF_SHOPPING_CARTS = 10;
-    private static final int NUMBER_OF_VENDORS = 10;
+    private static final int NUMBER_OF_VENDORS = 20;
+
+    private static final Logger logger = LoggerFactory.getLogger(DBFiller.class);
+
     private static final String imageFiles = "src/main/csv/filenames.csv";
     private static final String productNames = "src/main/csv/articlenames.csv";
     private static final String productCategories = "src/main/csv/artikelkategorie.csv";
@@ -51,23 +59,31 @@ public class DBFiller {
 
     }
 
+    @Transactional
     public void clearAndFillDB() {
-        //clearDB();
+        clearDB();
         fillCustomers();
         fillVendors();
         fillProducts();
-        fillOrders();
-        fillReviews();
-        fillShoppingCarts();
+        //fillOrders();
+        //fillReviews();
+        //fillShoppingCarts();
     }
 
+    @Transactional
     public void clearDB() {
+        System.out.println("Before clearing database...");
+        logger.info("Before clearing database...");
         customerRepository.deleteAll();
         orderRepository.deleteAll();
         productRepository.deleteAll();
         reviewRepository.deleteAll();
         shoppingCartRepository.deleteAll();
         vendorRepository.deleteAll();
+        vendorRepository.resetSequence();
+        logger.info("After clearing database..");
+        logger.info(vendorRepository.findAll().toString());
+        System.out.println("After clearing database...");
     }
 
     public ProductRepository getProductRepository(){
@@ -91,8 +107,7 @@ public class DBFiller {
 
         return records;
     }
-
-    private void fillCustomers() {
+    public void fillCustomers() {
         var faker = Faker.instance();
         List<Customer> customers = IntStream.range(0, NUMBER_OF_CUSTOMERS)
                 .parallel() // Enable parallel processing
@@ -107,7 +122,6 @@ public class DBFiller {
 
         customerRepository.saveAll(customers);
     }
-
     public void fillVendors() {
         var faker = Faker.instance();
         List<Vendor> vendors = IntStream.range(0, NUMBER_OF_VENDORS)
@@ -120,16 +134,17 @@ public class DBFiller {
                 .collect(Collectors.toList());
 
         vendorRepository.saveAll(vendors);
+        logger.info(vendorRepository.findAll().toString());
+        logger.info(String.valueOf(vendorRepository.findAll().size()));
     }
-
-
     public void fillProducts() {
         var faker = Faker.instance();
 
         List<String[]> productFiles = readFile(this.products);
+        logger.info("FILL PRODUCT " + this.vendorRepository.findAll().toString());
 
         List<Product> products = IntStream.range(0, NUMBER_OF_PRODUCTS)
-                .parallel()
+                //i dont know why you put parallel it fucked everything up i can't get the right amoutn of entries from vendorRepository the number always changed
                 .mapToObj(i -> {
                     String[] record = productFiles.get(i % productFiles.size()); // Get the record for the current product
 
@@ -140,8 +155,10 @@ public class DBFiller {
                     double price = faker.number().randomDouble(2, 0, 1000);
                     String sku = faker.commerce().promotionCode();
                     int quantity = faker.number().numberBetween(0, 1000);
-                    Vendor vendor = vendorRepository.findById((long) faker.number().numberBetween(1, NUMBER_OF_VENDORS))
-                            .orElseThrow();
+                    long number = faker.number().numberBetween(1, NUMBER_OF_VENDORS);
+                    Vendor vendor = vendorRepository.findById(number)
+                            .orElseThrow(() -> new RuntimeException("Vendor not found with the specified ID" + String.valueOf(number) + " " + vendorRepository.findAll().toString()));
+
 
 
                     return new Product(name, productDescription, category, price, sku, quantity, imageFile, vendor);

@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FooterComponent } from '../components/footer/footer.component';
 import { HeaderComponent } from '../components/header/header.component';
 import { ProductService } from '../product.service';
+import { DatabasefillerService } from '../databasefiller.service';
+import { switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-product',
@@ -14,17 +16,20 @@ import { ProductService } from '../product.service';
 export class ProductComponent implements OnInit{
   products : any[] = [];
 
-  constructor(private productService : ProductService){}
+  constructor(private productService : ProductService, private databaseFillerService : DatabasefillerService){}
 
   ngOnInit(): void {
-    this.productService.getProducts().subscribe(
+    this.databaseFillerService.fillDatabase().pipe(
+      switchMap(() => this.productService.getProducts())
+    ).subscribe(
       (data: any[]) => {
         this.products = data;
+        console.log(data);
       },
-      (error) => {
+      (error : any) => {
         console.error('Error fetching products:', error);
       }
-    )
+    );
   }
 
   getProductImageStyle(imageUrl: string): object {

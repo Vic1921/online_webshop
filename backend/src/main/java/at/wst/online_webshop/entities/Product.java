@@ -56,7 +56,7 @@ public class Product {
             inverseJoinColumns = @JoinColumn(name = "order_id"))
     private List<Order> orders;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "vendor_id", nullable = false)
     private Vendor vendor;
 

@@ -17,7 +17,9 @@ public class ProductDTO {
     private String productName;
     private Double productPrice;
     private String productSKU;
-    private String imageUrl;
+    private String productImageUrl;
+    private String productDescription;
+    private String productCategory;
     private Integer productQuantity;
     private Long vendorId;
     private Long shoppingCartId;
