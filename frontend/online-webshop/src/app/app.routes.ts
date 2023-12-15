@@ -1,8 +1,10 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
-import { SignupComponent } from './signup/signup.component';
-import { ProductComponent } from './product/product.component';
-import { ShoppingcartComponent } from './shoppingcart/shoppingcart.component';
+import { SignupComponent } from './components/signup/signup.component';
+import { ProductComponent } from './components/product/product.component';
+import { ShoppingcartComponent } from './components/shoppingcart/shoppingcart.component';
+import { ProductDetailsComponent } from './components/product-details/product-details.component';
+import { LoginComponent } from './components/login/login.component';
 export const routes: Routes = [
     {
         path:'',
@@ -23,5 +25,15 @@ export const routes: Routes = [
         path:  'shoppingcart',
         component: ShoppingcartComponent,
         title: 'Shoppingcart'
+    },
+    {
+        path:'products/:id',
+        component: ProductDetailsComponent,
+        title: 'Product'
+    }, 
+    {
+        path: 'login',
+        component: LoginComponent,
+        title: 'Login',
     }
 ];

@@ -1,15 +1,15 @@
 package at.wst.online_webshop.controller;
 
 
+import at.wst.online_webshop.dtos.ProductDTO;
 import at.wst.online_webshop.entities.Product;
+import at.wst.online_webshop.exception_handlers.ProductNotFoundException;
 import at.wst.online_webshop.services.ProductService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -34,6 +34,16 @@ public class ProductController {
             // Log the exception
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @GetMapping("/{productId}")
+    public ResponseEntity<ProductDTO> getProduct(@PathVariable long productId){
+        try{
+            ProductDTO product = productService.getProduct(productId);
+            return ResponseEntity.ok(product);
+        } catch (ProductNotFoundException e){
+            return ResponseEntity.badRequest().body(null);
         }
     }
 }

@@ -9,5 +9,5 @@ export interface Product {
     productSKU: string;
     productQuantity: number;
     productImageUrl: string;
-    vendor: number;
+    reviews: number[] 
 }
