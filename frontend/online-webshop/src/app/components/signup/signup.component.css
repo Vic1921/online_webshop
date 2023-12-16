@@ -51,7 +51,7 @@ form .input-box input{
   padding: 0 15px;
   font-size: 17px;
   font-weight: 400;
-  color: #ffffff;
+  color: black;
   border: 1.5px solid #C7BEBE;
   border-bottom-width: 2.5px;
   border-radius: 6px;
@@ -72,7 +72,7 @@ form h3{
   margin-left: 10px;
 }
 .input-box.button input{
-  color: #fff;
+  color: white;
   letter-spacing: 1px;
   border: none;
   background: #4070f4;

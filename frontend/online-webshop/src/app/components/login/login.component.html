@@ -1,10 +1,10 @@
 <body>
     <div class="wrapper">
       <header>Login Form</header>
-      <form action="#">
+      <form [formGroup]="loginForm" (submit)="onSubmit()">
         <div class="field email">
           <div class="input-area">
-            <input type="text" placeholder="Email Address">
+            <input type="text" placeholder="Email Address" formControlName="email">
             <i class="icon fas fa-envelope"></i>
             <i class="error error-icon fas fa-exclamation-circle"></i>
           </div>
@@ -12,7 +12,7 @@
         </div>
         <div class="field password">
           <div class="input-area">
-            <input type="password" placeholder="Password">
+            <input type="password" placeholder="Password" formControlName="password">
             <i class="icon fas fa-lock"></i>
             <i class="error error-icon fas fa-exclamation-circle"></i>
           </div>
@@ -23,5 +23,4 @@
       </form>
       <div class="sign-txt">Not yet member? <a href="#">Signup now</a></div>
     </div>
-    <script src="script.js"></script>
   </body>

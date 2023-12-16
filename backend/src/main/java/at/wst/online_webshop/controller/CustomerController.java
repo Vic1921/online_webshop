@@ -4,6 +4,7 @@ package at.wst.online_webshop.controller;
 import at.wst.online_webshop.dtos.CustomerDTO;
 import at.wst.online_webshop.dtos.requests.AuthenticationRequest;
 import at.wst.online_webshop.dtos.requests.CreatingCustomerRequest;
+import at.wst.online_webshop.entities.CustomerUserDetails;
 import at.wst.online_webshop.exception_handlers.FailedSignUpException;
 import at.wst.online_webshop.security.JwtTokenUtil;
 import at.wst.online_webshop.services.CustomerDetailsService;
@@ -58,7 +59,8 @@ public class CustomerController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody AuthenticationRequest request){
+    public ResponseEntity<?> login(@RequestBody AuthenticationRequest request){
+        logger.info("Received login request: " + request.getEmail());
         try{
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
@@ -69,12 +71,18 @@ public class CustomerController {
 
         //if authorization successful, generate JWT token
         UserDetails userDetails = customerDetailsService.loadUserByUsername(request.getEmail());
+
+        CustomerUserDetails customerUserDetails = (CustomerUserDetails) userDetails;
+
         System.out.println(userDetails);
         String token = jwtTokenUtil.generateToken(userDetails);
+        logger.info("Token generated: " + token);
         Map<String, String> result = new HashMap<>();
         result.put("token", token);
+        result.put("customerName", customerUserDetails.getCustomer().getName());
+
 
         //return jwt token in response
-        return new ResponseEntity(result , HttpStatus.OK);
+        return ResponseEntity.ok(result);
     }
 }

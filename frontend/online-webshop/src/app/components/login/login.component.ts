@@ -1,12 +1,16 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormControl, ReactiveFormsModule, Validators, FormGroup} from '@angular/forms';
+import { FormControl, ReactiveFormsModule, Validators, FormGroup } from '@angular/forms';
 import { LoginService } from '../../services/login.service';
+import { Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
+
+
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -16,22 +20,30 @@ export class LoginComponent {
     password: new FormControl('', Validators.required),
   });
 
+  loading = false;
 
-  constructor (private loginService : LoginService) {}
+
+  constructor(private loginService: LoginService, private router: Router) { }
 
   onSubmit(): void {
-    if(this.loginForm.valid){
+    if (this.loginForm.valid && !this.loading) {
+      this.loading = true;
+
       const loginData = this.loginForm.value;
 
       this.loginService.login(loginData).subscribe(
         response => {
+          //navigate to the homepage
+          this.router.navigate(['']);
           console.log('Login successful!', response);
           // Redirect to login page or any other page
         },
         error => {
-          console.error('Register failed', error);
+          console.error('Login failed', error);
         }
-      );
+      ).add(() => {
+        this.loading = false; // Reset loading indicator regardless of success or failure
+      });
     }
   }
 }

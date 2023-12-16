@@ -10,6 +10,8 @@ import java.util.function.Function;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -24,12 +26,12 @@ public class JwtTokenUtil implements Serializable {
     private final SecretKey SECRET;
 
     public JwtTokenUtil(){
-        this.SECRET = generateSecretKey(SECRET_KEY_STRING);
+        this.SECRET = Keys.secretKeyFor(SignatureAlgorithm.HS256);;
     }
 
     private SecretKey generateSecretKey(String secretKeyString) {
-            byte[] decodedKey = Base64.getDecoder().decode(secretKeyString.getBytes(StandardCharsets.UTF_8));
-            return new SecretKeySpec(decodedKey, "AES");
+        byte[] decodedKey = Base64.getDecoder().decode(secretKeyString.getBytes(StandardCharsets.UTF_8));
+        return new SecretKeySpec(decodedKey, "HmacSHA256");
     }
 
     public String getEmailFromToken(String token){
@@ -63,13 +65,12 @@ public class JwtTokenUtil implements Serializable {
     }
 
     private String createToken(Map<String, Object> claims, String subject){
-        return Jwts.builder().claims(claims).subject(subject).setIssuedAt(new Date(System.currentTimeMillis())).setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000)).signWith(SECRET).compact();
+        return Jwts.builder().claims(claims).subject(subject).setIssuedAt(new Date(System.currentTimeMillis())).setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000)).signWith(SignatureAlgorithm.HS256, SECRET).compact();
     }
 
     //validate Token
     public boolean validateToken(String token, UserDetails userDetails){
         final String email = getEmailFromToken(token);
-        System.out.println("email: " + email);
         return (email.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 }

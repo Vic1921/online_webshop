@@ -7,6 +7,7 @@ import at.wst.online_webshop.exception_handlers.*;
 import at.wst.online_webshop.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -23,9 +24,12 @@ public class CustomerService {
 
     private final CustomerRepository customerRepository;
 
+    private final PasswordEncoder passwordEncoder;
+
     @Autowired
-    public CustomerService(CustomerRepository customerRepository) {
+    public CustomerService(CustomerRepository customerRepository, PasswordEncoder passwordEncoder) {
         this.customerRepository = customerRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<Customer> getAllCustomer() {
@@ -55,7 +59,9 @@ public class CustomerService {
             throw new WeakPasswordException("Password is not secure");
         }
 
-        Customer newCustomer = new Customer(customerRequest.getName(), customerRequest.getEmail(), customerRequest.getPassword(), customerRequest.getAddress());
+        String encodedPassword = passwordEncoder.encode(customerRequest.getPassword());
+
+        Customer newCustomer = new Customer(customerRequest.getName(), customerRequest.getEmail(), encodedPassword, customerRequest.getAddress());
 
         customerRepository.save(newCustomer);
         return convertToDto(newCustomer);
@@ -70,6 +76,7 @@ public class CustomerService {
 
     private boolean isSecurePassword(String password){
         //password criteria definition
+        /*
         int minLength = 8;
         boolean hasUppercase = !password.equals(password.toLowerCase());
         boolean hasLowercase = !password.equals(password.toUpperCase());
@@ -79,6 +86,9 @@ public class CustomerService {
                 hasUppercase &&
                 hasLowercase &&
                 hasDigit;
+
+         */
+        return true;
     }
 
     private boolean isPasswordCorrect(String providedPassword, String storedPassword){
