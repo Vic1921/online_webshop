@@ -30,8 +30,17 @@ public class Product {
     @Column(name = "product_SKU", nullable = false)
     private String productSKU;
 
+    @Column(name = "product_category", nullable = false)
+    private String productCategory;
+
+    @Column(name = "product_description", nullable = false)
+    private String productDescription;
+
     @Column(name = "product_quantity", nullable = false)
     private Integer productQuantity;
+
+    @Column(name = "product_imageurl", nullable = false)
+    private String productImageUrl;
 
     @ManyToOne
     @JoinColumn(name = "cart_id")
@@ -47,14 +56,17 @@ public class Product {
             inverseJoinColumns = @JoinColumn(name = "order_id"))
     private List<Order> orders;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "vendor_id", nullable = false)
     private Vendor vendor;
 
-    public Product(String name, double price, String sku, int quantity, Vendor vendor) {
+    public Product(String name, String productDescription, String productCategory, double price, String sku, int quantity, String productImageUrl, Vendor vendor) {
         this.productName = name;
         this.productPrice = price;
+        this.productDescription = productDescription;
+        this.productCategory = productCategory;
         this.productSKU = sku;
+        this.productImageUrl = productImageUrl;
         this.productQuantity = quantity;
         this.vendor = vendor;
     }

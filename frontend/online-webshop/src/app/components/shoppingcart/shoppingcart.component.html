@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+</head>
+
+<body>
+  <div class="card">
+    <div class="row">
+      <div class="col-md-8 cart">
+        <div class="title">
+          <div class="row">
+            <div class="col">
+              <h4><b>Shopping Cart</b></h4>
+            </div>
+            <div class="col align-self-center text-right text-muted">
+              <div *ngIf="loginService.isLoggedIn(); else emptyCart">
+                <ng-container>
+                  <tr>
+                    <td colspan="5" style="text-align:center;">{{ cart.products?.length }} </td>
+                  </tr>
+                </ng-container>
+              </div>
+
+              <ng-template #emptyCart>
+                <tr>
+                  <td colspan="5" style="text-align:center;">You have no products added in your Shopping Cart</td>
+                </tr>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+
+        <div *ngFor="let product of cart.products" class="row border-top border-bottom">
+          <div class="row main align-items-center">
+            <div class="col-2"><img class="img-fluid" [src]="getProductImageStyle(product.productImageUrl)"></div>
+            <div class="col">
+              <div class="row text-muted">{{product.productCategory}}</div>
+              <div class="row">{{product.productName}}</div>
+            </div>
+            <div class="col">
+              <div class="btn-group">
+                <form action="deleteProductFromShoppingCart.php" method="POST">
+                  <input type="hidden" name="product_id" value="<?php echo $product['ARTIKELNUMMER'] ?>" />
+                  <button type="submit" name="delete_from_card" value="delete_from_card" class="border">-</button>
+                </form>
+                <a href="#" class="border" style="height:100%; width:100%; display-block:inline;">
+                  <?php echo (int)$product_list[$product['ARTIKELNUMMER']][0] ?>
+                </a>
+                <form action="addShoppingCart.php" method="POST">
+                  <input type="hidden" name="product_id" value="<?php echo $product['ARTIKELNUMMER'] ?>" />
+                  <button type="submit" name="add_to_card" value="add_to_card" class="border">+</button>
+                </form>
+              </div>
+            </div>
+            <div class="col">&euro; {{product.productPrice}}>
+              <form action="deleteProduct.php" style="display:inline;" method="POST">
+                <input type="hidden" name="product_id" value="<?php echo $product['ARTIKELNUMMER'] ?>" />
+                <button type="submit" name="delete_from_card" value="delete_from_card" class="btn"
+                  style="margin-top:0%; display:inline; width:30%; background-color:transparent; border-style:none; color:black ">&#10005;</button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class="back-to-shop"><a href="#!">&leftarrow;</a><span
+            class="text-muted">Back to shop</span></div>
+      </div>
+      <div class="col-md-4 summary">
+        <div>
+          <h5><b>GESAMT</b></h5>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col" style="padding-left:0;">ITEMS
+            {{cart.products?.length}}
+          </div>
+          <div class="col text-right">&euro;
+            <?php echo $subtotal ?>
+          </div>
+        </div>
+        <form>
+          <p>LIEFERUNG</p>
+          <select>
+            <option class="text-muted">Standard-Delivery- &euro;5.00</option>
+          </select>
+          <p>CODE EINGEBEN</p>
+          <input id="code" placeholder="Enter your code">
+        </form>
+        <div class="row" style="border-top: 1px solid rgba(0,0,0,.1); padding: 2vh 0;">
+          <div class="col">GESAMTPREIS</div>
+          <div class="col text-right">&euro;
+            <?php echo $subtotal + 5 ?>
+          </div>
+        </div>
+        <form action="addOrder.php" method="POST">
+          <input type="hidden" name="code" value="code" />
+          <button type="submit" name="add_to_order" value="add_to_order" class="btn btn-primary"
+            style="border-radius: 25px;">CHECKOUT</button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</body>

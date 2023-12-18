@@ -1,11 +1,14 @@
 package at.wst.online_webshop.controller;
 
+import at.wst.online_webshop.dtos.ProductDTO;
 import at.wst.online_webshop.dtos.ShoppingCartDTO;
 import at.wst.online_webshop.dtos.requests.ShoppingCartItemRequest;
 import at.wst.online_webshop.services.ShoppingCartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/shopping-cart")
@@ -25,10 +28,12 @@ public class ShoppingCartController {
     }
 
     // Get all items from the shopping cart
+    //redundant code same as getShoppingCartId
     @GetMapping("/get-items")
-    public ResponseEntity<ShoppingCartDTO> getItemsFromShoppingCart(Long id) {
+    public ResponseEntity<List<ProductDTO>> getItemsFromShoppingCart(@RequestParam Long id) {
         ShoppingCartDTO shoppingCartDTO = shoppingCartService.getShoppingCartById(id);
-        return ResponseEntity.ok(shoppingCartDTO);
+        List<ProductDTO> productsFromShoppingCart = shoppingCartDTO.getProductDTOS();
+        return ResponseEntity.ok(productsFromShoppingCart);
     }
 
     // Create a new shopping cart
@@ -40,21 +45,21 @@ public class ShoppingCartController {
 
     // Get a shopping cart by its ID
     @GetMapping("/get")
-    public ResponseEntity<ShoppingCartDTO> getShoppingCartById(Long id) {
+    public ResponseEntity<ShoppingCartDTO> getShoppingCartById(@RequestParam Long id) {
         ShoppingCartDTO shoppingCart = shoppingCartService.getShoppingCartById(id);
         return ResponseEntity.ok(shoppingCart);
     }
 
     // Update an existing shopping cart
     @PutMapping("/update")
-    public ResponseEntity<ShoppingCartDTO> updateShoppingCart(ShoppingCartDTO shoppingCartDTO) {
+    public ResponseEntity<ShoppingCartDTO> updateShoppingCart(@RequestBody ShoppingCartDTO shoppingCartDTO) {
         ShoppingCartDTO updatedShoppingCart = shoppingCartService.updateShoppingCart(shoppingCartDTO);
         return ResponseEntity.ok(updatedShoppingCart);
     }
 
     // Delete a shopping cart
-    @PostMapping("/delete")
-    public ResponseEntity<Void> deleteShoppingCart(Long id) {
+    @DeleteMapping("/delete")
+    public ResponseEntity<Void> deleteShoppingCart(@RequestParam Long id) {
         shoppingCartService.deleteShoppingCart(id);
         return ResponseEntity.noContent().build();
     }
