@@ -4,25 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a89b384a-466f-4917-a10f-b2f1a1f5ae0a" name="Changes" comment="created Entities">
-      <change afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dockerfile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/mvnw" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/mvnw.cmd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/at/wst/online_webshop/OnlineWebshopApplication.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/at/wst/online_webshop/entities/CartId.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/at/wst/online_webshop/entities/Customer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/at/wst/online_webshop/entities/Order.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/at/wst/online_webshop/entities/Product.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/at/wst/online_webshop/entities/Review.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/at/wst/online_webshop/entities/Vendor.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/at/wst/online_webshop/OnlineWebshopApplicationTests.java" beforeDir="false" />
-    </list>
+    <list default="true" id="a89b384a-466f-4917-a10f-b2f1a1f5ae0a" name="Changes" comment="created Entities" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -49,6 +31,10 @@
       </MavenGeneralSettings>
     </option>
   </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 5
+}</component>
   <component name="ProjectId" id="2ThqFk6iB42TQujDH7HV7tf8twP" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -68,7 +54,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/victo/IdeaProjects/online_webshop/backend/pom.xml",
+    "last_opened_file_path": "C:/Users/victo/IdeaProjects/online_webshop",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -107,6 +93,9 @@
       <workItem from="1691505563367" duration="6110000" />
       <workItem from="1691610117641" duration="2326000" />
       <workItem from="1691672904720" duration="2700000" />
+      <workItem from="1699962919394" duration="91000" />
+      <workItem from="1700238372067" duration="52000" />
+      <workItem from="1701430919540" duration="11000" />
     </task>
     <task id="LOCAL-00001" summary="Credentials for both databses set up properly">
       <created>1691510062747</created>
@@ -128,6 +117,17 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Credentials for both databses set up properly" />
