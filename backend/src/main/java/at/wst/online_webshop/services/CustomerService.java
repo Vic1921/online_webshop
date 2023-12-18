@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static at.wst.online_webshop.convertors.CustomerConvertor.convertToDto;
+import static at.wst.online_webshop.convertors.CustomerConvertor.convertToEntity;
 
 @Service
 public class CustomerService {
@@ -38,7 +39,7 @@ public class CustomerService {
 
     @Transactional
     public CustomerDTO signUp(CreatingCustomerRequest customerRequest) {
-        //business logic and validity check
+        // business logic and validity check
         if (customerRequest.getName().isBlank()) {
             throw new FailedSignUpException("Name cannot be empty");
         }
@@ -69,13 +70,13 @@ public class CustomerService {
 
 
     private boolean isValidEmail(String email){
-        //using regular expression to check if email is valid
+        // using regular expression to check if email is valid
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
         return email.matches(emailRegex);
     }
 
     private boolean isSecurePassword(String password){
-        //password criteria definition
+        // password criteria definition
         /*
         int minLength = 8;
         boolean hasUppercase = !password.equals(password.toLowerCase());
@@ -92,8 +93,25 @@ public class CustomerService {
     }
 
     private boolean isPasswordCorrect(String providedPassword, String storedPassword){
-    return false;
+        return false;
     }
 
+    public CustomerDTO getCustomerDTOById(Long id) {
+        Customer customer = customerRepository.findById(id).orElseThrow(() -> new CustomerNotFoundException("Customer with id: " + id + " not found"));
+        return convertToDto(customer);
+    }
 
+    public CustomerDTO updateCustomer(CustomerDTO customerDTO) {
+        Customer customer = convertToEntity(customerDTO);
+        Customer updatedCustomer = customerRepository.save(customer);
+        return convertToDto(updatedCustomer);
+    }
+
+    public void deleteCustomer(Long id) {
+        customerRepository.deleteById(id);
+    }
+
+    public void saveCustomer(Customer customer) {
+        customerRepository.save(customer);
+    }
 }

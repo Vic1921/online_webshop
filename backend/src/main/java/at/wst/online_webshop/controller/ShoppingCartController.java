@@ -31,7 +31,7 @@ public class ShoppingCartController {
     //redundant code same as getShoppingCartId
     @GetMapping("/get-items")
     public ResponseEntity<List<ProductDTO>> getItemsFromShoppingCart(@RequestParam Long id) {
-        ShoppingCartDTO shoppingCartDTO = shoppingCartService.getShoppingCartById(id);
+        ShoppingCartDTO shoppingCartDTO = shoppingCartService.getShoppingCartDTOById(id);
         List<ProductDTO> productsFromShoppingCart = shoppingCartDTO.getProductDTOS();
         return ResponseEntity.ok(productsFromShoppingCart);
     }
@@ -46,7 +46,7 @@ public class ShoppingCartController {
     // Get a shopping cart by its ID
     @GetMapping("/get")
     public ResponseEntity<ShoppingCartDTO> getShoppingCartById(@RequestParam Long id) {
-        ShoppingCartDTO shoppingCart = shoppingCartService.getShoppingCartById(id);
+        ShoppingCartDTO shoppingCart = shoppingCartService.getShoppingCartDTOById(id);
         return ResponseEntity.ok(shoppingCart);
     }
 

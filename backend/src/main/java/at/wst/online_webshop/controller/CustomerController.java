@@ -8,13 +8,10 @@ import at.wst.online_webshop.dtos.requests.CreatingCustomerRequest;
 import at.wst.online_webshop.entities.Customer;
 import at.wst.online_webshop.entities.CustomerUserDetails;
 import at.wst.online_webshop.entities.ShoppingCart;
-import at.wst.online_webshop.exception_handlers.FailedSignUpException;
 import at.wst.online_webshop.security.JwtTokenUtil;
 import at.wst.online_webshop.services.CustomerDetailsService;
 import at.wst.online_webshop.services.CustomerService;
 import at.wst.online_webshop.services.ShoppingCartService;
-import org.apache.coyote.Response;
-import org.infinispan.protostream.annotations.impl.HasProtoSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,14 +64,14 @@ public class CustomerController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody AuthenticationRequest request){
+    public ResponseEntity<?> login(@RequestBody AuthenticationRequest request) {
         logger.info("Received login request: " + request.getEmail());
         logger.info("Received login request password: " + request.getPassword());
-        try{
+        try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
             );
-        } catch (BadCredentialsException e){
+        } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         }
 
@@ -87,9 +84,9 @@ public class CustomerController {
         logger.info("Token generated: " + token);
         Map<String, String> result = new HashMap<>();
         result.put("token", token);
-        if(customerUserDetails.getCustomer().getShoppingCart() != null){
+        if (customerUserDetails.getCustomer().getShoppingCart() != null) {
             result.put("cartID", String.valueOf(customerUserDetails.getCustomer().getShoppingCart().getCartId()));
-        }else{
+        } else {
             result.put("cartID", null);
         }
         result.put("customerID", String.valueOf(customerUserDetails.getCustomer().getCustomerId()));
@@ -103,15 +100,15 @@ public class CustomerController {
     public ResponseEntity<String> updateCartId(@RequestParam Long customerId, @RequestParam Long cartId) {
         try {
             // Fetch the customer entity from the database
-             Optional<Customer> customer = customerService.getCustomer(customerId);
-            ShoppingCartDTO shoppingCart = shoppingCartService.getShoppingCartById(cartId);
+            Optional<Customer> customer = customerService.getCustomer(customerId);
+            ShoppingCart shoppingCart = shoppingCartService.getShoppingCartById(cartId);
 
             if (customer.isPresent()) {
                 // Update the cartId in the customer entity
                 customer.get().setShoppingCart(shoppingCart);
 
                 // Save the updated customer entity
-                customerService.saveCustomer(customer);
+                customerService.saveCustomer(customer.get());
 
                 return ResponseEntity.ok("CartId updated successfully");
             } else {
@@ -121,7 +118,4 @@ public class CustomerController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating cartId");
         }
     }
-
-    }
-
 }
