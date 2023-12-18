@@ -6,14 +6,10 @@ import at.wst.online_webshop.entities.Customer;
 import at.wst.online_webshop.exception_handlers.*;
 import at.wst.online_webshop.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +30,10 @@ public class CustomerService {
 
     public List<Customer> getAllCustomer() {
         return customerRepository.findAll();
+    }
+
+    public Optional<Customer> getCustomer(Long customerId) {
+        return customerRepository.findById(customerId);
     }
 
     @Transactional

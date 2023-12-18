@@ -55,6 +55,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests(req -> req
+                        .antMatchers("/api/shopping-cart/**").permitAll()
                         .antMatchers("/api/customers/register").permitAll()
                         .antMatchers("/api/customers/login").permitAll()
                         .antMatchers(HttpMethod.GET, "/**").permitAll()

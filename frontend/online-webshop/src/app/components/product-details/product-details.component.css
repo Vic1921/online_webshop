@@ -100,16 +100,17 @@
 }
 
 .search-option {
-    position: absolute;
-    background-color: #000;
+    position: relative;
+    background-color: #1e1e1e;
     overflow: hidden;
     align-items: center;
     color: #fff;
     width: 200px;
     height: 200px;
+    margin-top: 100px;
     border-radius: 49% 51% 50% 50% / 68% 69% 31% 32%;
     left: 30%;
-    bottom: -250px;
+    bottom: -50px;
     transition: all 0.5s;
     cursor: pointer
 }

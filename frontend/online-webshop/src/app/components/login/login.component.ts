@@ -21,6 +21,7 @@ export class LoginComponent {
   });
 
   loading = false;
+  errorText: string | null = null;
 
 
   constructor(private loginService: LoginService, private router: Router) { }
@@ -28,6 +29,7 @@ export class LoginComponent {
   onSubmit(): void {
     if (this.loginForm.valid && !this.loading) {
       this.loading = true;
+      this.errorText = null;
 
       const loginData = this.loginForm.value;
 
@@ -40,10 +42,15 @@ export class LoginComponent {
         },
         error => {
           console.error('Login failed', error);
+          this.errorText = 'Login failed. Please check your email and password.';
         }
       ).add(() => {
         this.loading = false; // Reset loading indicator regardless of success or failure
       });
     }
+  }
+
+  navigateToSignup(){
+    this.router.navigate(['/signup']);
   }
 }

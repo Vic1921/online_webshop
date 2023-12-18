@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { FooterComponent } from '../footer/footer.component';
 import { HeaderComponent } from '../header/header.component';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -21,7 +22,7 @@ export class SignupComponent {
     address: new FormControl('', Validators.required),
   });
 
-  signupService = inject(SignupService);
+  constructor(private signupService : SignupService, private router : Router){}
 
   onSubmit(): void {
     if (this.signupForm.valid) {
@@ -31,6 +32,7 @@ export class SignupComponent {
         response => {
           console.log('Register successful!', response);
           // Redirect to login page or any other page
+          this.router.navigate(['']);
         },
         error => {
           console.error('Register failed', error);

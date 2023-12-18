@@ -4,6 +4,7 @@ import at.wst.online_webshop.convertors.CustomerConvertor;
 import at.wst.online_webshop.convertors.ShoppingCartConvertor;
 import at.wst.online_webshop.dtos.CustomerDTO;
 import at.wst.online_webshop.dtos.OrderDTO;
+import at.wst.online_webshop.dtos.ProductDTO;
 import at.wst.online_webshop.dtos.ShoppingCartDTO;
 import at.wst.online_webshop.entities.Order;
 import at.wst.online_webshop.entities.Product;
@@ -18,6 +19,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static at.wst.online_webshop.convertors.OrderConvertor.convertToDto;
 import static at.wst.online_webshop.convertors.OrderConvertor.convertToEntity;
@@ -70,12 +73,14 @@ public class OrderService {
 
         validateCart(shoppingCartDTO);
         validateOrder(paymentMethod, shippingDetails);
+        List<Long> productIds = shoppingCartDTO.getProductDTOS().stream().map(ProductDTO::getProductId).collect(Collectors.toList());
 
-        var products = productRepository.findAllById(shoppingCartDTO.getProductIds());
+        var products = productRepository.findAllById(productIds);
         double totalAmount = products.stream().mapToDouble(Product::getProductPrice).sum();
 
         // create OrderDTO
-        OrderDTO orderDTO = new OrderDTO(LocalDateTime.now().toString(), totalAmount, customerId, shoppingCartDTO.getProductIds());
+        OrderDTO orderDTO = new OrderDTO(LocalDateTime.now().toString(), totalAmount, customerId,
+                productIds);
 
         // Update product quantities
         products.forEach(product -> {
@@ -92,7 +97,9 @@ public class OrderService {
     }
 
     private void validateCart(ShoppingCartDTO shoppingCartDTO) {
-        productRepository.findAllById(shoppingCartDTO.getProductIds()).forEach(product -> {
+        List<Long> productIds = shoppingCartDTO.getProductDTOS().stream().map(ProductDTO::getProductId).collect(Collectors.toList());
+
+        productRepository.findAllById(productIds).forEach(product -> {
             if (product.getProductQuantity() <= 0 ) {
                 throw new FailedOrderException("Not enough products in stock.");
             }

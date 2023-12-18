@@ -1,5 +1,6 @@
 package at.wst.online_webshop.dtos;
 
+import at.wst.online_webshop.entities.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,9 +17,9 @@ public class ShoppingCartDTO {
         private Long cartId;
         private Double totalPrice;
         private Long customerId;
-        private List<Long> productIds;
+        private List<ProductDTO> productDTOS;
 
-        public void addProduct(Long productId){
-            this.productIds.add(productId);
+        public void addProduct(ProductDTO product){
+            this.productDTOS.add(product);
         }
 }

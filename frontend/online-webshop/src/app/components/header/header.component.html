@@ -11,7 +11,7 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                         <li class="nav-item"><a class="nav-link active" aria-current="page"
-                                href="https://wwwlab.cs.univie.ac.at/~vua36/index.php">Home</a></li>
+                                href="#!">Home</a></li>
                         <li class="nav-item"><a class="nav-link" style="color:white;" href="#!">About</a></li>
                         <li class="nav-item"><a class="nav-link" style="color:white;" href="#!">Contact</a></li>
                         <li class="nav-item"><a class="nav-link" style="color:white;" href='/products'>Products</a></li>
@@ -21,11 +21,12 @@
                     <div *ngIf="loginService.isLoggedIn(); else btnGroup">
                         <div class="btn-group">
                             <button class="button" (click)="navigateToSignup()">Mein Account</button>
+                            <button class="button" (click)="logout()">Logout</button>
                             <button class="button" (click)="navigateToSignup()">Meine Bestellungen</button>
-                            <button class="button" onclick="redirectShoppingCart()">
+                            <button class="button" (click)="navigateToShoppingCart()">
 
 
-                                <button type="button" onclick="redirectShoppingCart()" class="button">
+                                <button type="button" (click)="navigateToShoppingCart()" class="button">
                                     Einkaufswagen
                                     <span class="badge badge-dark" style="background-color: rgba(0,0,0,.5);"></span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -42,9 +43,9 @@
                         <div class="btn-group">
                             <button class="button" (click)="navigateToLogin()">Login</button>
                             <button class="button" (click)="navigateToSignup()">Account erstellen</button>
-                            <button class="button" onclick="redirectShoppingCart()">
+                            <button class="button" (click)="navigateToShoppingCart()">
 
-                                <button type="button" onclick="redirectShoppingCart()" class="button">
+                                <button type="button" (click)="navigateToShoppingCart()" class="button">
                                     Einkaufswagen
                                     <span class="badge badge-dark" style="background-color: rgba(0,0,0,.5);"></span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -65,7 +66,15 @@
                 <div class="col-lg-6">
                     <div class="text-center my-5">
                         <h1 class="display-5 fw-bolder text-white mb-2">SKITOUREN WELT</h1>
-                        <p class="lead text-white mb-4">Alles was du für deine Skitour brauchst</p>
+                        <div *ngIf="!loginService.isLoggedIn(); else welcomeMessage">
+                            <p class="lead text-white mb-4">Alles was du für deine Skitour brauchst</p>
+                        </div>
+
+                            <ng-template #welcomeMessage>
+                                <p class="lead text-white mb-4">Wilkommen {{loginService.getCustomerID}} Alles was du für deine Skitour brauchst</p>
+
+                            </ng-template>
+
                         <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
                             <a class="btn btn-outline-light btn-lg px-4" href="#features">Skitouren Welt entdecken</a>
                         </div>

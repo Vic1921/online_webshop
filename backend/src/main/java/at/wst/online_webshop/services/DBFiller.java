@@ -61,7 +61,7 @@ public class DBFiller {
 
     @Transactional
     public void clearAndFillDB() {
-        clearDB();
+        //clearDB();
         fillCustomers();
         fillVendors();
         fillProducts();

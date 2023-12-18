@@ -31,4 +31,8 @@ export class HeaderComponent {
   navigateToShoppingCart(){
     this.router.navigate(['/shoppingcart']);
   }
+
+  logout(){
+    this.loginService.logout();
+  }
 }

@@ -5,7 +5,9 @@ import at.wst.online_webshop.convertors.ProductConvertor;
 import at.wst.online_webshop.convertors.ShoppingCartConvertor;
 import at.wst.online_webshop.dtos.ProductDTO;
 import at.wst.online_webshop.dtos.ShoppingCartDTO;
+import at.wst.online_webshop.entities.Customer;
 import at.wst.online_webshop.entities.ShoppingCart;
+import at.wst.online_webshop.exception_handlers.CustomerNotFoundException;
 import at.wst.online_webshop.exception_handlers.FailedOrderException;
 import at.wst.online_webshop.exception_handlers.ShoppingCartNotFoundException;
 import at.wst.online_webshop.repositories.CustomerRepository;
@@ -62,7 +64,7 @@ public class ShoppingCartService {
         productDTO.setProductQuantity(productDTO.getProductQuantity() - 1);
 
         // Add product to shopping cart
-        shoppingCartDTO.addProduct(productId);
+        shoppingCartDTO.addProduct(productDTO);
 
         // Update product
         shoppingCartDTO = updateShoppingCart(shoppingCartDTO);
