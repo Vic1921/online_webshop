@@ -1,5 +1,5 @@
-backend/target/*
-backend/.mvn/timing.properties
-backend/.mvn/wrapper/maven-wrapper.jar
+/backend/target/*
+/backend/.mvn/timing.properties
+/backend/.mvn/wrapper/maven-wrapper.jar
 
-backend/.idea/*
+/backend/.idea/*
