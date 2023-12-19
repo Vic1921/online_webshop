@@ -1,5 +1,6 @@
 package at.wst.online_webshop.controller;
 
+import at.wst.online_webshop.dtos.CartItemDTO;
 import at.wst.online_webshop.dtos.ProductDTO;
 import at.wst.online_webshop.dtos.ShoppingCartDTO;
 import at.wst.online_webshop.dtos.requests.ShoppingCartItemRequest;
@@ -28,11 +29,10 @@ public class ShoppingCartController {
     }
 
     // Get all items from the shopping cart
-    //redundant code same as getShoppingCartId
     @GetMapping("/get-items")
-    public ResponseEntity<List<ProductDTO>> getItemsFromShoppingCart(@RequestParam Long id) {
-        ShoppingCartDTO shoppingCartDTO = shoppingCartService.getShoppingCartDTOById(id);
-        List<ProductDTO> productsFromShoppingCart = shoppingCartDTO.getProductDTOS();
+    public ResponseEntity<List<CartItemDTO>> getItemsFromShoppingCart(@RequestParam Long id) {
+        ShoppingCartDTO shoppingCartDTO = shoppingCartService.getShoppingCartById(id);
+        List<CartItemDTO> productsFromShoppingCart = shoppingCartDTO.getCartItemDTOS();
         return ResponseEntity.ok(productsFromShoppingCart);
     }
 
@@ -46,7 +46,7 @@ public class ShoppingCartController {
     // Get a shopping cart by its ID
     @GetMapping("/get")
     public ResponseEntity<ShoppingCartDTO> getShoppingCartById(@RequestParam Long id) {
-        ShoppingCartDTO shoppingCart = shoppingCartService.getShoppingCartDTOById(id);
+        ShoppingCartDTO shoppingCart = shoppingCartService.getShoppingCartById(id);
         return ResponseEntity.ok(shoppingCart);
     }
 
