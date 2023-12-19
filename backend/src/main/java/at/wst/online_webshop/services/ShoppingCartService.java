@@ -1,9 +1,11 @@
 package at.wst.online_webshop.services;
 
 import at.wst.online_webshop.controller.CustomerController;
+import at.wst.online_webshop.convertors.CartItemConverter;
 import at.wst.online_webshop.convertors.CustomerConvertor;
 import at.wst.online_webshop.convertors.ProductConvertor;
 import at.wst.online_webshop.convertors.ShoppingCartConvertor;
+import at.wst.online_webshop.dtos.CartItemDTO;
 import at.wst.online_webshop.dtos.CustomerDTO;
 import at.wst.online_webshop.dtos.ProductDTO;
 import at.wst.online_webshop.dtos.ShoppingCartDTO;
@@ -26,6 +28,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 import static at.wst.online_webshop.convertors.ShoppingCartConvertor.convertToDto;
@@ -61,7 +64,11 @@ public class ShoppingCartService {
 
     public ShoppingCartDTO getShoppingCartById(Long id) {
         ShoppingCart shoppingCart = shoppingCartRepository.findById(id).orElseThrow(() -> new ShoppingCartNotFoundException(id));
-        return convertToDto(shoppingCart);
+        ShoppingCartDTO shoppingCartDTO = convertToDto(shoppingCart);
+        List<CartItemDTO> cartItemDTOList = CartItemConverter.convertToDtoList(shoppingCart.getCartItems());
+        shoppingCartDTO.setCartItemDTOS(cartItemDTOList);
+        logger.info("DTO IS BEFORE: " + shoppingCartDTO.toString());
+        return shoppingCartDTO;
     }
 
     @Transactional
@@ -103,7 +110,7 @@ public class ShoppingCartService {
         }
 
         //creating new Cartitem
-        updateOrCreateCartItem(shoppingCart, product, quantityToAdd);
+        CartItem cartItem = updateOrCreateCartItem(shoppingCart, product, quantityToAdd);
 
         //update product and shopping cart
         productRepository.save(product);
@@ -111,14 +118,20 @@ public class ShoppingCartService {
 
         // Convert entities to DTOs
         ShoppingCartDTO shoppingCartDTO = ShoppingCartConvertor.convertToDto(shoppingCart);
+        shoppingCartDTO.setCustomerId(customerId);
         shoppingCartDTO.setTotalPrice(updatePriceShoppingCartDTO(shoppingCart).doubleValue());
         CustomerDTO customerDTO = CustomerConvertor.convertToDto(customer);
         ProductDTO productDTO = ProductConvertor.convertToDto(product);
 
+        // Create a CartItemDTO based on the product and quantity
+       CartItemDTO cartItemDTO = CartItemConverter.convertToDto(cartItem);
+
+        shoppingCartDTO.addProduct(cartItemDTO);
         return shoppingCartDTO;
     }
 
-    private void updateOrCreateCartItem(ShoppingCart shoppingCart, Product product, int quantityToAdd){
+    @Transactional
+    public CartItem updateOrCreateCartItem(ShoppingCart shoppingCart, Product product, int quantityToAdd){
         Optional<CartItem> existingCartItem = shoppingCart.getCartItems().stream()
                 .filter(cartItem -> cartItem.getProduct().equals(product))
                 .findFirst();
@@ -134,6 +147,7 @@ public class ShoppingCartService {
 
             // Save the updated CartItem
             cartItemRepository.save(cartItemToUpdate);
+            return cartItemToUpdate;
         } else {
             // Create a new CartItem
             CartItem newCartItem = new CartItem(shoppingCart, product, quantityToAdd,
@@ -144,6 +158,7 @@ public class ShoppingCartService {
 
             // Save the new CartItem
             cartItemRepository.save(newCartItem);
+            return newCartItem;
         }
     }
 

@@ -24,7 +24,7 @@ public class ShoppingCart {
     @OneToOne(mappedBy = "shoppingCart")
     private Customer customer;
 
-    @OneToMany(mappedBy = "shoppingCart")
+    @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL)
     private List<CartItem> cartItems;
 
     public ShoppingCart(Customer customer, List<CartItem> cartItems) {
