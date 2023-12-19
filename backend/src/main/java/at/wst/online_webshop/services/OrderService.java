@@ -27,19 +27,18 @@ import static at.wst.online_webshop.convertors.OrderConvertor.convertToEntity;
 
 @Service
 public class OrderService {
-
-    @Autowired
     private OrderRepository orderRepository;
-
-    @Autowired
     private ShoppingCartRepository shoppingCartRepository;
-
-    @Autowired
     private CustomerRepository customerRepository;
-
-    @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    public OrderService(OrderRepository orderRepository, ShoppingCartRepository shoppingCartRepository, CustomerRepository customerRepository, ProductRepository productRepository) {
+        this.orderRepository = orderRepository;
+        this.shoppingCartRepository = shoppingCartRepository;
+        this.customerRepository = customerRepository;
+        this.productRepository = productRepository;
+    }
 
     public OrderDTO createOrder(OrderDTO orderDTO) {
         Order order = convertToEntity(orderDTO);
@@ -62,7 +61,6 @@ public class OrderService {
         orderRepository.deleteById(id);
     }
 
-    // TODO - Test this method
     @Transactional
     public OrderDTO placeOrder(Long customerId, Long shoppingCartId, String paymentMethod, String shippingDetails) {
         CustomerConvertor.convertToDto(customerRepository.findById(customerId)
@@ -72,6 +70,7 @@ public class OrderService {
 
         validateCart(shoppingCartDTO);
         validateOrder(paymentMethod, shippingDetails);
+
         List<Long> productIds = shoppingCartDTO.getProductDTOS().stream().map(ProductDTO::getProductId).collect(Collectors.toList());
 
         var products = productRepository.findAllById(productIds);

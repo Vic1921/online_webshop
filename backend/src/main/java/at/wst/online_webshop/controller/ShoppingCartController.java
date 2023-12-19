@@ -28,7 +28,6 @@ public class ShoppingCartController {
     }
 
     // Get all items from the shopping cart
-    //redundant code same as getShoppingCartId
     @GetMapping("/get-items")
     public ResponseEntity<List<ProductDTO>> getItemsFromShoppingCart(@RequestParam Long id) {
         ShoppingCartDTO shoppingCartDTO = shoppingCartService.getShoppingCartDTOById(id);

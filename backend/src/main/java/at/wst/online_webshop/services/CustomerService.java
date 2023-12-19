@@ -18,9 +18,7 @@ import static at.wst.online_webshop.convertors.CustomerConvertor.convertToEntity
 
 @Service
 public class CustomerService {
-
     private final CustomerRepository customerRepository;
-
     private final PasswordEncoder passwordEncoder;
 
     @Autowired

@@ -13,8 +13,9 @@ import lombok.Setter;
 public class AuthenticationRequest {
     @NotBlank(message = "Email cannot be empty")
     @Email(message = "Invalid email format")
-    private String password;
+    private String email;
 
     @NotBlank(message = "Password cannot be empty")
-    private String email;
+    private String password;
+
 }

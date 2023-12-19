@@ -19,15 +19,16 @@ import static at.wst.online_webshop.convertors.ShoppingCartConvertor.convertToEn
 
 @Service
 public class ShoppingCartService {
-
-    @Autowired
     private ShoppingCartRepository shoppingCartRepository;
-
-    @Autowired
     private CustomerRepository customerRepository;
+    private ProductRepository productRepository;
 
     @Autowired
-    private ProductRepository productRepository;
+    public ShoppingCartService(ShoppingCartRepository shoppingCartRepository, CustomerRepository customerRepository, ProductRepository productRepository) {
+        this.shoppingCartRepository = shoppingCartRepository;
+        this.customerRepository = customerRepository;
+        this.productRepository = productRepository;
+    }
 
     public ShoppingCartDTO createShoppingCart(ShoppingCartDTO shoppingCartDTO) {
         ShoppingCart shoppingCart = convertToEntity(shoppingCartDTO);
