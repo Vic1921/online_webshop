@@ -10,6 +10,7 @@ import at.wst.online_webshop.entities.Customer;
 import at.wst.online_webshop.entities.Order;
 import at.wst.online_webshop.entities.ShoppingCart;
 import at.wst.online_webshop.exception_handlers.*;
+import at.wst.online_webshop.exceptions.ShoppingCartNotFoundException;
 import at.wst.online_webshop.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;

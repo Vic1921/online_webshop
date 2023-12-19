@@ -62,8 +62,7 @@ class OrderServiceTest {
         ShoppingCart shoppingCart = new ShoppingCart();
         shoppingCart.setCartId(1L);
         shoppingCart.setCustomer(new Customer());
-        shoppingCart.setProducts(new ArrayList<>());
-        shoppingCart.setTotalPrice(10.0d);
+        shoppingCart.setCartItems(new ArrayList<>());
 
         Customer recommendedBy2 = new Customer();
         recommendedBy2.setAddress("42 Main St");
@@ -90,8 +89,7 @@ class OrderServiceTest {
         ShoppingCart shoppingCart2 = new ShoppingCart();
         shoppingCart2.setCartId(1L);
         shoppingCart2.setCustomer(customer);
-        shoppingCart2.setProducts(new ArrayList<>());
-        shoppingCart2.setTotalPrice(10.0d);
+        shoppingCart2.setCartItems(new ArrayList<>());
 
         Customer recommendedBy3 = new Customer();
         recommendedBy3.setAddress("42 Main St");
@@ -118,8 +116,7 @@ class OrderServiceTest {
         ShoppingCart shoppingCart3 = new ShoppingCart();
         shoppingCart3.setCartId(1L);
         shoppingCart3.setCustomer(new Customer());
-        shoppingCart3.setProducts(new ArrayList<>());
-        shoppingCart3.setTotalPrice(10.0d);
+        shoppingCart3.setCartItems(new ArrayList<>());
 
         Customer customer2 = new Customer();
         customer2.setAddress("42 Main St");
@@ -135,8 +132,7 @@ class OrderServiceTest {
         ShoppingCart shoppingCart4 = new ShoppingCart();
         shoppingCart4.setCartId(1L);
         shoppingCart4.setCustomer(customer2);
-        shoppingCart4.setProducts(new ArrayList<>());
-        shoppingCart4.setTotalPrice(10.0d);
+        shoppingCart4.setCartItems(new ArrayList<>());
 
         Customer customer3 = new Customer();
         customer3.setAddress("42 Main St");
@@ -166,8 +162,7 @@ class OrderServiceTest {
         ShoppingCart shoppingCart5 = new ShoppingCart();
         shoppingCart5.setCartId(1L);
         shoppingCart5.setCustomer(new Customer());
-        shoppingCart5.setProducts(new ArrayList<>());
-        shoppingCart5.setTotalPrice(10.0d);
+        shoppingCart5.setCartItems(new ArrayList<>());
 
         Customer recommendedBy6 = new Customer();
         recommendedBy6.setAddress("42 Main St");
@@ -194,8 +189,7 @@ class OrderServiceTest {
         ShoppingCart shoppingCart6 = new ShoppingCart();
         shoppingCart6.setCartId(1L);
         shoppingCart6.setCustomer(customer4);
-        shoppingCart6.setProducts(new ArrayList<>());
-        shoppingCart6.setTotalPrice(10.0d);
+        shoppingCart6.setCartItems(new ArrayList<>());
 
         Customer customer5 = new Customer();
         customer5.setAddress("42 Main St");
@@ -211,8 +205,7 @@ class OrderServiceTest {
         ShoppingCart shoppingCart7 = new ShoppingCart();
         shoppingCart7.setCartId(1L);
         shoppingCart7.setCustomer(customer5);
-        shoppingCart7.setProducts(new ArrayList<>());
-        shoppingCart7.setTotalPrice(10.0d);
+        shoppingCart7.setCartItems(new ArrayList<>());
         Optional<ShoppingCart> ofResult2 = Optional.of(shoppingCart7);
         when(shoppingCartRepository.findById(Mockito.<Long>any())).thenReturn(ofResult2);
 
@@ -245,8 +238,7 @@ class OrderServiceTest {
         ShoppingCart shoppingCart = new ShoppingCart();
         shoppingCart.setCartId(1L);
         shoppingCart.setCustomer(new Customer());
-        shoppingCart.setProducts(new ArrayList<>());
-        shoppingCart.setTotalPrice(10.0d);
+        shoppingCart.setCartItems(new ArrayList<>());
 
         Customer recommendedBy2 = new Customer();
         recommendedBy2.setAddress("42 Main St");
@@ -273,8 +265,7 @@ class OrderServiceTest {
         ShoppingCart shoppingCart2 = new ShoppingCart();
         shoppingCart2.setCartId(1L);
         shoppingCart2.setCustomer(customer);
-        shoppingCart2.setProducts(new ArrayList<>());
-        shoppingCart2.setTotalPrice(10.0d);
+        shoppingCart2.setCartItems(new ArrayList<>());
 
         Customer recommendedBy3 = new Customer();
         recommendedBy3.setAddress("42 Main St");
@@ -301,8 +292,7 @@ class OrderServiceTest {
         ShoppingCart shoppingCart3 = new ShoppingCart();
         shoppingCart3.setCartId(1L);
         shoppingCart3.setCustomer(new Customer());
-        shoppingCart3.setProducts(new ArrayList<>());
-        shoppingCart3.setTotalPrice(10.0d);
+        shoppingCart3.setCartItems(new ArrayList<>());
 
         Customer customer2 = new Customer();
         customer2.setAddress("42 Main St");
@@ -318,8 +308,7 @@ class OrderServiceTest {
         ShoppingCart shoppingCart4 = new ShoppingCart();
         shoppingCart4.setCartId(1L);
         shoppingCart4.setCustomer(customer2);
-        shoppingCart4.setProducts(new ArrayList<>());
-        shoppingCart4.setTotalPrice(10.0d);
+        shoppingCart4.setCartItems(new ArrayList<>());
 
         Customer customer3 = new Customer();
         customer3.setAddress("42 Main St");
@@ -350,8 +339,7 @@ class OrderServiceTest {
         ShoppingCart shoppingCart5 = new ShoppingCart();
         shoppingCart5.setCartId(1L);
         shoppingCart5.setCustomer(new Customer());
-        shoppingCart5.setProducts(new ArrayList<>());
-        shoppingCart5.setTotalPrice(10.0d);
+        shoppingCart5.setCartItems(new ArrayList<>());
 
         Customer recommendedBy6 = new Customer();
         recommendedBy6.setAddress("42 Main St");
@@ -378,8 +366,7 @@ class OrderServiceTest {
         ShoppingCart shoppingCart6 = new ShoppingCart();
         shoppingCart6.setCartId(1L);
         shoppingCart6.setCustomer(customer4);
-        shoppingCart6.setProducts(new ArrayList<>());
-        shoppingCart6.setTotalPrice(10.0d);
+        shoppingCart6.setCartItems(new ArrayList<>());
 
         Customer customer5 = new Customer();
         customer5.setAddress("42 Main St");
@@ -395,8 +382,7 @@ class OrderServiceTest {
         ShoppingCart shoppingCart7 = new ShoppingCart();
         shoppingCart7.setCartId(1L);
         shoppingCart7.setCustomer(customer5);
-        shoppingCart7.setProducts(new ArrayList<>());
-        shoppingCart7.setTotalPrice(10.0d);
+        shoppingCart7.setCartItems(new ArrayList<>());
         Optional<ShoppingCart> ofResult2 = Optional.of(shoppingCart7);
         when(shoppingCartRepository.findById(Mockito.<Long>any())).thenReturn(ofResult2);
 
