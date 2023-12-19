@@ -55,7 +55,7 @@ export class ProductDetailsComponent {
     if (this.loginService.isLoggedIn()) {
       const customerId = this.loginService.getCustomerID();
       // Check if the customer has an existing cart
-      const cartId: number | null = this.loginService.getCartID();
+      let cartId: number | null = this.loginService.getCartID();
       if(cartId == null) {
         console.info("Cart id should be null" + cartId);
       }
@@ -76,11 +76,12 @@ export class ProductDetailsComponent {
       } else {
         // If the customer does not have a cart, create a new cart and add the product
 
-        this.shoppingCartService.createCart().subscribe(
+        this.shoppingCartService.createCart(this.loginService.getCustomerID()).subscribe(
           (newCart) => {
             this.customerService.updateCart(customerId, newCart.cartId).subscribe(
            
               (ret) =>{
+                this.loginService.setCartID(newCart.cartId);
                 console.log("Sucessfully updated the Customer with the new Cart ID");
               },
               (error: any) => {
@@ -104,6 +105,7 @@ export class ProductDetailsComponent {
             
           },
           (error: any) => {
+            console.log(this.loginService.getCustomerID());
             // Handle the error response when creating a new cart
             console.error('Error creating a new cart:', error);
           }

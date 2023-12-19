@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ShoppingCart } from '../shoppingcart';
 import { Product } from '../product';
+import { Cartitem } from '../cartitem';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +16,8 @@ export class ShoppingcartService {
     return this.http.get<ShoppingCart>(`${this.apiUrl}/api/shopping-cart/get?id=${cartID}`);
   }
 
-  createCart() : Observable<ShoppingCart>{
-    return this.http.post<ShoppingCart>(`${this.apiUrl}/api/shopping-cart/create`, {});
+  createCart(customerId : number) : Observable<ShoppingCart>{
+    return this.http.post<ShoppingCart>(`${this.apiUrl}/api/shopping-cart/create`, customerId);
   }
 
   updateCart(shoppingCart: ShoppingCart): Observable<ShoppingCart> {
@@ -33,9 +34,9 @@ export class ShoppingcartService {
     return this.http.post<ShoppingCart>(`${this.apiUrl}/api/shopping-cart/add-item/`, request);
   }
 
-  getShoppingCartItems(cartID : number) : Observable<Product[]>{
+  getShoppingCartItems(cartID : number) : Observable<Cartitem[]>{
     const url = `${this.apiUrl}/api/shopping-cart/get-items?id=${cartID}`;
-    return this.http.get<Product[]>(url);
+    return this.http.get<Cartitem[]>(url);
   }
 
   deleteCart(cartID : number) : Observable<any>{

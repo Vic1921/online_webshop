@@ -59,6 +59,11 @@ export class LoginService {
     return customerCartID;
 }
 
+setCartID(cartID: number | null): void {
+  const cartIDString = cartID !== null ? cartID.toString() : "null";
+  localStorage.setItem(this.cartID, cartIDString);
+}
+
   isLoggedIn(): boolean{
     return !!this.getToken();
   }

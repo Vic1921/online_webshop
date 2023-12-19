@@ -27,4 +27,20 @@ public class ShoppingCartDTO {
                 }
             this.cartItemDTOS.add(cartItemDTO);
         }
+
+        public ShoppingCartDTO(Long customerId){
+                this.customerId = customerId;
+                this.cartItemDTOS = new ArrayList<>();
+                this.totalPrice = 0.0;
+        }
+
+        @Override
+        public String toString() {
+                return "ShoppingCartDTO{" +
+                        "cartId=" + cartId +
+                        ", totalPrice=" + totalPrice +
+                        ", customerId=" + customerId +
+                        ", cartItemDTOS=" + cartItemDTOS +
+                        '}';
+        }
 }

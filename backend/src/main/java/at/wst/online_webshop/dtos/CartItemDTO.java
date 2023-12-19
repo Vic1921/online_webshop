@@ -22,4 +22,15 @@ public class CartItemDTO {
     private String productName;
     private int cartItemQuantity;
     private BigDecimal cartItemSubprice;
+
+    @Override
+    public String toString() {
+        return "CartItemDTO{" +
+                "cartItemId=" + cartItemId +
+                ", productId=" + productId +
+                ", productName='" + productName + '\'' +
+                ", cartItemQuantity=" + cartItemQuantity +
+                ", cartItemSubprice=" + cartItemSubprice +
+                '}';
+    }
 }
