@@ -36,7 +36,7 @@ public class Customer {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cart_id")
     private ShoppingCart shoppingCart;
 
@@ -55,5 +55,20 @@ public class Customer {
         this.email = email;
         this.password = password;
         this.address = address;
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "customerId=" + customerId +
+                ", email='" + email + '\'' +
+                ", address='" + address + '\'' +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", shoppingCart=" + shoppingCart +
+                ", reviews=" + reviews +
+                ", orders=" + orders +
+                ", recommendedBy=" + recommendedBy +
+                '}';
     }
 }

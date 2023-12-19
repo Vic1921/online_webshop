@@ -1,5 +1,6 @@
 package at.wst.online_webshop.services;
 
+import at.wst.online_webshop.controller.CustomerController;
 import at.wst.online_webshop.convertors.CustomerConvertor;
 import at.wst.online_webshop.convertors.ProductConvertor;
 import at.wst.online_webshop.convertors.ShoppingCartConvertor;
@@ -44,7 +45,6 @@ public class ShoppingCartService {
 
     private static final Logger logger = LoggerFactory.getLogger(ShoppingCartService.class);
 
-    @Autowired
     public ShoppingCartService(ShoppingCartRepository shoppingCartRepository, CustomerRepository customerRepository, ProductRepository productRepository, CartItemRepository cartItemRepository){
         this.productRepository = productRepository;
         this.shoppingCartRepository = shoppingCartRepository;

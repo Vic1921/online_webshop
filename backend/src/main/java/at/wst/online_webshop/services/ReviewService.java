@@ -27,7 +27,6 @@ public class ReviewService {
     private ProductRepository productRepository;
     private OrderRepository orderRepository;
 
-    @Autowired
     public ReviewService(ReviewRepository reviewRepository, CustomerRepository customerRepository, ProductRepository productRepository, OrderRepository orderRepository) {
         this.reviewRepository = reviewRepository;
         this.customerRepository = customerRepository;

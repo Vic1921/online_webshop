@@ -30,7 +30,6 @@ public class OrderService {
     private CustomerRepository customerRepository;
     private ProductRepository productRepository;
 
-    @Autowired
     public OrderService(OrderRepository orderRepository, ShoppingCartRepository shoppingCartRepository, CustomerRepository customerRepository, ProductRepository productRepository) {
         this.orderRepository = orderRepository;
         this.shoppingCartRepository = shoppingCartRepository;
@@ -68,7 +67,6 @@ public class OrderService {
 
         validateCart(shoppingCartDTO);
         validateOrder(paymentMethod, shippingDetails);
-
         List<Long> productIds = shoppingCartDTO.getCartItemDTOS().stream().map(CartItemDTO::getProductId).collect(Collectors.toList());
 
         var products = productRepository.findAllById(productIds);

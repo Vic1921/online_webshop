@@ -15,11 +15,11 @@ export class LoginService {
 
   login(credentials: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/api/customers/login`, credentials).pipe(
-      tap((response: { token: string; customer: string; cartID: string}) => {
+      tap((response: { token: string; customerID: string; cartID: string}) => {
         if (response.token) {
           // Store the token and customer information in local storage
           localStorage.setItem(this.tokenKey, response.token);
-          localStorage.setItem(this.customerKey, JSON.stringify(response.customer));
+          localStorage.setItem(this.customerKey, response.customerID);
           localStorage.setItem(this.cartID, response.cartID);
         }
       }),
@@ -36,7 +36,7 @@ export class LoginService {
 
   getCustomerID(): number {
     const customerString = localStorage.getItem(this.customerKey);
-    const customerId = customerString ? parseInt(customerString, 10) : 0; 
+    const customerId = customerString ? parseInt(customerString, 10) : 0;
     return customerId
   }
 
@@ -55,7 +55,7 @@ export class LoginService {
       console.log('Returning null', custerCartString);
       return null;
     }
-    const customerCartID = custerCartString ? parseInt(custerCartString, 10) : null; 
+    const customerCartID = custerCartString ? parseInt(custerCartString, 10) : null;
     return customerCartID;
 }
 

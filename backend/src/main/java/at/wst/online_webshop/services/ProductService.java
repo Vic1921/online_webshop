@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 public class ProductService {
     private final ProductRepository productRepository;
 
-    @Autowired
     public ProductService(ProductRepository productRepository){
         this.productRepository = productRepository;
     }

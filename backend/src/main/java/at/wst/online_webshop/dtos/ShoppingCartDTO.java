@@ -25,6 +25,6 @@ public class ShoppingCartDTO {
                 if(cartItemDTOS == null){
                         cartItemDTOS = new ArrayList<CartItemDTO>();
                 }
-                this.cartItemDTOS.add(cartItemDTO);
+            this.cartItemDTOS.add(cartItemDTO);
         }
 }

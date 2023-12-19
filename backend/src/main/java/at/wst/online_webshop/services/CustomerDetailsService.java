@@ -19,7 +19,7 @@ import java.util.Optional;
 public class CustomerDetailsService implements UserDetailsService {
     private CustomerRepository customerRepository;
 
-    @Autowired
+
     public CustomerDetailsService(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
     }

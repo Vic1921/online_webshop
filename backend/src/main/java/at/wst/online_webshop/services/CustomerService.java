@@ -31,7 +31,6 @@ public class CustomerService {
 
     private final PasswordEncoder passwordEncoder;
 
-    @Autowired
     public CustomerService(CustomerRepository customerRepository, PasswordEncoder passwordEncoder, ShoppingCartService shoppingCartService) {
         this.customerRepository = customerRepository;
         this.passwordEncoder = passwordEncoder;
@@ -54,7 +53,7 @@ public class CustomerService {
             Customer customer = optionalCustomer.get();
 
             // Assuming you have a method to fetch the shopping cart by cartId
-            ShoppingCartDTO shoppingCartDTO = shoppingCartService.getShoppingCartById(cartId);
+           ShoppingCartDTO shoppingCartDTO = shoppingCartService.getShoppingCartById(cartId);
 
             if (shoppingCartDTO != null) {
                 // Update the customer entity with the new shopping cart

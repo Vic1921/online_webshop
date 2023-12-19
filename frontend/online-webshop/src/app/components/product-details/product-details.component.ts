@@ -7,6 +7,7 @@ import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
 import { LoginService } from '../../services/login.service';
 import { ShoppingcartService } from '../../services/shoppingcart.service';
+import { CustomerService } from '../../customer.service';
 
 @Component({
   selector: 'app-product-details',
@@ -18,7 +19,7 @@ import { ShoppingcartService } from '../../services/shoppingcart.service';
 export class ProductDetailsComponent {
   product: Product | undefined;
 
-  constructor(private route: ActivatedRoute, private productService: ProductService, private loginService: LoginService, private shoppingCartService: ShoppingcartService) {
+  constructor(private route: ActivatedRoute, private productService: ProductService, private loginService: LoginService, private shoppingCartService: ShoppingcartService, private customerService : CustomerService) {
     const productId = Number(this.route.snapshot.paramMap.get('id'));
     console.info(productId);
 
@@ -74,9 +75,22 @@ export class ProductDetailsComponent {
         );
       } else {
         // If the customer does not have a cart, create a new cart and add the product
+
         this.shoppingCartService.createCart().subscribe(
           (newCart) => {
+            this.customerService.updateCart(customerId, newCart.cartId).subscribe(
+           
+              (ret) =>{
+                console.log("Sucessfully updated the Customer with the new Cart ID");
+              },
+              (error: any) => {
+                console.log(newCart.cartId);
+                console.log(customerId);
+                console.error("Couldnt update the Customer with the new ShoppingCart ID: ");
+              }
+            )
             // Now that a new cart is created, add the product to the new cart
+            
             this.shoppingCartService.addToCart(customerId, newCart.cartId, productId).subscribe(
               (shoppingCart) => {
                 // Handle the success response
@@ -87,12 +101,14 @@ export class ProductDetailsComponent {
                 console.error('Error adding product to cart:', error);
               }
             );
+            
           },
           (error: any) => {
             // Handle the error response when creating a new cart
             console.error('Error creating a new cart:', error);
           }
         );
+        
       }
     } else {
       // Handle the case when the user is not logged in (optional)
