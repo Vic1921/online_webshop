@@ -33,7 +33,10 @@ public class Order {
 
     @ManyToMany(mappedBy = "orders")
     private List<Product> products;
-
+/*
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderItem> orderItems;
+*/
     public Order(Date orderDate, double totalPrice, Customer customer, List<Product> products) {
         this.orderDate = orderDate.toString();
         this.orderTotalMount = totalPrice;

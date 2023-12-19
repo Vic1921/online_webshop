@@ -1,8 +1,14 @@
 package at.wst.online_webshop.services;
 
+import at.wst.online_webshop.convertors.OrderConvertor;
+import at.wst.online_webshop.convertors.ShoppingCartConvertor;
 import at.wst.online_webshop.dtos.CustomerDTO;
+import at.wst.online_webshop.dtos.OrderDTO;
+import at.wst.online_webshop.dtos.ShoppingCartDTO;
 import at.wst.online_webshop.dtos.requests.CreatingCustomerRequest;
 import at.wst.online_webshop.entities.Customer;
+import at.wst.online_webshop.entities.Order;
+import at.wst.online_webshop.entities.ShoppingCart;
 import at.wst.online_webshop.exception_handlers.*;
 import at.wst.online_webshop.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,18 +20,22 @@ import java.util.List;
 import java.util.Optional;
 
 import static at.wst.online_webshop.convertors.CustomerConvertor.convertToDto;
+import static at.wst.online_webshop.convertors.OrderConvertor.convertToEntity;
 
 @Service
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
 
+    private final ShoppingCartService shoppingCartService;
+
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public CustomerService(CustomerRepository customerRepository, PasswordEncoder passwordEncoder) {
+    public CustomerService(CustomerRepository customerRepository, PasswordEncoder passwordEncoder, ShoppingCartService shoppingCartService) {
         this.customerRepository = customerRepository;
         this.passwordEncoder = passwordEncoder;
+        this.shoppingCartService = shoppingCartService;
     }
 
     public List<Customer> getAllCustomer() {
@@ -34,6 +44,36 @@ public class CustomerService {
 
     public Optional<Customer> getCustomer(Long customerId) {
         return customerRepository.findById(customerId);
+    }
+
+    @Transactional
+    public ShoppingCartDTO updateShoppingCart(Long customerId, Long cartId) {
+        Optional<Customer> optionalCustomer = customerRepository.findById(customerId);
+
+        if (optionalCustomer.isPresent()) {
+            Customer customer = optionalCustomer.get();
+
+            // Assuming you have a method to fetch the shopping cart by cartId
+           ShoppingCartDTO shoppingCartDTO = shoppingCartService.getShoppingCartById(cartId);
+
+            if (shoppingCartDTO != null) {
+                // Update the customer entity with the new shopping cart
+                ShoppingCart shoppingCart = ShoppingCartConvertor.convertToEntity(shoppingCartDTO);
+                customer.setShoppingCart(shoppingCart);
+
+                // Save the updated customer
+                customerRepository.save(customer);
+
+                // Convert the updated shopping cart to DTO
+                return shoppingCartDTO;
+            } else {
+                // Handle the case when the shopping cart is not found
+                throw new ShoppingCartNotFoundException("Shopping cart not found");
+            }
+        } else {
+            // Handle the case when the customer is not found
+            throw new CustomerNotFoundException("Customer not found");
+        }
     }
 
     @Transactional
@@ -90,10 +130,4 @@ public class CustomerService {
          */
         return true;
     }
-
-    private boolean isPasswordCorrect(String providedPassword, String storedPassword){
-    return false;
-    }
-
-
 }
