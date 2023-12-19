@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Getter
@@ -20,18 +21,23 @@ public class ShoppingCart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cartId;
 
-    @Column(name = "total_price")
-    private Double totalPrice;
-
     @OneToOne(mappedBy = "shoppingCart")
     private Customer customer;
 
     @OneToMany(mappedBy = "shoppingCart")
-    private List<Product> products;
+    private List<CartItem> cartItems;
 
-    public ShoppingCart(double totalPrice, Customer customer, List<Product> products) {
-        this.totalPrice = totalPrice;
+    public ShoppingCart(Customer customer, List<CartItem> cartItems) {
         this.customer = customer;
-        this.products = products;
+        this.cartItems = cartItems;
+    }
+
+    @Override
+    public String toString() {
+        return "ShoppingCart{" +
+                "cartId=" + cartId +
+                ", customer=" + customer +
+                ", products=" + cartItems +
+                '}';
     }
 }

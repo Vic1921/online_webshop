@@ -2,9 +2,7 @@ package at.wst.online_webshop.services;
 
 import at.wst.online_webshop.convertors.CustomerConvertor;
 import at.wst.online_webshop.convertors.ShoppingCartConvertor;
-import at.wst.online_webshop.dtos.OrderDTO;
-import at.wst.online_webshop.dtos.ProductDTO;
-import at.wst.online_webshop.dtos.ShoppingCartDTO;
+import at.wst.online_webshop.dtos.*;
 import at.wst.online_webshop.entities.Order;
 import at.wst.online_webshop.entities.Product;
 import at.wst.online_webshop.exceptions.FailedOrderException;
@@ -71,7 +69,7 @@ public class OrderService {
         validateCart(shoppingCartDTO);
         validateOrder(paymentMethod, shippingDetails);
 
-        List<Long> productIds = shoppingCartDTO.getProductDTOS().stream().map(ProductDTO::getProductId).collect(Collectors.toList());
+        List<Long> productIds = shoppingCartDTO.getCartItemDTOS().stream().map(CartItemDTO::getProductId).collect(Collectors.toList());
 
         var products = productRepository.findAllById(productIds);
         double totalAmount = products.stream().mapToDouble(Product::getProductPrice).sum();
@@ -95,7 +93,7 @@ public class OrderService {
     }
 
     private void validateCart(ShoppingCartDTO shoppingCartDTO) {
-        List<Long> productIds = shoppingCartDTO.getProductDTOS().stream().map(ProductDTO::getProductId).collect(Collectors.toList());
+        List<Long> productIds = shoppingCartDTO.getCartItemDTOS().stream().map(CartItemDTO::getProductId).collect(Collectors.toList());
 
         productRepository.findAllById(productIds).forEach(product -> {
             if (product.getProductQuantity() <= 0 ) {
@@ -119,3 +117,4 @@ public class OrderService {
         }
     }
 }
+

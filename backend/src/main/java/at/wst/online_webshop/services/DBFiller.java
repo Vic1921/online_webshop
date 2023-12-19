@@ -1,5 +1,6 @@
 package at.wst.online_webshop.services;
 
+import at.wst.online_webshop.dtos.CartItemDTO;
 import at.wst.online_webshop.entities.*;
 import at.wst.online_webshop.repositories.*;
 import com.github.javafaker.Faker;
@@ -47,15 +48,17 @@ public class DBFiller {
     private final ReviewRepository reviewRepository;
     private final ShoppingCartRepository shoppingCartRepository;
     private final VendorRepository vendorRepository;
+    private final CartItemRepository cartItemRepository;
 
     @Autowired
-    public DBFiller(CustomerRepository customerRepository, OrderRepository orderRepository, ProductRepository productRepository, ReviewRepository reviewRepository, ShoppingCartRepository shoppingCartRepository, VendorRepository vendorRepository) {
+    public DBFiller(CartItemRepository cartItemRepository, CustomerRepository customerRepository, OrderRepository orderRepository, ProductRepository productRepository, ReviewRepository reviewRepository, ShoppingCartRepository shoppingCartRepository, VendorRepository vendorRepository) {
         this.customerRepository = customerRepository;
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
         this.reviewRepository = reviewRepository;
         this.shoppingCartRepository = shoppingCartRepository;
         this.vendorRepository = vendorRepository;
+        this.cartItemRepository = cartItemRepository;
 
     }
 
@@ -162,7 +165,7 @@ public class DBFiller {
 
 
                     return new Product(name, productDescription, category, price, sku, quantity, imageFile, vendor);
-                    })
+                })
                 .collect(Collectors.toList());
 
         productRepository.saveAll(products);
@@ -186,9 +189,9 @@ public class DBFiller {
             var products = productRepository.findAll()
                     .stream()
                     .collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
-                                Collections.shuffle(list);
-                                return list.stream().limit(5).collect(Collectors.toList());
-                            }));
+                        Collections.shuffle(list);
+                        return list.stream().limit(5).collect(Collectors.toList());
+                    }));
             var totalPrice = products.stream().mapToDouble(Product::getProductPrice).sum();
 
             orders.add(new Order(orderDate, totalPrice, customer, products));
@@ -216,15 +219,14 @@ public class DBFiller {
         var faker = Faker.instance();
 
         for (int i = 0; i < NUMBER_OF_SHOPPING_CARTS; i++) {
-            var totalPrice = faker.number().randomDouble(2, 0, 1000);
             var customer = customerRepository.findById((long) faker.number().numberBetween(1, NUMBER_OF_CUSTOMERS)).orElseThrow();
-            var products = productRepository.findAll()
+            var cartItems = cartItemRepository.findAll()
                     .stream()
                     .collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
                         Collections.shuffle(list);
                         return list.stream().limit(5).collect(Collectors.toList());
                     }));
-            shoppingCarts.add(new ShoppingCart(totalPrice, customer, products));
+            shoppingCarts.add(new ShoppingCart(customer, cartItems));
         }
         shoppingCartRepository.saveAll(shoppingCarts);
     }

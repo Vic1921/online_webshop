@@ -5,13 +5,17 @@ import at.wst.online_webshop.dtos.CustomerDTO;
 import at.wst.online_webshop.dtos.ShoppingCartDTO;
 import at.wst.online_webshop.dtos.requests.AuthenticationRequest;
 import at.wst.online_webshop.dtos.requests.CreatingCustomerRequest;
+import at.wst.online_webshop.dtos.requests.UpdateShoppingCartRequest;
 import at.wst.online_webshop.entities.Customer;
 import at.wst.online_webshop.entities.CustomerUserDetails;
 import at.wst.online_webshop.entities.ShoppingCart;
+import at.wst.online_webshop.exception_handlers.FailedSignUpException;
 import at.wst.online_webshop.security.JwtTokenUtil;
 import at.wst.online_webshop.services.CustomerDetailsService;
 import at.wst.online_webshop.services.CustomerService;
 import at.wst.online_webshop.services.ShoppingCartService;
+import org.apache.coyote.Response;
+import org.infinispan.protostream.annotations.impl.HasProtoSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +26,8 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import static at.wst.online_webshop.convertors.ShoppingCartConvertor.convertToEntity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -97,25 +103,15 @@ public class CustomerController {
     }
 
     @PostMapping("/update-cart")
-    public ResponseEntity<String> updateCartId(@RequestParam Long customerId, @RequestParam Long cartId) {
+    public ResponseEntity<String> updateCartId(@RequestBody UpdateShoppingCartRequest request) {
         try {
-            // Fetch the customer entity from the database
-            Optional<Customer> customer = customerService.getCustomer(customerId);
-            ShoppingCart shoppingCart = shoppingCartService.getShoppingCartById(cartId);
-
-            if (customer.isPresent()) {
-                // Update the cartId in the customer entity
-                customer.get().setShoppingCart(shoppingCart);
-
-                // Save the updated customer entity
-                customerService.saveCustomer(customer.get());
-
-                return ResponseEntity.ok("CartId updated successfully");
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Customer not found");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating cartId");
+            customerService.updateShoppingCart(request.getCustomerId(), request.getCartId());
+            return ResponseEntity.noContent().build();
+        } catch (Exception e){
+            logger.info("Getting a bad request {}", e);
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
+
     }
+
 }
