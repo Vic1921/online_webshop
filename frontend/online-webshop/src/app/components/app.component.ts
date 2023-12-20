@@ -1,8 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HomeComponent } from './home/home.component';
 import { RouterModule , RouterLink } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
+import { ProductService } from '../services/product.service';
+import { DbfillerService } from '../services/dbfiller.service';
+import { switchMap, take } from 'rxjs/operators'; // Import switchMap and take from 'rxjs/operators'
+
 
 
 @Component({
@@ -13,5 +17,5 @@ import { HttpClientModule } from '@angular/common/http';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'home';
+  title = 'Home';
 }

@@ -2,15 +2,17 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ShoppingcartService } from '../../services/shoppingcart.service';
 import { LoginService } from '../../services/login.service';
-import { ShoppingCart } from '../../shoppingcart';
-import { Cartitem } from '../../cartitem';
-import { Product } from '../../product';
+import { ShoppingCart } from '../../interfaces/shoppingcart';
+import { Cartitem } from '../../interfaces/cartitem';
+import { Product } from '../../interfaces/product';
 import { ProductService } from '../../services/product.service';
+import { OrderService } from '../../services/order.service';
+import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-shoppingcart',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './shoppingcart.component.html',
   styleUrl: './shoppingcart.component.css'
 })
@@ -18,12 +20,23 @@ export class ShoppingcartComponent {
   private cartId: number | undefined;
   products: Product[] = [];
   cart: ShoppingCart;
+
+  orderForm = new FormGroup({
+    shippingDetails: new FormControl(''),
+    paymentMethod: new FormControl(''),
+    code: new FormControl(''),
+    deliveryAddress: new FormControl(''),
+  });
+
   constructor(
     private shoppingCartService: ShoppingcartService,
     public loginService: LoginService,
-    private productService: ProductService
+    private productService: ProductService,
+    private orderService : OrderService
   ) {
-    this.cart = { cartId: 0, totalPrice: 0, customerId: 0, products: [] };
+    this.cart = { cartId: 0, totalPrice: 0, customerId: 0, cartItemDTOS: [] };
+
+ 
     if (this.loginService.isLoggedIn()) {
       this.cartId = Number(this.loginService.getCartID());
 
@@ -39,8 +52,8 @@ export class ShoppingcartComponent {
             (cartItems: Cartitem[] | null) => {
               if (cartItems !== null) {
                 const productIds = cartItems.map((item) => item.productId);
-                this.cart.products = cartItems;
-                console.log(this.cart.products);
+                this.cart.cartItemDTOS = cartItems;
+                console.log(this.cart.cartItemDTOS);
 
                 // Iterate through productIds and fetch products
                 productIds.forEach((productId) => {
@@ -75,8 +88,36 @@ export class ShoppingcartComponent {
     }
   }
 
+  placeOrder() {
+    if (this.loginService.isLoggedIn()) {
+      const customerId = this.loginService.getCustomerID();
+      const shoppingCartId = this.loginService.getCartID() ?? 0;
+      const formValues = this.orderForm.value;
+      const paymentMethod = formValues.paymentMethod ?? '';
+      const shippingDetails = formValues.shippingDetails ?? '';  // Provide an empty string as the default value
+
+
+
+      // Call the service to place the order
+      this.orderService.placeOrder(customerId, shoppingCartId, paymentMethod, shippingDetails).subscribe(
+        (response) => {
+          console.log('Order placed successfully:', response);
+        },
+        (error) => {
+          console.log(customerId);
+          console.log(shoppingCartId);
+          console.log(paymentMethod);
+          console.log(shippingDetails);
+
+          console.error('Error placing order:', error);
+        }
+      );
+    }
+  }
+  
+
   getItemsCount(): number {
-    return this.cart?.products?.length || 0;
+    return this.cart?.cartItemDTOS?.length || 0;
   }
   
   getProductImageStyle(imageUrl: string): object {

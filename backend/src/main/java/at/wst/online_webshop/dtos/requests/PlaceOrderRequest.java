@@ -14,4 +14,14 @@ public class PlaceOrderRequest {
     private Long shoppingCartId;
     private String paymentMethod;
     private String shippingDetails;
+
+    @Override
+    public String toString() {
+        return "PlaceOrderRequest{" +
+                "customerId=" + customerId +
+                ", shoppingCartId=" + shoppingCartId +
+                ", paymentMethod='" + paymentMethod + '\'' +
+                ", shippingDetails='" + shippingDetails + '\'' +
+                '}';
+    }
 }

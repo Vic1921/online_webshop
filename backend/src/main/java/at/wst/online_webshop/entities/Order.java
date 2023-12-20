@@ -31,16 +31,23 @@ public class Order {
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
-    @ManyToMany(mappedBy = "orders")
-    private List<Product> products;
-    /*
-        @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-        private List<OrderItem> orderItems;
-    */
-    public Order(Date orderDate, double totalPrice, Customer customer, List<Product> products) {
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderItem> orderItems;
+
+    public Order(Date orderDate, double totalPrice, Customer customer, List<OrderItem> orderItems) {
         this.orderDate = orderDate.toString();
         this.orderTotalMount = totalPrice;
         this.customer = customer;
-        this.products = products;
+        this.orderItems = orderItems;
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "orderId=" + orderId +
+                ", orderDate='" + orderDate + '\'' +
+                ", orderTotalMount=" + orderTotalMount +
+                ", customer=" + customer +
+                '}';
     }
 }

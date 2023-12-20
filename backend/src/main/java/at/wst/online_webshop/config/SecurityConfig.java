@@ -57,6 +57,7 @@ public class SecurityConfig {
                 .authorizeRequests(req -> req
                         .antMatchers("/api/shopping-cart/**").permitAll()
                         .antMatchers("/api/customers/**").permitAll()
+                        .antMatchers("/api/orders/**").permitAll()
                         .antMatchers("/api/customers/register").permitAll()
                         .antMatchers("/api/customers/login").permitAll()
                         .antMatchers(HttpMethod.GET, "/**").permitAll()

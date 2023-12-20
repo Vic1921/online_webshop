@@ -1,7 +1,9 @@
 package at.wst.online_webshop.convertors;
 
 import at.wst.online_webshop.dtos.CustomerDTO;
+import at.wst.online_webshop.dtos.OrderItemDTO;
 import at.wst.online_webshop.entities.Customer;
+import at.wst.online_webshop.entities.OrderItem;
 import org.modelmapper.ModelMapper;
 
 public class CustomerConvertor {

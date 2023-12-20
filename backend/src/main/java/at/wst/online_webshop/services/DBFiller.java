@@ -49,9 +49,10 @@ public class DBFiller {
     private final ShoppingCartRepository shoppingCartRepository;
     private final VendorRepository vendorRepository;
     private final CartItemRepository cartItemRepository;
+    private final OrderItemRepository orderItemRepository;
 
     @Autowired
-    public DBFiller(CartItemRepository cartItemRepository, CustomerRepository customerRepository, OrderRepository orderRepository, ProductRepository productRepository, ReviewRepository reviewRepository, ShoppingCartRepository shoppingCartRepository, VendorRepository vendorRepository) {
+    public DBFiller(OrderItemRepository orderItemRepository, CartItemRepository cartItemRepository, CustomerRepository customerRepository, OrderRepository orderRepository, ProductRepository productRepository, ReviewRepository reviewRepository, ShoppingCartRepository shoppingCartRepository, VendorRepository vendorRepository) {
         this.customerRepository = customerRepository;
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
@@ -59,6 +60,7 @@ public class DBFiller {
         this.shoppingCartRepository = shoppingCartRepository;
         this.vendorRepository = vendorRepository;
         this.cartItemRepository = cartItemRepository;
+        this.orderItemRepository = orderItemRepository;
 
     }
 
@@ -186,15 +188,16 @@ public class DBFiller {
         for (int i = 0; i < NUMBER_OF_ORDERS; i++) {
             var orderDate = faker.date().birthday();
             var customer = customerRepository.findById((long) faker.number().numberBetween(1, NUMBER_OF_CUSTOMERS)).orElseThrow();
-            var products = productRepository.findAll()
+            var orderItems = orderItemRepository.findAll()
                     .stream()
                     .collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
                         Collections.shuffle(list);
                         return list.stream().limit(5).collect(Collectors.toList());
                     }));
-            var totalPrice = products.stream().mapToDouble(Product::getProductPrice).sum();
-
-            orders.add(new Order(orderDate, totalPrice, customer, products));
+            double totalPrice = orderItems.stream()
+                    .mapToDouble(item -> item.getProduct().getProductPrice() * item.getOrderItemQuantity())
+                    .sum();
+            orders.add(new Order(orderDate, totalPrice, customer, orderItems));
         }
         orderRepository.saveAll(orders);
     }

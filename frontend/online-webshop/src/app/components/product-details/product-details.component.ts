@@ -1,13 +1,13 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Product } from '../../product';
 import { ActivatedRoute } from '@angular/router';
 import { ProductService } from '../../services/product.service';
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
 import { LoginService } from '../../services/login.service';
 import { ShoppingcartService } from '../../services/shoppingcart.service';
-import { CustomerService } from '../../customer.service';
+import { CustomerService } from '../../services/customer.service';
+import { Product } from '../../interfaces/product';
 
 @Component({
   selector: 'app-product-details',
@@ -58,6 +58,9 @@ export class ProductDetailsComponent {
       let cartId: number | null = this.loginService.getCartID();
       if(cartId == null) {
         console.info("Cart id should be null" + cartId);
+      }else{
+        console.info("Cart id is not null" + cartId);
+
       }
 
       if (cartId !== null) {
@@ -70,6 +73,8 @@ export class ProductDetailsComponent {
           },
           (error: any) => {
             // Handle the error response
+            console.log("this cart id si");
+            console.log(cartId);
             console.error('Error adding product to cart:', error);
           }
         );
@@ -82,6 +87,7 @@ export class ProductDetailsComponent {
            
               (ret) =>{
                 this.loginService.setCartID(newCart.cartId);
+
                 console.log("Sucessfully updated the Customer with the new Cart ID");
               },
               (error: any) => {

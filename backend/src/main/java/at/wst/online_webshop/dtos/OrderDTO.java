@@ -17,12 +17,23 @@ public class OrderDTO {
     private String orderDate;
     private Double orderTotalMount;
     private Long customerId;
-    private List<Long> productIds;
+    private List<OrderItemDTO> orderItems;
 
-    public OrderDTO(String orderDate, Double orderTotalMount, Long customerId, List<Long> productIds) {
+    public OrderDTO(String orderDate, Double orderTotalMount, Long customerId, List<OrderItemDTO> orderItems) {
         this.orderDate = orderDate;
         this.orderTotalMount = orderTotalMount;
         this.customerId = customerId;
-        this.productIds = productIds;
+        this.orderItems = orderItems;
+    }
+
+    @Override
+    public String toString() {
+        return "OrderDTO{" +
+                "orderId=" + orderId +
+                ", orderDate='" + orderDate + '\'' +
+                ", orderTotalMount=" + orderTotalMount +
+                ", customerId=" + customerId +
+                ", orderItems=" + orderItems +
+                '}';
     }
 }

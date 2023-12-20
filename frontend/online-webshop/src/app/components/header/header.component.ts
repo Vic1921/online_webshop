@@ -3,6 +3,11 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
 import { LoginService } from '../../services/login.service';
+import { DbfillerService } from '../../services/dbfiller.service';
+import { ProductService } from '../../services/product.service';
+import { switchMap, take } from 'rxjs/operators'; // Import switchMap and take from 'rxjs/operators'
+import { ShoppingCart } from '../../interfaces/shoppingcart';
+import { ShoppingcartService } from '../../services/shoppingcart.service';
 
 
 @Component({
@@ -13,8 +18,48 @@ import { LoginService } from '../../services/login.service';
   styleUrl: './header.component.css'
 })
 export class HeaderComponent {
+  private databaseFilled = false;
+  cart : ShoppingCart | undefined;
 
-  constructor(private router: Router, public loginService : LoginService) {}
+  constructor(private router: Router, public loginService : LoginService, private databaseFillerService: DbfillerService, private productService: ProductService, private shoppingCartService : ShoppingcartService) {
+    if (this.loginService.isLoggedIn()) {
+      const cartId = Number(this.loginService.getCartID());
+  
+      this.shoppingCartService.getCart(cartId).subscribe(
+        (cart: ShoppingCart) => {
+          this.cart = cart;
+          console.log(this.cart); // Log inside the subscribe callback
+        },
+        (error) => {
+          console.error('Error fetching shopping cart:', error);
+        }
+      );
+    }
+  }
+
+
+  fillDatabaseAndFetchProducts(): void {
+    // Fill the database and fetch products only if not filled yet
+    this.databaseFillerService.fillDatabase().pipe(
+      switchMap(() => this.productService.getProductsFromHttp()),
+      take(1) // Take only the first emitted value, i.e., complete after fetching products once
+    ).subscribe(
+      (data: any[]) => {
+        console.log(data);
+        this.productService.products = data.sort((a, b) => a.id - b.id);
+        this.databaseFilled = true; // Set the flag to true after filling the database
+      },
+      (error: any) => {
+        console.error('Error fetching products:', error);
+      }
+    );
+  }
+
+  checkDatabaseAndFetchProducts(): void {
+    if (!this.databaseFilled) {
+      this.fillDatabaseAndFetchProducts();
+    }
+  }
 
   navigateToSignup() {
     this.router.navigate(['/signup']);

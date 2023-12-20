@@ -3,6 +3,8 @@ package at.wst.online_webshop.controller;
 import at.wst.online_webshop.dtos.OrderDTO;
 import at.wst.online_webshop.dtos.requests.PlaceOrderRequest;
 import at.wst.online_webshop.services.OrderService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,18 +16,28 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
+    private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
+
+
     // Place an order
     @PostMapping("/place")
     public ResponseEntity<OrderDTO> placeOrder(
             @RequestBody PlaceOrderRequest request) {
 
-        OrderDTO result = orderService.placeOrder(
-                request.getCustomerId(),
-                request.getShoppingCartId(),
-                request.getPaymentMethod(),
-                request.getShippingDetails());
+        logger.info("PLACING ORDER" + request.toString());
+        try {
+            OrderDTO result = orderService.placeOrder(
+                    request.getCustomerId(),
+                    request.getShoppingCartId(),
+                    request.getPaymentMethod(),
+                    request.getShippingDetails());
+            return ResponseEntity.ok(result);
 
-        return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            logger.info(e.toString());
+            return ResponseEntity.badRequest().body(null);
+
+        }
     }
 
     // Create a new order (Directly using OrderDTO)

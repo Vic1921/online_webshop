@@ -41,7 +41,7 @@ public class ReviewService {
 
         // Validate order
         if (orderId != null) {
-            boolean orderExists = orderRepository.existsByOrderIdAndCustomer_CustomerIdAndProducts_ProductId(orderId, customerId, productId);
+            boolean orderExists = orderRepository.existsByOrderIdAndCustomer_CustomerIdAndOrderItems_Product_ProductId(orderId, customerId, productId);
             if (!orderExists) {
                 throw new FailedReviewException("No order found for this product and customer.");
             }

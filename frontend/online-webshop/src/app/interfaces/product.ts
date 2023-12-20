@@ -1,5 +1,3 @@
-import { Vendor } from "./vendor";
-
 export interface Product {
     productId: number; 
     productName: string;

@@ -5,7 +5,7 @@ import { HeaderComponent } from '../header/header.component';
 import { ProductService } from '../../services/product.service';
 import { switchMap } from 'rxjs';
 import { DbfillerService } from '../../services/dbfiller.service';
-import { Product } from '../../product';
+import { Product } from '../../interfaces/product';
 import { RouterModule } from '@angular/router';
 
 @Component({
@@ -15,26 +15,22 @@ import { RouterModule } from '@angular/router';
   templateUrl: './product.component.html',
   styleUrl: './product.component.css'
 })
-export class ProductComponent implements OnInit{
+export class ProductComponent{
   products : Product[] = [];
 
-  constructor(private productService : ProductService, private databaseFillerService : DbfillerService){}
-
-  ngOnInit(): void {
-    //this needs to be reworked we dont want to fill the database everytime the user loads the product page
-    this.databaseFillerService.fillDatabase().pipe(
-      switchMap(() => this.productService.getProducts())
-    ).subscribe(
+  constructor(private productService : ProductService){
+    this.productService.getProductsFromHttp().subscribe(
       (data: any[]) => {
-        this.products = data;
-        console.log(data);
+        this.productService.products = data;
+        this.products = this.productService.products;
       },
-      (error : any) => {
+      (error: any) => {
         console.error('Error fetching products:', error);
       }
     );
   }
 
+ 
   getProductImageStyle(imageUrl: string): object {
     return {
       'background-image': `url('./assets/images/products/${imageUrl}')`,

@@ -50,12 +50,15 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private List<Review> reviews;
 
+    /*
     @ManyToMany
     @JoinTable(
             name = "order_products",
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "order_id"))
     private List<Order> orders;
+
+     */
 
     @ManyToOne
     @JoinColumn(name = "vendor_id", nullable = false)

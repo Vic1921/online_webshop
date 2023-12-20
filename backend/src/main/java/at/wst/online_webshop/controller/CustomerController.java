@@ -96,6 +96,7 @@ public class CustomerController {
             result.put("cartID", null);
         }
         result.put("customerID", String.valueOf(customerUserDetails.getCustomer().getCustomerId()));
+        result.put("customerName", customerUserDetails.getCustomer().getName());
 
 
         //return jwt token in response

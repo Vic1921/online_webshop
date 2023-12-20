@@ -5,5 +5,5 @@ export interface ShoppingCart {
     cartId : number,
     totalPrice : number,
     customerId : number,
-    products? : Cartitem[],
+    cartItemDTOS? : Cartitem[],
 }
