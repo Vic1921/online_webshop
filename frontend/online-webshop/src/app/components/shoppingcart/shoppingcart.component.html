@@ -20,8 +20,21 @@
               <div *ngIf="loginService.isLoggedIn(); else emptyCart">
                 <ng-container>
                   <tr>
-                    <td colspan="5" style="text-align:center;">{{ cart.products?.length }} </td>
+                    <td colspan="5" style="text-align:center;">
+                      <ng-container *ngIf="getItemsCount() > 1; else singleItemBlock">
+                        {{ getItemsCount() }} items
+                      </ng-container>
+                      <ng-template #singleItemBlock>
+                        <ng-container *ngIf="getItemsCount() === 1; else emptyBlock">
+                          1 item
+                        </ng-container>
+                        <ng-template #emptyBlock>
+                          Empty
+                        </ng-template>
+                      </ng-template>
+                    </td>
                   </tr>
+                  
                 </ng-container>
               </div>
 
@@ -34,12 +47,12 @@
           </div>
         </div>
 
-        <div *ngFor="let product of products" class="row border-top border-bottom">
+        <div *ngFor="let cartItem of this.cart.products" class="row border-top border-bottom">
           <div class="row main align-items-center">
-            <div class="col-2"><img class="img-fluid" [src]="getProductImageStyle(product.productImageUrl)"></div>
+            <div class="col-2"><img class="img-fluid" [src]="'./assets/images/products/' + cartItem?.productImageUrl"></div>
             <div class="col">
-              <div class="row text-muted">{{product.productCategory}}</div>
-              <div class="row">{{product.productName}}</div>
+              <div class="row text-muted">{{cartItem.productCategory}}</div>
+              <div class="row">{{cartItem.productName}}</div>
             </div>
             <div class="col">
               <div class="btn-group">
@@ -48,7 +61,7 @@
                   <button type="submit" name="delete_from_card" value="delete_from_card" class="border">-</button>
                 </form>
                 <a href="#" class="border" style="height:100%; width:100%; display-block:inline;">
-                  <?php echo (int)$product_list[$product['ARTIKELNUMMER']][0] ?>
+                  {{cartItem.cartItemQuantity}}
                 </a>
                 <form action="addShoppingCart.php" method="POST">
                   <input type="hidden" name="product_id" value="<?php echo $product['ARTIKELNUMMER'] ?>" />
@@ -56,7 +69,7 @@
                 </form>
               </div>
             </div>
-            <div class="col">&euro; {{product.productPrice}}>
+            <div class="col">&euro; {{cartItem.cartItemSubprice}}
               <form action="deleteProduct.php" style="display:inline;" method="POST">
                 <input type="hidden" name="product_id" value="<?php echo $product['ARTIKELNUMMER'] ?>" />
                 <button type="submit" name="delete_from_card" value="delete_from_card" class="btn"
@@ -79,7 +92,7 @@
             {{cart.products?.length}}
           </div>
           <div class="col text-right">&euro;
-            <?php echo $subtotal ?>
+            {{cart.totalPrice}}
           </div>
         </div>
         <form>
@@ -93,7 +106,7 @@
         <div class="row" style="border-top: 1px solid rgba(0,0,0,.1); padding: 2vh 0;">
           <div class="col">GESAMTPREIS</div>
           <div class="col text-right">&euro;
-            <?php echo $subtotal + 5 ?>
+            {{this.cart.totalPrice + 5}}
           </div>
         </div>
         <form action="addOrder.php" method="POST">

@@ -67,6 +67,7 @@ public class ShoppingCartService {
         ShoppingCartDTO shoppingCartDTO = convertToDto(shoppingCart);
         List<CartItemDTO> cartItemDTOList = CartItemConverter.convertToDtoList(shoppingCart.getCartItems());
         shoppingCartDTO.setCartItemDTOS(cartItemDTOList);
+        shoppingCartDTO.setTotalPrice(calculateTotalPriceShoppingCart(shoppingCart).doubleValue());
         logger.info("DTO IS BEFORE: " + shoppingCartDTO.toString());
         return shoppingCartDTO;
     }
@@ -119,9 +120,7 @@ public class ShoppingCartService {
         // Convert entities to DTOs
         ShoppingCartDTO shoppingCartDTO = ShoppingCartConvertor.convertToDto(shoppingCart);
         shoppingCartDTO.setCustomerId(customerId);
-        shoppingCartDTO.setTotalPrice(updatePriceShoppingCartDTO(shoppingCart).doubleValue());
-        CustomerDTO customerDTO = CustomerConvertor.convertToDto(customer);
-        ProductDTO productDTO = ProductConvertor.convertToDto(product);
+        shoppingCartDTO.setTotalPrice(calculateTotalPriceShoppingCart(shoppingCart).doubleValue());
 
         // Create a CartItemDTO based on the product and quantity
        CartItemDTO cartItemDTO = CartItemConverter.convertToDto(cartItem);
@@ -162,7 +161,7 @@ public class ShoppingCartService {
         }
     }
 
-    private BigDecimal updatePriceShoppingCartDTO(ShoppingCart shoppingCart){
+    private BigDecimal calculateTotalPriceShoppingCart(ShoppingCart shoppingCart){
         return shoppingCart.getCartItems().stream()
                 .map(CartItem::getCartItemSubprice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);

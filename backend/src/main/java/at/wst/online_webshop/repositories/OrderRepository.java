@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
-    boolean existsByIdAndCustomerIdAndProductId(Long orderId, Long customerId, Long productId);
+    boolean existsByOrderIdAndCustomer_CustomerIdAndProducts_ProductId(Long orderId, Long customerId, Long productId);
 }

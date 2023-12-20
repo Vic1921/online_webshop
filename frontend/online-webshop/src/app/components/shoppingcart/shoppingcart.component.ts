@@ -31,6 +31,7 @@ export class ShoppingcartComponent {
       this.shoppingCartService.getCart(this.cartId).subscribe(
         (cart: ShoppingCart) => {
           this.cart = cart;
+          console.log(cart);
 
           // Now, this.cart contains the shopping cart details including product details
           // Fetch product details based on productIds
@@ -38,7 +39,25 @@ export class ShoppingcartComponent {
             (cartItems: Cartitem[] | null) => {
               if (cartItems !== null) {
                 const productIds = cartItems.map((item) => item.productId);
-                // Rest of the code...
+                this.cart.products = cartItems;
+                console.log(this.cart.products);
+
+                // Iterate through productIds and fetch products
+                productIds.forEach((productId) => {
+                  this.productService.getProduct(productId).subscribe(
+                    (product) => {
+                      // Push the fetched product to the products array
+                      this.products.push(product);
+
+                      // Now, this.cart contains the shopping cart details including products
+                    },
+                    (error) => {
+                      console.error(`Error fetching product with ID ${productId}:`, error);
+                    }
+                  );
+                });
+
+
               } else {
                 console.log(this.cart);
                 console.error('Cart items are null.');
@@ -47,7 +66,7 @@ export class ShoppingcartComponent {
             (error) => {
               console.error('Error fetching shopping cart items:', error);
             }
-          );          
+          );
         },
         (error) => {
           console.error('Error fetching shopping cart:', error);
@@ -56,9 +75,13 @@ export class ShoppingcartComponent {
     }
   }
 
+  getItemsCount(): number {
+    return this.cart?.products?.length || 0;
+  }
+  
   getProductImageStyle(imageUrl: string): object {
     return {
-      'background-image': `url('./assets/images/products/${imageUrl}')`,
+      'background-image': `url('./assets/images/products/'${imageUrl}')`,
       'background-repeat': 'no-repeat',
       'background-size': 'cover',
       'background-position': 'center center'

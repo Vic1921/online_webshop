@@ -20,6 +20,9 @@ public class CartItemDTO {
     private Long cartItemId;
     private Long productId;
     private String productName;
+    private String productImageUrl;
+    private Long productPrice;
+    private String productCategory;
     private int cartItemQuantity;
     private BigDecimal cartItemSubprice;
 
@@ -29,6 +32,8 @@ public class CartItemDTO {
                 "cartItemId=" + cartItemId +
                 ", productId=" + productId +
                 ", productName='" + productName + '\'' +
+                ", productImageUrl='" + productImageUrl + '\'' +
+                ", productPrice=" + productPrice +
                 ", cartItemQuantity=" + cartItemQuantity +
                 ", cartItemSubprice=" + cartItemSubprice +
                 '}';
