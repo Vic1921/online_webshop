@@ -18,9 +18,9 @@ public class OrderConvertor {
         return modelMapper.map(orderDTO, Order.class);
     }
 
-    public static List<OrderItemDTO> convertToDtoList(List<OrderItem> cartItems) {
-        return cartItems.stream()
-                .map(OrderItemConvertor::convertToDto)
+    public static List<OrderDTO> convertToDtoList(List<Order> orders) {
+        return orders.stream()
+                .map(OrderConvertor::convertToDto)
                 .collect(Collectors.toList());
     }
     // Entity to DTO

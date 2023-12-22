@@ -7,7 +7,7 @@ import { FooterComponent } from '../footer/footer.component';
 import { LoginService } from '../../services/login.service';
 import { ShoppingcartService } from '../../services/shoppingcart.service';
 import { CustomerService } from '../../services/customer.service';
-import { Product } from '../../interfaces/product';
+import { ProductDTO } from '../../interfaces/product';
 
 @Component({
   selector: 'app-product-details',
@@ -17,7 +17,7 @@ import { Product } from '../../interfaces/product';
   styleUrl: './product-details.component.css'
 })
 export class ProductDetailsComponent {
-  product: Product | undefined;
+  product: ProductDTO | undefined;
 
   constructor(private route: ActivatedRoute, private productService: ProductService, private loginService: LoginService, private shoppingCartService: ShoppingcartService, private customerService : CustomerService) {
     const productId = Number(this.route.snapshot.paramMap.get('id'));

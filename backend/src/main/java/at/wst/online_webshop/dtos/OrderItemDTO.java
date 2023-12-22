@@ -10,7 +10,16 @@ import lombok.Setter;
 @Setter
 public class OrderItemDTO {
     private Long orderItemId;
-    private Long productId;
+    private ProductDTO productDTO;
     private int orderItemQuantity;
 
+
+    @Override
+    public String toString() {
+        return "OrderItemDTO{" +
+                "orderItemId=" + orderItemId +
+                ", productDTO=" + productDTO +
+                ", orderItemQuantity=" + orderItemQuantity +
+                '}';
+    }
 }

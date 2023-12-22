@@ -20,5 +20,19 @@ public class ProductDTO {
     private String productDescription;
     private String productCategory;
     private Integer productQuantity;
+    private String vendorName;
     private List<Long> reviewIds;
+
+    @Override
+    public String toString() {
+        return "ProductDTO{" +
+                "productId=" + productId +
+                ", productName='" + productName + '\'' +
+                ", productPrice=" + productPrice +
+                ", productImageUrl='" + productImageUrl + '\'' +
+                ", productDescription='" + productDescription + '\'' +
+                ", productCategory='" + productCategory + '\'' +
+                ", productQuantity=" + productQuantity +
+                '}';
+    }
 }

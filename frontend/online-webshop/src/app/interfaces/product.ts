@@ -1,4 +1,4 @@
-export interface Product {
+export interface ProductDTO {
     productId: number; 
     productName: string;
     productDescription: string;

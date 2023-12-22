@@ -27,11 +27,17 @@ export class OrderService {
   }
 
   getOrderByID(orderId : number) : Observable<Order>{
-    return this.http.get<Order>(`${this.apiUrl}/${orderId}`);
+    return this.http.get<Order>(`${this.apiUrl}/api/orders/${orderId}`);
   }
 
   updateOrder(orderId : number, order: Order): Observable<Order> {
     const url = `${this.apiUrl}/orders/${orderId}`;
     return this.http.put<Order>(url, order);
+  }
+
+  getOrdersByCustomerId(customerId : number) : Observable<Order[]>{
+    const url = `${this.apiUrl}/${customerId}`;
+    return this.http.get<Order[]>(url);
+
   }
 }

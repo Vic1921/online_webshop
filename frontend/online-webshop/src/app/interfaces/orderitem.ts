@@ -1,10 +1,10 @@
 import { Order } from "./order";
-import { Product } from "./product";
+import { ProductDTO } from "./product";
 
 export interface OrderItem {
     orderItemId?: number,
     order: Order,
-    product: Product;
+    productDTO: ProductDTO;
     orderItemQuantity : number;
     
 }

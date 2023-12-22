@@ -1,18 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
-import { Product } from '../interfaces/product';
+import { ProductDTO } from '../interfaces/product';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
   private apiUrl = 'http://localhost:8089';
-  products : Product[] = [];
+  products : ProductDTO[] = [];
   constructor(private http : HttpClient) { }
 
-  getProductsFromHttp(): Observable<Product[]>{
-    return this.http.get<Product[]>(`${this.apiUrl}/api/products/get-products`)
+  getProductsFromHttp(): Observable<ProductDTO[]>{
+    return this.http.get<ProductDTO[]>(`${this.apiUrl}/api/products/get-products`)
     .pipe(
       tap(
         response => console.log('Response:', response),
@@ -21,10 +21,10 @@ export class ProductService {
     );
   }
 
-  getProducts(): Observable<Product[]> {
+  getProducts(): Observable<ProductDTO[]> {
     // If products array is already populated, return it as an observable
     if (this.products.length > 0) {
-      return new Observable<Product[]>((observer) => {
+      return new Observable<ProductDTO[]>((observer) => {
         observer.next(this.products);
         observer.complete();
       });
@@ -35,7 +35,7 @@ export class ProductService {
   }
 
 
-  getProduct(productId : number) : Observable<Product>{
-    return this.http.get<Product>(`${this.apiUrl}/api/products/${productId}`);
+  getProduct(productId : number) : Observable<ProductDTO>{
+    return this.http.get<ProductDTO>(`${this.apiUrl}/api/products/${productId}`);
   }
 }

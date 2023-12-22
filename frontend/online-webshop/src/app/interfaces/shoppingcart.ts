@@ -1,5 +1,5 @@
 import { Cartitem } from "./cartitem";
-import { Product } from "./product";
+import { ProductDTO } from "./product";
 
 export interface ShoppingCart {
     cartId : number,

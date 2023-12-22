@@ -44,7 +44,7 @@ public class OrderService {
 
     public OrderDTO createOrder(OrderDTO orderDTO) {
         Order order = convertToEntity(orderDTO);
-        List<OrderItemDTO> orderItemDTOS = OrderConvertor.convertToDtoList(order.getOrderItems());
+        List<OrderItemDTO> orderItemDTOS = OrderItemConvertor.convertToDtoList(order.getOrderItems());
         orderDTO.setOrderItems(orderItemDTOS);
         Order savedOrder = orderRepository.save(order);
         return convertToDto(savedOrder);
@@ -52,10 +52,17 @@ public class OrderService {
 
     public OrderDTO getOrderById(Long id) {
         Order order = orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException(id));
+        if(order.getOrderItems() == null){
+            logger.info("THIS IS EMPTY");
+        }else{
+            logger.info("THIS IS THE ORDER: {}", order.toString());
+        }
         OrderDTO orderDTO = OrderConvertor.convertToDto(order);
-        List<OrderItemDTO> orderItemDTOS = OrderConvertor.convertToDtoList(order.getOrderItems());
+        logger.info("THIS IS THE ORDER DTO: {}", orderDTO.toString());
+        List<OrderItemDTO> orderItemDTOS = OrderItemConvertor.convertToDtoList(order.getOrderItems());
+        logger.info("THIS ARE THE ORDER DTOS: {}" , orderItemDTOS.toString());
         orderDTO.setOrderItems(orderItemDTOS);
-        return convertToDto(order);
+        return orderDTO;
     }
 
     @Transactional
@@ -63,6 +70,15 @@ public class OrderService {
         Order order = convertToEntity(orderDTO);
         Order updatedOrder = orderRepository.save(order);
         return convertToDto(updatedOrder);
+    }
+
+    public List<OrderDTO> getOrdersByCustomerId(Long customerId){
+        List<Order> orders = this.orderRepository.findByCustomer_CustomerId(customerId);
+        List<OrderDTO> orderDTOS = OrderConvertor.convertToDtoList(orders);
+        for (OrderDTO orderDTO : orderDTOS) {
+            logger.info("Order DTO details: {}", orderDTO.toString());
+        }
+        return orderDTOS;
     }
 
     @Transactional
@@ -89,6 +105,7 @@ public class OrderService {
             orderItem.setProduct(cartItem.getProduct());
             orderItem.setOrderItemQuantity(cartItem.getCartItemQuantity());
             orderItems.add(orderItem);
+            orderItemRepository.save(orderItem);
         }
 
         double totalAmount = orderItems.stream().mapToDouble(item -> item.getProduct().getProductPrice() * item.getOrderItemQuantity()).sum();
@@ -120,7 +137,7 @@ public class OrderService {
         });
 
         logger.info("DO WE REACH THIS CODE3");
-        List<OrderItemDTO> orderItemDTOS = OrderConvertor.convertToDtoList(order.getOrderItems());
+        List<OrderItemDTO> orderItemDTOS = OrderItemConvertor.convertToDtoList(order.getOrderItems());
 
 
         // Save order to database
@@ -128,9 +145,10 @@ public class OrderService {
         orderRepository.save(order);
         orderItemRepository.saveAll(orderItems);
         OrderDTO newOrderDTO = new OrderDTO(order.getOrderDate(), order.getOrderTotalMount(), order.getCustomer().getCustomerId(), orderItemDTOS);
-
+        newOrderDTO.setOrderId(order.getOrderId());
         // Delete shopping cart and save
         shoppingCartRepository.deleteById(shoppingCartId);
+        logger.info("NEW ORDER DTO IS: {}", newOrderDTO.toString());
         return newOrderDTO;
     }
 

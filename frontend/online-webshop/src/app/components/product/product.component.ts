@@ -5,7 +5,7 @@ import { HeaderComponent } from '../header/header.component';
 import { ProductService } from '../../services/product.service';
 import { switchMap } from 'rxjs';
 import { DbfillerService } from '../../services/dbfiller.service';
-import { Product } from '../../interfaces/product';
+import { ProductDTO } from '../../interfaces/product';
 import { RouterModule } from '@angular/router';
 
 @Component({
@@ -16,7 +16,7 @@ import { RouterModule } from '@angular/router';
   styleUrl: './product.component.css'
 })
 export class ProductComponent{
-  products : Product[] = [];
+  products : ProductDTO[] = [];
 
   constructor(private productService : ProductService){
     this.productService.getProductsFromHttp().subscribe(

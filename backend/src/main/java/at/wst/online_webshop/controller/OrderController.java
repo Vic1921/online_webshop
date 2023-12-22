@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/orders")
 public class OrderController {
@@ -50,8 +52,15 @@ public class OrderController {
     // Get an order by its ID
     @GetMapping("/{id}")
     public ResponseEntity<OrderDTO> getOrderById(@PathVariable Long id) {
-        OrderDTO order = orderService.getOrderById(id);
-        return ResponseEntity.ok(order);
+        try {
+            OrderDTO order = orderService.getOrderById(id);
+            logger.info("THIS IS THE ORDER");
+            logger.info(order.toString());
+            return ResponseEntity.ok(order);
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body(null);
+        }
+
     }
 
     // Update an existing order
@@ -60,6 +69,17 @@ public class OrderController {
         orderDTO.setOrderId(id);  // Ensure the ID in the DTO matches the path variable
         OrderDTO updatedOrder = orderService.updateOrder(orderDTO);
         return ResponseEntity.ok(updatedOrder);
+    }
+
+    @GetMapping("/orders")
+    public ResponseEntity<List<OrderDTO>> getOrdersByCustomerId(@PathVariable Long customerId) {
+        List<OrderDTO> orders = orderService.getOrdersByCustomerId(customerId);
+
+        if (!orders.isEmpty()) {
+            return ResponseEntity.ok(orders);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     // Delete an order

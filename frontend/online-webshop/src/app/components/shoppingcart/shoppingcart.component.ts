@@ -4,10 +4,11 @@ import { ShoppingcartService } from '../../services/shoppingcart.service';
 import { LoginService } from '../../services/login.service';
 import { ShoppingCart } from '../../interfaces/shoppingcart';
 import { Cartitem } from '../../interfaces/cartitem';
-import { Product } from '../../interfaces/product';
+import { ProductDTO } from '../../interfaces/product';
 import { ProductService } from '../../services/product.service';
 import { OrderService } from '../../services/order.service';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-shoppingcart',
@@ -18,7 +19,7 @@ import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angula
 })
 export class ShoppingcartComponent {
   private cartId: number | undefined;
-  products: Product[] = [];
+  products: ProductDTO[] = [];
   cart: ShoppingCart;
 
   orderForm = new FormGroup({
@@ -32,7 +33,8 @@ export class ShoppingcartComponent {
     private shoppingCartService: ShoppingcartService,
     public loginService: LoginService,
     private productService: ProductService,
-    private orderService : OrderService
+    private orderService : OrderService,
+    private router : Router
   ) {
     this.cart = { cartId: 0, totalPrice: 0, customerId: 0, cartItemDTOS: [] };
 
@@ -102,6 +104,11 @@ export class ShoppingcartComponent {
       this.orderService.placeOrder(customerId, shoppingCartId, paymentMethod, shippingDetails).subscribe(
         (response) => {
           console.log('Order placed successfully:', response);
+
+          //redirect the customer to the order details component with the right order id
+          const orderId = response.orderId;
+          console.log(orderId);
+          this.router.navigate(['/order', orderId]);
         },
         (error) => {
           console.log(customerId);

@@ -48,6 +48,7 @@ public class Order {
                 ", orderDate='" + orderDate + '\'' +
                 ", orderTotalMount=" + orderTotalMount +
                 ", customer=" + customer +
+                ", orderItems=" + orderItems +
                 '}';
     }
 }

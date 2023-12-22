@@ -12,17 +12,19 @@ export class LoginService {
   private customerKey ='customerID';
   private cartID = 'cartID';
   private customerName = 'customerName';
+  private customerAddress = 'customerAddress';
   constructor(private http : HttpClient) { }
 
   login(credentials: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/api/customers/login`, credentials).pipe(
-      tap((response: { token: string; customerID: string; cartID: string; customerName : string}) => {
+      tap((response: { token: string; customerID: string; cartID: string; customerName : string; customerAddress : string}) => {
         if (response.token) {
           // Store the token and customer information in local storage
           localStorage.setItem(this.tokenKey, response.token);
           localStorage.setItem(this.customerKey, response.customerID);
           localStorage.setItem(this.cartID, response.cartID);
           localStorage.setItem(this.customerName, response.customerName);
+          localStorage.setItem(this.customerAddress, response.customerAddress);
         }
       }),
       catchError(error => {
@@ -44,6 +46,10 @@ export class LoginService {
 
   getCustomerName() : string | null {
     return localStorage.getItem(this.customerName);
+  }
+
+  getCustomerAddress() :string | null {
+    return localStorage.getItem(this.customerAddress);
   }
 
 
