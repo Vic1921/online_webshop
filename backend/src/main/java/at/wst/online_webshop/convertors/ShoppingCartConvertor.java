@@ -15,6 +15,9 @@ public class ShoppingCartConvertor {
 
     public static ShoppingCart convertToEntity(ShoppingCartDTO shoppingCartDTO) {
         ShoppingCart shoppingCart = modelMapper.map(shoppingCartDTO, ShoppingCart.class);
+        if (shoppingCart.getCartItems() != null) {
+            shoppingCart.getCartItems().forEach(cartItem -> cartItem.setShoppingCart(shoppingCart));
+        }
         return shoppingCart;
     }
 }

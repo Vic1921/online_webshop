@@ -109,7 +109,7 @@ public class CustomerController {
             customerService.updateShoppingCart(request.getCustomerId(), request.getCartId());
             return ResponseEntity.noContent().build();
         } catch (Exception e){
-            logger.info("Getting a bad request {}", e);
+            logger.info("Getting a bad request " + e);
             return ResponseEntity.badRequest().body(e.getMessage());
         }
 

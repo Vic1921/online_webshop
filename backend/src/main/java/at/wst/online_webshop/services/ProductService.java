@@ -33,7 +33,7 @@ public class ProductService {
             Product product = optionalProduct.get();
 
             List<Long> reviewIds = product.getReviews().stream().map(Review::getReviewId).collect(Collectors.toList());
-            return new ProductDTO(product.getProductId(), product.getProductName(), product.getProductPrice(), product.getProductImageUrl(), product.getProductDescription(), product.getProductCategory(), product.getProductQuantity(), reviewIds);
+            return new ProductDTO(product.getProductId(), product.getProductName(), product.getProductPrice(), product.getProductImageUrl(), product.getProductDescription(), product.getProductCategory(), product.getProductQuantity(), product.getVendor().getVendorName(), reviewIds);
         }else{
             throw new ProductNotFoundException("Product not found");
         }

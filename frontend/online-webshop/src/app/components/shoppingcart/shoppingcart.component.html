@@ -21,11 +21,11 @@
                 <ng-container>
                   <tr>
                     <td colspan="5" style="text-align:center;">
-                      <ng-container *ngIf="getItemsCount() > 1; else singleItemBlock">
-                        {{ getItemsCount() }} items
+                      <ng-container *ngIf="getTotalItems() > 1; else singleItemBlock">
+                        {{ getTotalItems() }} items
                       </ng-container>
                       <ng-template #singleItemBlock>
-                        <ng-container *ngIf="getItemsCount() === 1; else emptyBlock">
+                        <ng-container *ngIf="getTotalItems() === 1; else emptyBlock">
                           1 item
                         </ng-container>
                         <ng-template #emptyBlock>
@@ -57,25 +57,16 @@
             </div>
             <div class="col">
               <div class="btn-group">
-                <form action="deleteProductFromShoppingCart.php" method="POST">
-                  <input type="hidden" name="product_id" value="<?php echo $product['ARTIKELNUMMER'] ?>" />
                   <button type="submit" name="delete_from_card" value="delete_from_card" class="border">-</button>
-                </form>
                 <a href="#" class="border" style="height:100%; width:100%; display-block:inline;">
                   {{cartItem.cartItemQuantity}}
                 </a>
-                <form action="addShoppingCart.php" method="POST">
-                  <input type="hidden" name="product_id" value="<?php echo $product['ARTIKELNUMMER'] ?>" />
-                  <button type="submit" name="add_to_card" value="add_to_card" class="border">+</button>
-                </form>
+                  <button type="submit" (click)="addToCart(cartItem?.productId)" name="add_to_card" value="add_to_card" class="border">+</button>
               </div>
             </div>
             <div class="col">&euro; {{cartItem.cartItemSubprice}}
-              <form action="deleteProduct.php" style="display:inline;" method="POST">
-                <input type="hidden" name="product_id" value="<?php echo $product['ARTIKELNUMMER'] ?>" />
                 <button type="submit" name="delete_from_card" value="delete_from_card" class="btn"
                   style="margin-top:0%; display:inline; width:30%; background-color:transparent; border-style:none; color:black ">&#10005;</button>
-              </form>
             </div>
           </div>
         </div>

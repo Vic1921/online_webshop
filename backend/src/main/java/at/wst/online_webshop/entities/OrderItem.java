@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-//müssen schauen ob wir order_items brauchen
 @Getter
 @Setter
 @RequiredArgsConstructor

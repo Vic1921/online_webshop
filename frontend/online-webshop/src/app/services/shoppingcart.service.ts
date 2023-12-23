@@ -4,13 +4,15 @@ import { Observable } from 'rxjs';
 import { ShoppingCart } from '../interfaces/shoppingcart';
 import { ProductDTO } from '../interfaces/product';
 import { Cartitem } from '../interfaces/cartitem';
+import { EventEmitter } from '@angular/core';
+import { EventEmitterService } from '../eventemitter.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ShoppingcartService {
   private apiUrl = 'http://localhost:8089';
-  constructor(private http : HttpClient) { }
+  constructor(private http : HttpClient, private eventEmitterService : EventEmitterService) { }
 
   getCart(cartID : number) : Observable<ShoppingCart>{
     return this.http.get<ShoppingCart>(`${this.apiUrl}/api/shopping-cart/get?id=${cartID}`);
@@ -30,6 +32,8 @@ export class ShoppingcartService {
       shoppingCartId: shoppingCartId,
       productId: productId
     };
+
+    this.eventEmitterService.emitCartUpdated();
 
     return this.http.post<ShoppingCart>(`${this.apiUrl}/api/shopping-cart/add-item/`, request);
   }

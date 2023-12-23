@@ -24,17 +24,29 @@ export class HeaderComponent {
   constructor(private router: Router, public loginService : LoginService, private databaseFillerService: DbfillerService, private productService: ProductService, private shoppingCartService : ShoppingcartService) {
     if (this.loginService.isLoggedIn()) {
       const cartId = Number(this.loginService.getCartID());
-  
-      this.shoppingCartService.getCart(cartId).subscribe(
-        (cart: ShoppingCart) => {
-          this.cart = cart;
-          console.log(this.cart); // Log inside the subscribe callback
-        },
-        (error) => {
-          console.error('Error fetching shopping cart:', error);
-        }
-      );
+
+      console.log(cartId);
+
+      if(cartId != null){
+        this.shoppingCartService.getCart(cartId).subscribe(
+          (cart: ShoppingCart) => {
+            this.cart = cart;
+            console.log(this.cart); // Log inside the subscribe callback
+          },
+          (error) => {
+            console.error('Error fetching shopping cart:', error);
+          }
+        );
+      }
     }
+  }
+
+  getTotalItems() : number{
+    const totalQuantity: number = this.cart?.cartItemDTOS?.reduce(
+      (sum, cartItem) => sum + (cartItem.cartItemQuantity || 0),
+      0) || 0;
+
+      return totalQuantity;
   }
 
 

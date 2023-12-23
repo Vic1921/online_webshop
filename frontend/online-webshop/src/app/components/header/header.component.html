@@ -18,7 +18,7 @@
                             <button class="button" style="padding-right: 40px; width: 100%; white-space: nowrap;" (click)="navigateToShoppingCart()">
                                 <button type="button" (click)="navigateToShoppingCart()" class="button">
                                     Einkaufswagen
-                                    <span class="badge badge-dark" style="background-color: rgba(0,0,0,.5);">{{cart?.cartItemDTOS?.length}}</span>
+                                    <span class="badge badge-dark" style="background-color: rgba(0,0,0,.5);">{{getTotalItems()}}</span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                         class="bi bi-cart" viewBox="0 0 16 16">
                                         <path

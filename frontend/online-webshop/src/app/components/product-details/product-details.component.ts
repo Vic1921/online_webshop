@@ -32,8 +32,7 @@ export class ProductDetailsComponent {
 
 
   }
-
-
+  
   getProductImageStyle(imageUrl: string): object {
     return {
       'background-image': `url(${imageUrl})`,

@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,7 +58,9 @@ public class ShoppingCartService {
 
     @Transactional
     public ShoppingCartDTO createShoppingCart(ShoppingCartDTO shoppingCartDTO) {
+        Customer customer = customerRepository.findById(shoppingCartDTO.getCustomerId()).orElseThrow(() -> new CustomerNotFoundException("Customer not found"));
         ShoppingCart shoppingCart = convertToEntity(shoppingCartDTO);
+        shoppingCart.setCustomer(customer);
         ShoppingCart savedShoppingCart = shoppingCartRepository.save(shoppingCart);
         return convertToDto(savedShoppingCart);
     }
@@ -86,8 +89,15 @@ public class ShoppingCartService {
     }
 
     @Transactional
-    public void deleteShoppingCart(Long id) {
-        shoppingCartRepository.deleteById(id);
+    public void deleteShoppingCart(Long cartId) {
+        ShoppingCart shoppingCart = shoppingCartRepository.findById(cartId)
+                .orElseThrow(() -> new ShoppingCartNotFoundException(cartId));
+
+        if (shoppingCart.getCustomer() != null) {
+            shoppingCart.getCustomer().setShoppingCart(null);
+        }
+
+        shoppingCartRepository.deleteById(cartId);
     }
 
     @Transactional
@@ -139,6 +149,7 @@ public class ShoppingCartService {
             // Update the existing CartItem
             CartItem cartItemToUpdate = existingCartItem.get();
             cartItemToUpdate.setCartItemQuantity(cartItemToUpdate.getCartItemQuantity() + quantityToAdd);
+            cartItemToUpdate.setShoppingCart(shoppingCart);
 
             BigDecimal newSubprice = new BigDecimal(product.getProductPrice())
                     .multiply(BigDecimal.valueOf(cartItemToUpdate.getCartItemQuantity()));
@@ -151,6 +162,7 @@ public class ShoppingCartService {
             // Create a new CartItem
             CartItem newCartItem = new CartItem(shoppingCart, product, quantityToAdd,
                     new BigDecimal(product.getProductPrice()).multiply(BigDecimal.valueOf(quantityToAdd)));
+            newCartItem.setShoppingCart(shoppingCart);
 
             // Add the new CartItem to the shopping cart
             shoppingCart.getCartItems().add(newCartItem);

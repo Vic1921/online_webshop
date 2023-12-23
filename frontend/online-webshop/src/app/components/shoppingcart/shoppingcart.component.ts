@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ShoppingcartService } from '../../services/shoppingcart.service';
 import { LoginService } from '../../services/login.service';
@@ -9,6 +9,7 @@ import { ProductService } from '../../services/product.service';
 import { OrderService } from '../../services/order.service';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { CustomerService } from '../../services/customer.service';
 
 @Component({
   selector: 'app-shoppingcart',
@@ -33,60 +34,103 @@ export class ShoppingcartComponent {
     private shoppingCartService: ShoppingcartService,
     public loginService: LoginService,
     private productService: ProductService,
-    private orderService : OrderService,
-    private router : Router
+    private orderService: OrderService,
+    private customerService : CustomerService,
+    private cdr: ChangeDetectorRef,
+    private router: Router
   ) {
     this.cart = { cartId: 0, totalPrice: 0, customerId: 0, cartItemDTOS: [] };
 
- 
+
     if (this.loginService.isLoggedIn()) {
       this.cartId = Number(this.loginService.getCartID());
 
       // Subscribe to getCart observable
-      this.shoppingCartService.getCart(this.cartId).subscribe(
-        (cart: ShoppingCart) => {
-          this.cart = cart;
-          console.log(cart);
+      if (this.cartId != null && this.cartId != 0) {
+        this.shoppingCartService.getCart(this.cartId).subscribe(
+          (cart: ShoppingCart) => {
+            this.cart = cart;
+            console.log(cart);
 
-          // Now, this.cart contains the shopping cart details including product details
-          // Fetch product details based on productIds
-          this.shoppingCartService.getShoppingCartItems(cart.cartId).subscribe(
-            (cartItems: Cartitem[] | null) => {
-              if (cartItems !== null) {
-                const productIds = cartItems.map((item) => item.productId);
-                this.cart.cartItemDTOS = cartItems;
-                console.log(this.cart.cartItemDTOS);
+            // Now, this.cart contains the shopping cart details including product details
+            // Fetch product details based on productIds
+            this.shoppingCartService.getShoppingCartItems(cart.cartId).subscribe(
+              (cartItems: Cartitem[] | null) => {
+                if (cartItems !== null) {
+                  const productIds = cartItems.map((item) => item.productId);
+                  this.cart.cartItemDTOS = cartItems;
+                  console.log(this.cart.cartItemDTOS);
 
-                // Iterate through productIds and fetch products
-                productIds.forEach((productId) => {
-                  this.productService.getProduct(productId).subscribe(
-                    (product) => {
-                      // Push the fetched product to the products array
-                      this.products.push(product);
+                  // Iterate through productIds and fetch products
+                  productIds.forEach((productId) => {
+                    this.productService.getProduct(productId).subscribe(
+                      (product) => {
+                        // Push the fetched product to the products array
+                        this.products.push(product);
 
-                      // Now, this.cart contains the shopping cart details including products
-                    },
-                    (error) => {
-                      console.error(`Error fetching product with ID ${productId}:`, error);
-                    }
-                  );
-                });
+                        // Now, this.cart contains the shopping cart details including products
+                      },
+                      (error) => {
+                        console.error(`Error fetching product with ID ${productId}:`, error);
+                      }
+                    );
+                  });
 
 
-              } else {
-                console.log(this.cart);
-                console.error('Cart items are null.');
+                } else {
+                  console.log(this.cart);
+                  console.error('Cart items are null.');
+                }
+              },
+              (error) => {
+                console.error('Error fetching shopping cart items:', error);
               }
-            },
-            (error) => {
-              console.error('Error fetching shopping cart items:', error);
-            }
-          );
-        },
-        (error) => {
-          console.error('Error fetching shopping cart:', error);
-        }
-      );
+            );
+          },
+          (error) => {
+            console.error('Error fetching shopping cart:', error);
+          }
+        );
+      }
+    }
+  }
+
+  addToCart(productId: number | undefined) : void {
+    if (productId == undefined) {
+      console.error('Product Id is undefined');
+      return;
+    }
+
+    if (this.loginService.isLoggedIn()) {
+      const customerId = this.loginService.getCustomerID();
+      // Check if the customer has an existing cart
+      let cartId: number | null = this.loginService.getCartID();
+      if(cartId == null) {
+        console.info("Cart id should be null" + cartId);
+      }else{
+        console.info("Cart id is not null" + cartId);
+
+      }
+
+      if (cartId !== null) {
+        // If the customer has an existing cart, add the product to the existing cart
+        console.info(cartId);
+        this.shoppingCartService.addToCart(customerId, cartId, productId).subscribe(
+          (shoppingCart) => {
+            // Handle the success response
+            this.cart = shoppingCart; // Updated shopping cart
+            this.cdr.detectChanges();
+    
+            console.log('Product added to existing cart. Updated shopping cart:', shoppingCart);
+          },
+          (error: any) => {
+            // Handle the error response
+            console.log("this cart id si");
+            console.log(cartId);
+            console.error('Error adding product to cart:', error);
+          }
+        );
+      } 
     }
   }
 
@@ -104,10 +148,12 @@ export class ShoppingcartComponent {
       this.orderService.placeOrder(customerId, shoppingCartId, paymentMethod, shippingDetails).subscribe(
         (response) => {
           console.log('Order placed successfully:', response);
-
           //redirect the customer to the order details component with the right order id
           const orderId = response.orderId;
+          //delete the cart
+          this.loginService.setCartID(null);
           console.log(orderId);
+
           this.router.navigate(['/order', orderId]);
         },
         (error) => {
@@ -121,12 +167,16 @@ export class ShoppingcartComponent {
       );
     }
   }
-  
 
-  getItemsCount(): number {
-    return this.cart?.cartItemDTOS?.length || 0;
+  getTotalItems() : number{
+    const totalQuantity: number = this.cart?.cartItemDTOS?.reduce(
+      (sum, cartItem) => sum + (cartItem.cartItemQuantity || 0),
+      0) || 0;
+
+      return totalQuantity;
   }
-  
+
+
   getProductImageStyle(imageUrl: string): object {
     return {
       'background-image': `url('./assets/images/products/'${imageUrl}')`,

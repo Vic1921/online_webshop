@@ -19,7 +19,7 @@ public class ShoppingCartDTO {
         private Long cartId;
         private Double totalPrice;
         private Long customerId;
-        private List<CartItemDTO> cartItemDTOS;
+        private List<CartItemDTO> cartItemDTOS = new ArrayList<>();;
 
         public void addProduct(CartItemDTO cartItemDTO){
                 if(cartItemDTOS == null){

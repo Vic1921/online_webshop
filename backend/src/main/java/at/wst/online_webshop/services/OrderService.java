@@ -12,10 +12,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static at.wst.online_webshop.convertors.OrderConvertor.convertToDto;
@@ -29,17 +32,19 @@ public class OrderService {
     private CustomerRepository customerRepository;
     private OrderItemRepository orderItemRepository;
     private ProductRepository productRepository;
+    private ShoppingCartService shoppingCartService;
 
     private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
 
 
     @Autowired
-    public OrderService(OrderItemRepository orderItemRepository, OrderRepository orderRepository, ShoppingCartRepository shoppingCartRepository, CustomerRepository customerRepository, ProductRepository productRepository) {
+    public OrderService(ShoppingCartService shoppingCartService, OrderItemRepository orderItemRepository, OrderRepository orderRepository, ShoppingCartRepository shoppingCartRepository, CustomerRepository customerRepository, ProductRepository productRepository) {
         this.orderRepository = orderRepository;
         this.shoppingCartRepository = shoppingCartRepository;
         this.customerRepository = customerRepository;
         this.productRepository = productRepository;
         this.orderItemRepository = orderItemRepository;
+        this.shoppingCartService = shoppingCartService;
     }
 
     public OrderDTO createOrder(OrderDTO orderDTO) {
@@ -124,11 +129,7 @@ public class OrderService {
         //reference Order
         final Order referenceOrder = order;
         orderItems.forEach(orderItem -> orderItem.setOrder(referenceOrder));
-
         order.setOrderItems(orderItems);
-
-
-
 
         // Update product quantities
         products.forEach(product -> {
@@ -139,15 +140,14 @@ public class OrderService {
         logger.info("DO WE REACH THIS CODE3");
         List<OrderItemDTO> orderItemDTOS = OrderItemConvertor.convertToDtoList(order.getOrderItems());
 
-
         // Save order to database
-        //OrderDTO savedOrder = createOrder(convertToDto(order));
         orderRepository.save(order);
         orderItemRepository.saveAll(orderItems);
         OrderDTO newOrderDTO = new OrderDTO(order.getOrderDate(), order.getOrderTotalMount(), order.getCustomer().getCustomerId(), orderItemDTOS);
         newOrderDTO.setOrderId(order.getOrderId());
         // Delete shopping cart and save
-        shoppingCartRepository.deleteById(shoppingCartId);
+        this.shoppingCartService.deleteShoppingCart(shoppingCartId);
+
         logger.info("NEW ORDER DTO IS: {}", newOrderDTO.toString());
         return newOrderDTO;
     }

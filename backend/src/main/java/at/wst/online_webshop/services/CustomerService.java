@@ -53,7 +53,7 @@ public class CustomerService {
             Customer customer = optionalCustomer.get();
 
             // Assuming you have a method to fetch the shopping cart by cartId
-           ShoppingCartDTO shoppingCartDTO = shoppingCartService.getShoppingCartById(cartId);
+            ShoppingCartDTO shoppingCartDTO = shoppingCartService.getShoppingCartById(cartId);
 
             if (shoppingCartDTO != null) {
                 // Update the customer entity with the new shopping cart
@@ -74,6 +74,7 @@ public class CustomerService {
             throw new CustomerNotFoundException("Customer not found");
         }
     }
+
 
     @Transactional
     public CustomerDTO signUp(CreatingCustomerRequest customerRequest) {
