@@ -27,7 +27,7 @@ export class HeaderComponent {
 
       console.log(cartId);
 
-      if(cartId != null){
+      if(cartId != null && cartId != 0){
         this.shoppingCartService.getCart(cartId).subscribe(
           (cart: ShoppingCart) => {
             this.cart = cart;
@@ -79,6 +79,10 @@ export class HeaderComponent {
 
   navigateToLogin(){
     this.router.navigate(['/login']);
+  }
+
+  navigateToOrders(){
+    this.router.navigate(['/orders']);
   }
 
   navigateToProduts() {

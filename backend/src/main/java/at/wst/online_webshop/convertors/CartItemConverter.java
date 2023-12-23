@@ -14,8 +14,6 @@ public class CartItemConverter {
 
     public static CartItemDTO convertToDto(CartItem cartItem) {
         CartItemDTO cartItemDTO = modelMapper.map(cartItem, CartItemDTO.class);
-        cartItemDTO.setShoppingCartDTO(ShoppingCartConvertor.convertToDto(cartItem.getShoppingCart()));
-
         return cartItemDTO;
     }
 
@@ -27,7 +25,6 @@ public class CartItemConverter {
 
     public static CartItem convertToEntity(CartItemDTO cartItemDTO) {
         CartItem cartItem = modelMapper.map(cartItemDTO, CartItem.class);
-        cartItem.setShoppingCart(ShoppingCartConvertor.convertToEntity(cartItemDTO.getShoppingCartDTO()));
         return cartItem;
     }
 }

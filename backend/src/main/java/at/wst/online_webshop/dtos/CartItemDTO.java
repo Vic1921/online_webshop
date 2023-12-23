@@ -24,7 +24,7 @@ public class CartItemDTO {
     private Double productPrice;
     private String productCategory;
     private int cartItemQuantity;
-    private ShoppingCartDTO shoppingCartDTO;
+    private long shoppingCartId;
     private BigDecimal cartItemSubprice;
 
     @Override

@@ -36,7 +36,7 @@ export class OrderService {
   }
 
   getOrdersByCustomerId(customerId : number) : Observable<Order[]>{
-    const url = `${this.apiUrl}/${customerId}`;
+    const url = `${this.apiUrl}/api/orders/=${customerId}`;
     return this.http.get<Order[]>(url);
 
   }

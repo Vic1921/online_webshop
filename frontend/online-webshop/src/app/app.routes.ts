@@ -6,6 +6,7 @@ import { ShoppingcartComponent } from './components/shoppingcart/shoppingcart.co
 import { ProductDetailsComponent } from './components/product-details/product-details.component';
 import { LoginComponent } from './components/login/login.component';
 import { OrderdetailsComponent } from './components/orderdetails/orderdetails.component';
+import { OrderComponent } from './components/order/order.component';
 export const routes: Routes = [
     {
         path:'',
@@ -41,5 +42,10 @@ export const routes: Routes = [
         path:'order/:orderId',
         component: OrderdetailsComponent,
         title: 'Order',
+    },
+    {
+        path: 'orders',
+        component: OrderComponent,
+        title: 'Orders',
     }
 ];

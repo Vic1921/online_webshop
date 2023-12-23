@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -128,6 +129,7 @@ public class ShoppingCartService {
         shoppingCartRepository.save(shoppingCart);
 
         // Convert entities to DTOs
+        List<CartItemDTO> cartItemDTOS = CartItemConverter.convertToDtoList(shoppingCart.getCartItems());
         ShoppingCartDTO shoppingCartDTO = ShoppingCartConvertor.convertToDto(shoppingCart);
         shoppingCartDTO.setCustomerId(customerId);
         shoppingCartDTO.setTotalPrice(calculateTotalPriceShoppingCart(shoppingCart).doubleValue());
@@ -135,7 +137,7 @@ public class ShoppingCartService {
         // Create a CartItemDTO based on the product and quantity
        CartItemDTO cartItemDTO = CartItemConverter.convertToDto(cartItem);
 
-        shoppingCartDTO.addProduct(cartItemDTO);
+        shoppingCartDTO.setCartItemDTOS(cartItemDTOS);
         return shoppingCartDTO;
     }
 
@@ -152,7 +154,7 @@ public class ShoppingCartService {
             cartItemToUpdate.setShoppingCart(shoppingCart);
 
             BigDecimal newSubprice = new BigDecimal(product.getProductPrice())
-                    .multiply(BigDecimal.valueOf(cartItemToUpdate.getCartItemQuantity()));
+                    .multiply(BigDecimal.valueOf(cartItemToUpdate.getCartItemQuantity())).setScale(2, RoundingMode.HALF_UP);;
             cartItemToUpdate.setCartItemSubprice(newSubprice);
 
             // Save the updated CartItem
@@ -176,6 +178,6 @@ public class ShoppingCartService {
     private BigDecimal calculateTotalPriceShoppingCart(ShoppingCart shoppingCart){
         return shoppingCart.getCartItems().stream()
                 .map(CartItem::getCartItemSubprice)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+                .reduce(BigDecimal.ZERO, BigDecimal::add).setScale(2, RoundingMode.HALF_UP);
     }
 }

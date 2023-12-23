@@ -15,7 +15,7 @@ import { LoginService } from '../../services/login.service';
   styleUrl: './order.component.css'
 })
 export class OrderComponent {
-  private orders : Order[] = [];
+  orders : Order[] = [];
 
   constructor(private orderService : OrderService, private loginService : LoginService){
     const customerId = loginService.getCustomerID();

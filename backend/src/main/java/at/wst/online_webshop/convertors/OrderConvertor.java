@@ -25,6 +25,10 @@ public class OrderConvertor {
     }
     // Entity to DTO
     public static OrderDTO convertToDto(Order order) {
-        return modelMapper.map(order, OrderDTO.class);
+
+        OrderDTO orderDTO = modelMapper.map(order, OrderDTO.class);
+        List<OrderItemDTO> orderItemDTOS = OrderItemConvertor.convertToDtoList(order.getOrderItems());
+        orderDTO.setOrderItems(orderItemDTOS);
+        return orderDTO;
     }
 }
