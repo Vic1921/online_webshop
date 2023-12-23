@@ -9,5 +9,6 @@ import { CommonModule } from '@angular/common';
   styleUrl: './review.component.css'
 })
 export class ReviewComponent {
+  reviews: Review[] = []; // Assuming you have a reviews array
 
 }

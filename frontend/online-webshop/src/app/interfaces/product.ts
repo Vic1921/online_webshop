@@ -6,6 +6,7 @@ export interface ProductDTO {
     productPrice: number;
     productSKU: string;
     productQuantity: number;
+    vendorName : string;
     productImageUrl: string;
     reviews: number[] 
 }

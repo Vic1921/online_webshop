@@ -6,6 +6,7 @@ import { OrderService } from '../../services/order.service';
 import { Order } from '../../interfaces/order';
 import { LoginComponent } from '../login/login.component';
 import { LoginService } from '../../services/login.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-order',
@@ -17,7 +18,7 @@ import { LoginService } from '../../services/login.service';
 export class OrderComponent {
   orders : Order[] = [];
 
-  constructor(private orderService : OrderService, private loginService : LoginService){
+  constructor(private orderService : OrderService, private loginService : LoginService, private router : Router){
     const customerId = loginService.getCustomerID();
     this.orderService.getOrdersByCustomerId(customerId).subscribe(
       (repsonse) => {
@@ -29,6 +30,10 @@ export class OrderComponent {
       }
     )
     
+  }
+
+  navigateToOrderDetails(orderId : number) : void{
+    this.router.navigate(['/order', orderId]);
   }
 
 }

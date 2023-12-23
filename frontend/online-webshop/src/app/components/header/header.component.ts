@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
 import { LoginService } from '../../services/login.service';
 import { DbfillerService } from '../../services/dbfiller.service';
 import { ProductService } from '../../services/product.service';
-import { switchMap, take } from 'rxjs/operators'; // Import switchMap and take from 'rxjs/operators'
+import { filter, switchMap, take } from 'rxjs/operators'; // Import switchMap and take from 'rxjs/operators'
 import { ShoppingCart } from '../../interfaces/shoppingcart';
 import { ShoppingcartService } from '../../services/shoppingcart.service';
 
@@ -19,9 +19,12 @@ import { ShoppingcartService } from '../../services/shoppingcart.service';
 })
 export class HeaderComponent {
   private databaseFilled = false;
+  @Input() isOrderComponent: boolean = false;
+  @Input() isHomeComponent: boolean = false;
+
   cart : ShoppingCart | undefined;
 
-  constructor(private router: Router, public loginService : LoginService, private databaseFillerService: DbfillerService, private productService: ProductService, private shoppingCartService : ShoppingcartService) {
+  constructor(private router: Router, private activatedRouter : ActivatedRoute, public loginService : LoginService, private databaseFillerService: DbfillerService, private productService: ProductService, private shoppingCartService : ShoppingcartService) {
     if (this.loginService.isLoggedIn()) {
       const cartId = Number(this.loginService.getCartID());
 
@@ -39,6 +42,7 @@ export class HeaderComponent {
         );
       }
     }
+   
   }
 
   getTotalItems() : number{
