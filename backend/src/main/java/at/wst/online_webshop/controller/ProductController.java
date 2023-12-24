@@ -26,9 +26,9 @@ public class ProductController {
     }
 
     @GetMapping("/get-products")
-    public ResponseEntity<List<Product>> getAllProducts(){
+    public ResponseEntity<List<ProductDTO>> getAllProducts(){
         try {
-            List<Product> products = productService.getAllProducts();
+            List<ProductDTO> products = productService.getAllProducts();
             return ResponseEntity.ok(products);
         } catch (Exception e) {
             // Log the exception

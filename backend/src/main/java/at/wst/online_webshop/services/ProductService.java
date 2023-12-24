@@ -1,10 +1,17 @@
 package at.wst.online_webshop.services;
 
+import at.wst.online_webshop.controller.OrderController;
+import at.wst.online_webshop.convertors.OrderConvertor;
+import at.wst.online_webshop.convertors.ProductConvertor;
+import at.wst.online_webshop.dtos.OrderDTO;
 import at.wst.online_webshop.dtos.ProductDTO;
+import at.wst.online_webshop.entities.Order;
 import at.wst.online_webshop.entities.Product;
 import at.wst.online_webshop.entities.Review;
 import at.wst.online_webshop.exception_handlers.ProductNotFoundException;
 import at.wst.online_webshop.repositories.ProductRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,14 +23,21 @@ import java.util.stream.Collectors;
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
+    private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
+
 
     public ProductService(ProductRepository productRepository){
         this.productRepository = productRepository;
     }
 
     @Transactional(readOnly = true)
-    public List<Product> getAllProducts(){
-        return this.productRepository.findAll();
+    public List<ProductDTO> getAllProducts(){
+        List<Product> products = this.productRepository.findAll();
+        List<ProductDTO> productDTOS =  ProductConvertor.convertToDtoList(products);
+        for (ProductDTO productDTO : productDTOS) {
+            logger.info("Order DTO details: {}", productDTO.toString());
+        }
+        return productDTOS;
     }
 
     public ProductDTO getProduct(long productId) {

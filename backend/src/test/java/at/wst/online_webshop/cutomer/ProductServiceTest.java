@@ -1,5 +1,7 @@
 package at.wst.online_webshop.cutomer;
 
+import at.wst.online_webshop.convertors.ProductConvertor;
+import at.wst.online_webshop.dtos.ProductDTO;
 import at.wst.online_webshop.entities.Product;
 import at.wst.online_webshop.repositories.ProductRepository;
 import at.wst.online_webshop.services.ProductService;
@@ -33,7 +35,7 @@ public class ProductServiceTest {
         Mockito.when(productRepository.findAll()).thenReturn(mockProducts);
 
         // Call the method under test
-        List<Product> result = productService.getAllProducts();
+        List<ProductDTO> result = productService.getAllProducts();
 
         // Verify the interaction
         Mockito.verify(productRepository, Mockito.times(1)).findAll();

@@ -39,4 +39,15 @@ public class Review {
         this.reviewRating = rating;
         this.reviewComment = comment;
     }
+
+    @Override
+    public String toString() {
+        return "Review{" +
+                "reviewId=" + reviewId +
+                ", product=" + product +
+                ", customer=" + customer +
+                ", reviewRating=" + reviewRating +
+                ", reviewComment='" + reviewComment + '\'' +
+                '}';
+    }
 }

@@ -1,11 +1,14 @@
 package at.wst.online_webshop.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.sql.Array;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -47,7 +50,9 @@ public class Product {
     @JoinColumn(name = "cart_id")
     private ShoppingCart shoppingCart;
 
-    @OneToMany(mappedBy = "product")
+    //JsonIgnore to handle the bidirectional relationship between reviews and products, because there is infinite recursion during serialization
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Review> reviews;
 
     /*
@@ -72,6 +77,7 @@ public class Product {
         this.productSKU = sku;
         this.productImageUrl = productImageUrl;
         this.productQuantity = quantity;
+        this.reviews = new ArrayList<>();
         this.vendor = vendor;
     }
 
@@ -99,6 +105,7 @@ public class Product {
                 ", productDescription='" + productDescription + '\'' +
                 ", productQuantity=" + productQuantity +
                 ", productImageUrl='" + productImageUrl + '\'' +
+                ", shoppingCart=" + shoppingCart +
                 '}';
     }
 }

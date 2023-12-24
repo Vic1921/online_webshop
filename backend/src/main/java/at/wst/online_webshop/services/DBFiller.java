@@ -31,9 +31,10 @@ public class DBFiller {
     private static final int NUMBER_OF_CUSTOMERS = 100;
     private static final int NUMBER_OF_ORDERS = 100;
     private static final int NUMBER_OF_PRODUCTS = 36;
-    private static final int NUMBER_OF_REVIEWS = 10;
+    private static final int NUMBER_OF_REVIEWS = 100;
     private static final int NUMBER_OF_SHOPPING_CARTS = 10;
     private static final int NUMBER_OF_VENDORS = 20;
+    private static final int NUMBER_OF_ORDER_ITEMS = 5;
 
     private static final Logger logger = LoggerFactory.getLogger(DBFiller.class);
 
@@ -70,8 +71,9 @@ public class DBFiller {
         fillCustomers();
         fillVendors();
         fillProducts();
-        //fillOrders();
-        //fillReviews();
+        fillOrders();
+        fillOrderItems();
+        fillReviews();
         //fillShoppingCarts();
     }
 
@@ -127,6 +129,7 @@ public class DBFiller {
 
         customerRepository.saveAll(customers);
     }
+
     public void fillVendors() {
         var faker = Faker.instance();
         List<Vendor> vendors = IntStream.range(0, NUMBER_OF_VENDORS)
@@ -146,7 +149,6 @@ public class DBFiller {
         var faker = Faker.instance();
 
         List<String[]> productFiles = readFile(this.products);
-        logger.info("FILL PRODUCT " + this.vendorRepository.findAll().toString());
 
         List<Product> products = IntStream.range(0, NUMBER_OF_PRODUCTS)
                 //i dont know why you put parallel it fucked everything up i can't get the right amoutn of entries from vendorRepository the number always changed
@@ -202,6 +204,22 @@ public class DBFiller {
         orderRepository.saveAll(orders);
     }
 
+    private void fillOrderItems() {
+        Faker faker = Faker.instance();
+        List<OrderItem> orderItems = new ArrayList<>();
+
+        for (int i = 0; i < NUMBER_OF_ORDERS * NUMBER_OF_ORDER_ITEMS; i++) {
+            Order order = orderRepository.findById((long) faker.number().numberBetween(1, NUMBER_OF_ORDERS)).orElseThrow();
+            Product product = productRepository.findById((long) faker.number().numberBetween(1, NUMBER_OF_PRODUCTS)).orElseThrow();
+            int quantity = faker.number().numberBetween(1,5);
+            OrderItem orderItem = new OrderItem(order, product, quantity);
+
+            orderItems.add(orderItem);
+        }
+
+        orderItemRepository.saveAll(orderItems);
+    }
+
     private void fillReviews() {
         List<Review> reviews = new ArrayList<>(NUMBER_OF_REVIEWS);
         var faker = Faker.instance();
@@ -215,6 +233,23 @@ public class DBFiller {
             reviews.add(new Review(product, customer, rating, comment));
         }
         reviewRepository.saveAll(reviews);
+
+        // Update the associated products with the saved reviews
+        for (Review review : reviews) {
+            Product product = review.getProduct();
+            if (product != null) {
+                List<Review> productReviews = product.getReviews();
+                if (productReviews == null) {
+                    productReviews = new ArrayList<>();
+                    product.setReviews(productReviews);
+                }
+                logger.info(product.toString());
+                logger.info(product.getReviews().toString());
+
+                productReviews.add(review);
+                productRepository.save(product);
+            }
+        }
     }
 
     private void fillShoppingCarts() {

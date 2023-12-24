@@ -36,4 +36,10 @@ public class OrderItem {
                 ", orderItemQuantity=" + orderItemQuantity +
                 '}';
     }
+
+    public OrderItem(Order order, Product product, int orderItemQuantity) {
+        this.order = order;
+        this.product = product;
+        this.orderItemQuantity = orderItemQuantity;
+    }
 }
