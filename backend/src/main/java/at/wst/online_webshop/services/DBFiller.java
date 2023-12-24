@@ -31,7 +31,7 @@ public class DBFiller {
     private static final int NUMBER_OF_CUSTOMERS = 100;
     private static final int NUMBER_OF_ORDERS = 100;
     private static final int NUMBER_OF_PRODUCTS = 36;
-    private static final int NUMBER_OF_REVIEWS = 100;
+    private static final int NUMBER_OF_REVIEWS = 300;
     private static final int NUMBER_OF_SHOPPING_CARTS = 10;
     private static final int NUMBER_OF_VENDORS = 20;
     private static final int NUMBER_OF_ORDER_ITEMS = 5;

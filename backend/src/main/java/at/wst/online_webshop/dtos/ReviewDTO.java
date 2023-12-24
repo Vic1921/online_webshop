@@ -13,7 +13,7 @@ public class ReviewDTO {
 
         private Long reviewId;
         private Long productId;
-        private Long customerId;
+        private String customerName;
         private Integer reviewRating;
         private String reviewComment;
 }

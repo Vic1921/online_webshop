@@ -1,1 +1,154 @@
-<p>review works!</p>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Business Frontpage - Start Bootstrap Template</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+
+
+<section style="background-color: #e7effd;">
+    <div class="container my-5 py-5 text-dark">
+
+        <div class="height-100 container d-flex justify-content-between">
+    
+            <div class="card p-3" style="height:350px !important;">                
+                <div class="mt-5 d-flex justify-content-between align-items-center">
+                    <h5 class="review-stat" style="font-size: small !important;">5 Sterne</h5>
+                    <div class="small-ratings">
+                        <i class="fa fa-star rating-color"></i>
+                        <i class="fa fa-star rating-color"></i>
+                        <i class="fa fa-star rating-color"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                    </div>
+                    
+                </div>
+                
+                <div class="mt-1 d-flex justify-content-between align-items-center">
+                    <h5 class="review-stat" style="font-size: small !important;">4 Sterne</h5>
+                    <div class="small-ratings">
+                        <i class="fa fa-star rating-color"></i>
+                        <i class="fa fa-star rating-color"></i>
+                        <i class="fa fa-star rating-color"></i>
+                        <i class="fa fa-star rating-color"></i>
+                        <i class="fa fa-star"></i>
+                    </div>
+                </div>
+                
+                
+                <div class="mt-1 d-flex justify-content-between align-items-center">
+                    <h5 class="review-stat" style="font-size: small !important;">3 Sterne</h5>
+                    <div class="small-ratings">
+                        <i class="fa fa-star rating-color"></i>
+                        <i class="fa fa-star rating-color"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                    </div>
+                </div>
+                
+                
+                <div class="mt-1 d-flex justify-content-between align-items-center">
+                    <h5 class="review-stat" style="font-size: small !important;">2 Sterne</h5>
+                    <div class="small-ratings">
+                        <i class="fa fa-star rating-color"></i>
+                        <i class="fa fa-star rating-color"></i>
+                        <i class="fa fa-star rating-color"></i>
+                        <i class="fa fa-star rating-color"></i>
+                        <i class="fa fa-star rating-color"></i>
+                    </div>
+                </div>
+                
+                
+                <div class="mt-1 d-flex justify-content-between align-items-center">
+                    <h5 class="review-stat" style="font-size: small !important;">1 Sterne</h5>
+                    <div class="small-ratings">
+                        <i class="fa fa-star rating-color"></i>
+                        <i class="fa fa-star rating-color"></i>
+                        <i class="fa fa-star rating-color"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                    </div>
+                </div>
+                
+                <div class="mt-1 d-flex justify-content-between align-items-center">
+                    <h5 class="review-stat" style="font-size: small !important;">0 Sterne</h5>
+                    <div class="small-ratings">
+                        <i class="fa fa-star rating-color"></i>
+                        <i class="fa fa-star rating-color"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                    </div>
+                </div>
+
+                <div class="mt-1" style="padding-top: 10%;">
+                    <h5 class="review-stat" style="font-size: large; white-space: no-wrap;">Rezension verfassen</h5>
+                    
+                    <button class="btn btn-primary mt-2" (click)="writeReview()">Schreiben Sie eine Rezension</button>
+                </div>
+                
+
+            </div>
+
+            <div class="row d-flex justify-content-start" style="width:100% !important; padding-left: 50px;">
+                <div class="col-md-11 col-lg-9 col-xl-7">
+                    <div *ngFor="let review of reviews">
+                        <div class="d-flex flex-start mb-4" style="width:700px !important; min-height:auto;">
+                            <div class="card w-100">
+                                <div class="card-body p-4">
+                                    <div class="">
+                                        <h5>{{review.customerName}}</h5>
+                                        <div class="small-ratings">
+                                            <i *ngFor="let star of getStarRating(review.reviewRating)" [class]="star"></i>
+                                          </div>
+                                        <p>
+                                            {{review.reviewComment}}
+                                        </p>
+    
+                                        <div class="small d-flex justify-content-start">
+                                            <a href="#!" class="d-flex align-items-center me-3">
+                                                <i class="far fa-thumbs-up me-2"></i>
+                                                <p class="mb-0">Like</p>
+                                            </a>
+                                            <a href="#!" class="d-flex align-items-center me-3">
+                                                <i class="far fa-comment-dots me-2"></i>
+                                                <p class="mb-0">Comment</p>
+                                            </a>
+                                            <a href="#!" class="d-flex align-items-center me-3">
+                                                <i class="fas fa-share me-2"></i>
+                                                <p class="mb-0">Share</p>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+
+
+
+
+
+
+       
+    </div>
+
+    
+</section>

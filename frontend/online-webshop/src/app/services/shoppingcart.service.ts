@@ -5,7 +5,7 @@ import { ShoppingCart } from '../interfaces/shoppingcart';
 import { ProductDTO } from '../interfaces/product';
 import { Cartitem } from '../interfaces/cartitem';
 import { EventEmitter } from '@angular/core';
-import { EventEmitterService } from '../eventemitter.service';
+import { EventEmitterService } from './eventemitter.service';
 
 @Injectable({
   providedIn: 'root'

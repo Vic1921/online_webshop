@@ -10,6 +10,7 @@ public class ReviewConvertor {
 
     public static ReviewDTO convertToDto(Review review) {
         ReviewDTO reviewDTO = modelMapper.map(review, ReviewDTO.class);
+        reviewDTO.setCustomerName(review.getCustomer().getName());
         return reviewDTO;
     }
 
