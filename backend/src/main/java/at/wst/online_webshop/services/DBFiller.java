@@ -19,9 +19,12 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -229,8 +232,15 @@ public class DBFiller {
             var customer = customerRepository.findById((long) faker.number().numberBetween(1, NUMBER_OF_CUSTOMERS)).orElseThrow();
             var rating = faker.number().numberBetween(1, 5);
             var comment = faker.lorem().sentence();
+            var creationDate = faker.date().past(365, TimeUnit.DAYS);
+            LocalDate localDate = creationDate.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
 
-            reviews.add(new Review(product, customer, rating, comment));
+            // Format LocalDate
+            String formattedDateTime = localDate.format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+
+
+            reviews.add(new Review(product, customer, rating, comment, formattedDateTime));
         }
         reviewRepository.saveAll(reviews);
 

@@ -2,11 +2,13 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Review } from '../../interfaces/review';
 import { ReviewService } from '../../services/review.service';
+import { Router } from '@angular/router';
+import { WriteReviewComponent } from '../writereview/writereview.component';
 
 @Component({
   selector: 'app-review',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, WriteReviewComponent],
   templateUrl: './review.component.html',
   styleUrl: './review.component.css'
 })
@@ -16,7 +18,7 @@ export class ReviewComponent implements OnChanges{
   @Input() productId: number | undefined;
   averageReviewRating: number | undefined;
 
-  constructor(private reviewService: ReviewService) {}
+  constructor(private reviewService: ReviewService, private router : Router) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['productId'] && this.productId) {
@@ -63,8 +65,12 @@ export class ReviewComponent implements OnChanges{
     return starRating;
   }
 
+  getReviewSize(){
+    return this.reviews.length;
+  }
 
+  
   writeReview() {
-    throw new Error('Method not implemented.');
+    this.router.navigate(['/create-review']);
     }
 }

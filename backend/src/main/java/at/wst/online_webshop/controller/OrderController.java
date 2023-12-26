@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -61,6 +62,23 @@ public class OrderController {
             return ResponseEntity.badRequest().body(null);
         }
 
+    }
+
+    @GetMapping("/order-details")
+    public ResponseEntity<OrderDTO> getOrderByProductAndCustomer(@RequestParam Long customerId, @RequestParam Long productId){
+        logger.info("RECEVIED REQUEST");
+        try{
+            OrderDTO orderDTO = orderService.getOrderByCustomerAndProduct(customerId, productId);
+
+            if (orderDTO != null) {
+                logger.info(orderDTO.toString());
+                return ResponseEntity.ok(orderDTO);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        }catch (Exception e) {
+            return ResponseEntity.status(500).body(null);
+        }
     }
 
     // Update an existing order

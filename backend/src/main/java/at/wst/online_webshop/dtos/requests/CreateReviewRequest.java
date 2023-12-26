@@ -15,4 +15,15 @@ public class CreateReviewRequest {
     private String comment;
     private int rating;
     private Long orderId;
+
+    @Override
+    public String toString() {
+        return "CreateReviewRequest{" +
+                "customerId=" + customerId +
+                ", productId=" + productId +
+                ", comment='" + comment + '\'' +
+                ", rating=" + rating +
+                ", orderId=" + orderId +
+                '}';
+    }
 }

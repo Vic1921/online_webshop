@@ -14,6 +14,8 @@ import at.wst.online_webshop.exceptions.FailedReviewException;
 import at.wst.online_webshop.repositories.CustomerRepository;
 import at.wst.online_webshop.repositories.ProductRepository;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -61,7 +63,12 @@ public class ReviewService {
         }
 
         // Create and save the review
-        Review review = new Review(product, customer, rating, comment);
+        LocalDateTime currentDateTime = LocalDateTime.now();
+
+        // Format the date and time (optional)
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String formattedDateTime = currentDateTime.format(formatter);
+        Review review = new Review(product, customer, rating, comment, formattedDateTime);
         Review savedReview = reviewRepository.save(review);
 
         // Convert to DTO and return

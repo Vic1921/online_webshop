@@ -33,11 +33,15 @@ public class Review {
     @Column(name = "review_comment", nullable = false)
     private String reviewComment;
 
-    public Review(Product product, Customer customer, int rating, String comment) {
+    @Column(name = "review_date", nullable = false)
+    private String reviewDate;
+
+    public Review(Product product, Customer customer, int rating, String comment, String reviewDate) {
         this.product = product;
         this.customer = customer;
         this.reviewRating = rating;
         this.reviewComment = comment;
+        this.reviewDate = reviewDate;
     }
 
     @Override

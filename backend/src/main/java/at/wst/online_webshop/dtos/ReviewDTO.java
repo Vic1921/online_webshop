@@ -14,6 +14,7 @@ public class ReviewDTO {
         private Long reviewId;
         private Long productId;
         private String customerName;
+        private String reviewDate;
         private Integer reviewRating;
         private String reviewComment;
 }

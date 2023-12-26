@@ -56,6 +56,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests(req -> req
                         .antMatchers("/api/shopping-cart/**").permitAll()
+                        .antMatchers("/api/reviews/**").permitAll()
                         .antMatchers("/api/customers/**").permitAll()
                         .antMatchers("/api/orders/**").permitAll()
                         .antMatchers("/api/customers/register").permitAll()

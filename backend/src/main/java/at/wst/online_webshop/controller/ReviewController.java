@@ -28,6 +28,7 @@ public class ReviewController {
     // Add a review
     @PostMapping
     public ResponseEntity<ReviewDTO> addReview(@RequestBody CreateReviewRequest request) {
+        logger.info(request.toString());
         ReviewDTO result = reviewService.addReview(
                 request.getCustomerId(),
                 request.getProductId(),

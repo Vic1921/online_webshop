@@ -40,4 +40,11 @@ export class OrderService {
     return this.http.get<Order[]>(url);
 
   }
+
+  getOrderDetails(customerId: number, productId: number): Observable<Order> {
+    const url = `${this.apiUrl}/api/orders/order-details?customerId=${customerId}&productId=${productId}`;
+
+    return this.http.get<Order>(url);
+  }
+  
 }

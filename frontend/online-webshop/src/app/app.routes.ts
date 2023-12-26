@@ -8,6 +8,7 @@ import { LoginComponent } from './components/login/login.component';
 import { OrderdetailsComponent } from './components/orderdetails/orderdetails.component';
 import { OrderComponent } from './components/order/order.component';
 import { ReviewComponent } from './components/review/review.component';
+import { WriteReviewComponent } from './components/writereview/writereview.component';
 export const routes: Routes = [
     {
         path:'',
@@ -53,5 +54,10 @@ export const routes: Routes = [
         path: 'reviews',
         component: ReviewComponent,
         title: 'Reviews',
+    },
+    { 
+        path: 'create-review/:id',
+        component: WriteReviewComponent,
+        title: 'CreateReview',
     }
 ];

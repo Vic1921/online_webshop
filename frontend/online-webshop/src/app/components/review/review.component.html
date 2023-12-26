@@ -18,137 +18,140 @@
 </head>
 
 
-<section style="background-color: #e7effd;">
-    <div class="container my-5 py-5 text-dark">
+<link rel="stylesheet" href="https://allyoucan.cloud/cdn/icofont/1.0.1/icofont.css"
+    integrity="sha384-jbCTJB16Q17718YM9U22iJkhuGbS0Gd2LjaWb4YJEZToOPmnKDjySVa323U+W7Fv" crossorigin="anonymous">
+<div class="container">
+    <div class="col-md-12">
+        <div class="offer-dedicated-body-left">
+            <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade active show" id="pills-reviews" role="tabpanel"
+                    aria-labelledby="pills-reviews-tab">
+                    <div id="ratings-and-reviews"
+                        class="bg-white rounded shadow-sm p-4 mb-4 clearfix restaurant-detailed-star-rating">
+                        <span class="star-rating float-right">
+                            <a href="#"><i class="icofont-ui-rating icofont-2x active"></i></a>
+                            <a href="#"><i class="icofont-ui-rating icofont-2x active"></i></a>
+                            <a href="#"><i class="icofont-ui-rating icofont-2x active"></i></a>
+                            <a href="#"><i class="icofont-ui-rating icofont-2x active"></i></a>
+                            <a href="#"><i class="icofont-ui-rating icofont-2x"></i></a>
+                        </span>
+                    </div>
+                    <div class="bg-white rounded shadow-sm p-4 mb-4 clearfix graph-star-rating">
+                        <h5 class="mb-0 mb-4">Ratings and Reviews</h5>
+                        <div class="graph-star-rating-header">
+                            <div class="star-rating">
+                                <a href="#"><i class="icofont-ui-rating active"></i></a>
+                                <a href="#"><i class="icofont-ui-rating active"></i></a>
+                                <a href="#"><i class="icofont-ui-rating active"></i></a>
+                                <a href="#"><i class="icofont-ui-rating active"></i></a>
+                                <a href="#"><i class="icofont-ui-rating"></i></a> <b class="text-black ml-2">{{getReviewSize()}} Reviews</b>
+                            </div>
+                            <p class="text-black mb-4 mt-2">Rated {{calculateAverageRating()}} out of 5</p>
+                        </div>
+                        <div class="graph-star-rating-body">
+                            <div class="rating-list">
+                                <div class="rating-list-left text-black">
+                                    5 Star
+                                </div>
+                                <div class="rating-list-center">
+                                    <div class="progress">
+                                        <div style="width: 56%" aria-valuemax="5" aria-valuemin="0" aria-valuenow="5"
+                                            role="progressbar" class="progress-bar bg-primary">
+                                            <span class="sr-only">80% Complete (danger)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="rating-list-right text-black">56%</div>
+                            </div>
+                            <div class="rating-list">
+                                <div class="rating-list-left text-black">
+                                    4 Star
+                                </div>
+                                <div class="rating-list-center">
+                                    <div class="progress">
+                                        <div style="width: 23%" aria-valuemax="5" aria-valuemin="0" aria-valuenow="5"
+                                            role="progressbar" class="progress-bar bg-primary">
+                                            <span class="sr-only">80% Complete (danger)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="rating-list-right text-black">23%</div>
+                            </div>
+                            <div class="rating-list">
+                                <div class="rating-list-left text-black">
+                                    3 Star
+                                </div>
+                                <div class="rating-list-center">
+                                    <div class="progress">
+                                        <div style="width: 11%" aria-valuemax="5" aria-valuemin="0" aria-valuenow="5"
+                                            role="progressbar" class="progress-bar bg-primary">
+                                            <span class="sr-only">80% Complete (danger)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="rating-list-right text-black">11%</div>
+                            </div>
+                            <div class="rating-list">
+                                <div class="rating-list-left text-black">
+                                    2 Star
+                                </div>
+                                <div class="rating-list-center">
+                                    <div class="progress">
+                                        <div style="width: 2%" aria-valuemax="5" aria-valuemin="0" aria-valuenow="5"
+                                            role="progressbar" class="progress-bar bg-primary">
+                                            <span class="sr-only">80% Complete (danger)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="rating-list-right text-black">02%</div>
+                            </div>
+                        </div>
+                        <div class="graph-star-rating-footer text-center mt-3 mb-3">
+                            <button type="button" (click)="this.writeReview()" class="btn btn-outline-primary btn-sm">Rate and Review</button>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded shadow-sm p-4 mb-4">
+                        <a href="#" class="btn btn-outline-primary btn-sm float-right">Top Rated</a>
+                        <h5 class="mb-1">All Ratings and Reviews</h5>
 
-        <div class="height-100 container d-flex justify-content-between">
-    
-            <div class="card p-3" style="height:350px !important;">                
-                <div class="mt-5 d-flex justify-content-between align-items-center">
-                    <h5 class="review-stat" style="font-size: small !important;">5 Sterne</h5>
-                    <div class="small-ratings">
-                        <i class="fa fa-star rating-color"></i>
-                        <i class="fa fa-star rating-color"></i>
-                        <i class="fa fa-star rating-color"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                    </div>
-                    
-                </div>
-                
-                <div class="mt-1 d-flex justify-content-between align-items-center">
-                    <h5 class="review-stat" style="font-size: small !important;">4 Sterne</h5>
-                    <div class="small-ratings">
-                        <i class="fa fa-star rating-color"></i>
-                        <i class="fa fa-star rating-color"></i>
-                        <i class="fa fa-star rating-color"></i>
-                        <i class="fa fa-star rating-color"></i>
-                        <i class="fa fa-star"></i>
-                    </div>
-                </div>
-                
-                
-                <div class="mt-1 d-flex justify-content-between align-items-center">
-                    <h5 class="review-stat" style="font-size: small !important;">3 Sterne</h5>
-                    <div class="small-ratings">
-                        <i class="fa fa-star rating-color"></i>
-                        <i class="fa fa-star rating-color"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                    </div>
-                </div>
-                
-                
-                <div class="mt-1 d-flex justify-content-between align-items-center">
-                    <h5 class="review-stat" style="font-size: small !important;">2 Sterne</h5>
-                    <div class="small-ratings">
-                        <i class="fa fa-star rating-color"></i>
-                        <i class="fa fa-star rating-color"></i>
-                        <i class="fa fa-star rating-color"></i>
-                        <i class="fa fa-star rating-color"></i>
-                        <i class="fa fa-star rating-color"></i>
-                    </div>
-                </div>
-                
-                
-                <div class="mt-1 d-flex justify-content-between align-items-center">
-                    <h5 class="review-stat" style="font-size: small !important;">1 Sterne</h5>
-                    <div class="small-ratings">
-                        <i class="fa fa-star rating-color"></i>
-                        <i class="fa fa-star rating-color"></i>
-                        <i class="fa fa-star rating-color"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                    </div>
-                </div>
-                
-                <div class="mt-1 d-flex justify-content-between align-items-center">
-                    <h5 class="review-stat" style="font-size: small !important;">0 Sterne</h5>
-                    <div class="small-ratings">
-                        <i class="fa fa-star rating-color"></i>
-                        <i class="fa fa-star rating-color"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                    </div>
-                </div>
+                        <div *ngFor="let review of reviews.slice(0, 5)">
 
-                <div class="mt-1" style="padding-top: 10%;">
-                    <h5 class="review-stat" style="font-size: large; white-space: no-wrap;">Rezension verfassen</h5>
-                    
-                    <button class="btn btn-primary mt-2" (click)="writeReview()">Schreiben Sie eine Rezension</button>
-                </div>
-                
-
-            </div>
-
-            <div class="row d-flex justify-content-start" style="width:100% !important; padding-left: 50px;">
-                <div class="col-md-11 col-lg-9 col-xl-7">
-                    <div *ngFor="let review of reviews">
-                        <div class="d-flex flex-start mb-4" style="width:700px !important; min-height:auto;">
-                            <div class="card w-100">
-                                <div class="card-body p-4">
-                                    <div class="">
-                                        <h5>{{review.customerName}}</h5>
-                                        <div class="small-ratings">
-                                            <i *ngFor="let star of getStarRating(review.reviewRating)" [class]="star"></i>
-                                          </div>
-                                        <p>
-                                            {{review.reviewComment}}
-                                        </p>
-    
-                                        <div class="small d-flex justify-content-start">
-                                            <a href="#!" class="d-flex align-items-center me-3">
-                                                <i class="far fa-thumbs-up me-2"></i>
-                                                <p class="mb-0">Like</p>
-                                            </a>
-                                            <a href="#!" class="d-flex align-items-center me-3">
-                                                <i class="far fa-comment-dots me-2"></i>
-                                                <p class="mb-0">Comment</p>
-                                            </a>
-                                            <a href="#!" class="d-flex align-items-center me-3">
-                                                <i class="fas fa-share me-2"></i>
-                                                <p class="mb-0">Share</p>
-                                            </a>
+                            <div class="reviews-members pt-4 pb-4">
+                                <div class="media">
+                                    <div class="media-body">
+                                        <div class="reviews-members-header">
+                                            <span class="star-rating float-right">
+                                                <a href="#"><i class="icofont-ui-rating active"></i></a>
+                                                <a href="#"><i class="icofont-ui-rating active"></i></a>
+                                                <a href="#"><i class="icofont-ui-rating active"></i></a>
+                                                <a href="#"><i class="icofont-ui-rating active"></i></a>
+                                                <a href="#"><i class="icofont-ui-rating"></i></a>
+                                            </span>
+                                            <h6 class="mb-1"><a class="text-black" href="#" style="font-weight: bold; font-size: medium;">{{review.customerName}}</a></h6>
+                                            <div class="small-ratings">
+                                                <i *ngFor="let star of getStarRating(review.reviewRating)"
+                                                    [class]="star"></i>
+                                            </div>
+                                            <p class="text-gray">{{review.reviewDate}}</p>
+                                        </div>
+                                        <div class="reviews-members-body">
+                                            <p>{{review.reviewComment}}</p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <hr>
+
+
+
+                        <a class="text-center w-100 d-block mt-4 font-weight-bold" href="#">See All Reviews</a>
                     </div>
+                
                 </div>
             </div>
-            
         </div>
-
-
-
-
-
-
-       
     </div>
+</div>
 
-    
-</section>
+<app-writereview [productId]="productId"></app-writereview>

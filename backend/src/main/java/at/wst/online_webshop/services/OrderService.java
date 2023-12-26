@@ -86,6 +86,13 @@ public class OrderService {
         return orderDTOS;
     }
 
+    public OrderDTO getOrderByCustomerAndProduct(Long customerId, Long productId){
+        Order order = orderRepository.findByCustomerCustomerIdAndOrderItems_Product_ProductId(customerId, productId);
+        OrderDTO orderDTO = OrderConvertor.convertToDto(order);
+
+        return orderDTO;
+    }
+
     @Transactional
     public void deleteOrder(Long id) {
         orderRepository.deleteById(id);

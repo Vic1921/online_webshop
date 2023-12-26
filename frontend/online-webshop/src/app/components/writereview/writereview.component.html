@@ -1,0 +1,49 @@
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Business Frontpage - Start Bootstrap Template</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+
+<body>
+    <div class="bg-white rounded shadow-sm p-4 mb-5 rating-review-select-page">
+        <h5 class="mb-4">Leave Comment</h5>
+        <div [formGroup]="reviewForm" class="rating">
+            <input type="radio" formControlName="rating" value="5" id="5" (change)="onStarChange(5)"
+                [class.yellow-star]="reviewForm.get('rating')?.value === 5" /><label for="5">☆</label>
+            <input type="radio" formControlName="rating" value="4" id="4" (change)="onStarChange(4)"
+                [class.yellow-star]="reviewForm.get('rating')?.value === 4" /><label for="4">☆</label>
+            <input type="radio" formControlName="rating" value="3" id="3" (change)="onStarChange(3)"
+                [class.yellow-star]="reviewForm.get('rating')?.value === 3" /><label for="3">☆</label>
+            <input type="radio" formControlName="rating" value="2" id="2" (change)="onStarChange(2)"
+                [class.yellow-star]="reviewForm.get('rating')?.value === 2" /><label for="2">☆</label>
+            <input type="radio" formControlName="rating" value="1" id="1" (change)="onStarChange(1)"
+                [class.yellow-star]="reviewForm.get('rating')?.value === 1" /><label for="1">☆</label>
+        </div>
+        <div class="small-ratings">
+            <i *ngFor="let star of getStarRating(reviewForm.get('rating')?.value || 0)">
+                [class]="star"></i>
+        </div>
+        <form [formGroup]="reviewForm" (submit)="onSubmit()">
+            <div class="form-group">
+                <label>Your Comment</label>
+                <textarea formControlName="comment" class="form-control"></textarea>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary btn-sm" type="submit">Submit Comment</button>
+            </div>
+        </form>
+    </div>
+</body>
