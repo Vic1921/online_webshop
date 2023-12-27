@@ -18,27 +18,61 @@
 </head>
 
 <body>
-    <div class="bg-white rounded shadow-sm p-4 mb-5 rating-review-select-page">
-        <h5 class="mb-4">Leave Comment</h5>
-        <div [formGroup]="reviewForm" class="rating">
-            <input type="radio" formControlName="rating" value="5" id="5" (change)="onStarChange(5)"
-                [class.yellow-star]="reviewForm.get('rating')?.value === 5" /><label for="5">☆</label>
-            <input type="radio" formControlName="rating" value="4" id="4" (change)="onStarChange(4)"
-                [class.yellow-star]="reviewForm.get('rating')?.value === 4" /><label for="4">☆</label>
-            <input type="radio" formControlName="rating" value="3" id="3" (change)="onStarChange(3)"
-                [class.yellow-star]="reviewForm.get('rating')?.value === 3" /><label for="3">☆</label>
-            <input type="radio" formControlName="rating" value="2" id="2" (change)="onStarChange(2)"
-                [class.yellow-star]="reviewForm.get('rating')?.value === 2" /><label for="2">☆</label>
-            <input type="radio" formControlName="rating" value="1" id="1" (change)="onStarChange(1)"
-                [class.yellow-star]="reviewForm.get('rating')?.value === 1" /><label for="1">☆</label>
+    <div class="bg-white rounded shadow-sm p-4 mb-4">
+        <div class="star-source">
+            <svg>
+                <linearGradient x1="50%" y1="5.41294643%" x2="87.5527344%" y2="65.4921875%" id="grad">
+                    <stop stop-color="#FCE100" offset="0%"></stop> <!-- Yellow -->
+                    <stop stop-color="#FFD700" offset="60%"></stop> <!-- Deep yellow -->
+                    <stop stop-color="#FFEA00" offset="100%"></stop> <!-- Another shade of yellow -->
+                </linearGradient>
+                <symbol id="star" viewBox="153 89 106 108">
+                    <polygon id="star-shape" stroke="url(#grad)" stroke-width="5" fill="currentColor"
+                        points="206 162.5 176.610737 185.45085 189.356511 150.407797 158.447174 129.54915 195.713758 130.842203 206 95 216.286242 130.842203 253.552826 129.54915 222.643489 150.407797 235.389263 185.45085">
+                    </polygon>
+                </symbol>
+            </svg>
+
         </div>
-        <div class="small-ratings">
-            <i *ngFor="let star of getStarRating(reviewForm.get('rating')?.value || 0)">
-                [class]="star"></i>
+        <div class="rating-container" [formGroup]="reviewForm">
+            <input type="radio" name="rating" formControlName="rating" value="5" id="five" (change)="onStarChange(5)">
+            <label for="five">
+                <svg class="rating">
+                    <use xlink:href="#star" />
+                </svg>
+            </label>
+            <input type="radio" name="rating" formControlName="rating" value="4" id="four" (change)="onStarChange(4)">
+            <label for="four">
+                <svg class="rating">
+                    <use xlink:href="#star" />
+                </svg>
+            </label>
+            <input type="radio" name="rating" formControlName="rating" value="3" id="three" (change)="onStarChange(3)">
+            <label for="three">
+                <svg class="rating">
+                    <use xlink:href="#star" />
+                </svg>
+            </label>
+            <input type="radio" name="rating" formControlName="rating" value="2" id="two" (change)="onStarChange(2)">
+            <label for="two">
+                <svg class="rating">
+                    <use xlink:href="#star" />
+                </svg>
+            </label>
+            <input type="radio" name="rating" formControlName="rating" value="1" id="one" (change)="onStarChange(1)">
+            <label for="one">
+                <svg class="rating">
+                    <use xlink:href="#star" />
+                </svg>
+            </label>
+
         </div>
+
         <form [formGroup]="reviewForm" (submit)="onSubmit()">
             <div class="form-group">
-                <label>Your Comment</label>
+                <label>
+                    <h5 class="mb-1" style="color: black; justify-content: start;">Write Review</h5>
+                </label>
                 <textarea formControlName="comment" class="form-control"></textarea>
             </div>
             <div class="form-group">

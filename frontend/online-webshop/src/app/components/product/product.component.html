@@ -9,7 +9,7 @@
 </head>
 
 
-<app-header></app-header>
+<app-header [isProductComponent]="true"></app-header>
 
 <body>
     <section class="section-products">
@@ -38,63 +38,7 @@
                 </div>
             </div>
         </div>
-    </section>
-
-    <div class="form-popup" id="myForm">
-        <form action="login.php" class="form-container" method="POST">
-            <h1>Login</h1>
-            <label for="email"><b>Email</b></label>
-            <input type="text" placeholder="Enter Email" name="email" value="email" required>
-
-            <label for="psw"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" name="passwort" value="passwort" required>
-
-            <button type="submit" class="btn">Login</button>
-            <button type="button" class="btn cancel" onclick="closeLogin()">Close</button>
-        </form>
-    </div>
-
-    <div class="center">
-        <div class="form-popup-sign_in" id="SignUp">
-            <form action="signup.php" class="form-container-sign_in" method="post">
-                <form action="?register=1" method="post">
-                    <h1>SignUp</h1>
-                    <label for="vorname"><b>Vorname</b></label>
-                    <input type="text" name="vorname" required>
-
-                    <label for="nachname"><b>Nachname</b></label>
-                    <input type="text" name="nachname" required>
-
-                    <label for="strasse"><b>Strasse</b></label>
-                    <input type="text" name="strasse" required>
-
-                    <label for="plz"><b>PLZ</b></label>
-                    <input type="text" name="plz" required>
-
-                    <label for="bankverbindung"><b>Bankverbindung</b></label>
-                    <input type="text" name="iban" required>
-
-                    <label for="telefonnummer"><b>Telefonnummer</b></label>
-                    <input type="text" placeholder="optional" name="telefonnummer" required>
-
-                    <label for="benutzername"><b>Benutzername</b></label>
-                    <input type="text" name="benutzername" required>
-
-                    <label for="e-mail"><b>E-Mail</b></label>
-                    <input type="text" placeholder="optional" name="email" required>
-
-                    <label for="passwort"><b>Passwort</b></label>
-                    <input type="text" placeholder="mindestens 8 Zeichen" name="passwort" required>
-
-                    <label for="passwort_verifierzung"><b>Passwort nochmals eingeben</b></label>
-                    <input type="text" name="passwort2" required>
-
-                    <button type="submit" class="btn-sign_in">SignUp</button>
-                    <button type="button" class="btn-sign_in cancel" onclick="closeSignUp()">Close</button>
-                </form>
-            </form>
-        </div>
-    </div>
+    </section>  
 </body>
 
 <app-footer></app-footer>

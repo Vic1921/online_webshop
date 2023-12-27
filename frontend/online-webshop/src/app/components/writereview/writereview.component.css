@@ -4,11 +4,11 @@
   justify-content: center;
 }
 
-.rating > input {
+.rating>input {
   display: none;
 }
 
-.rating > label {
+.rating>label {
   position: relative;
   width: 1em;
   font-size: 2vw;
@@ -16,33 +16,29 @@
   cursor: pointer;
 }
 
-.rating > input:checked ~ label.yellow-star:before,
-.rating > input:checked ~ label.yellow-star {
+.rating>input:checked~label.yellow-star:before,
+.rating>input:checked~label.yellow-star {
   opacity: 1;
   color: yellow;
 }
 
-.rating > label::before {
+.rating>label::before {
   content: "\2605";
   position: absolute;
   opacity: 0;
 }
 
-.rating > label:hover:before,
-.rating > label:hover ~ label:before {
+.rating>label:hover:before,
+.rating>label:hover~label:before {
   opacity: 1 !important;
 }
 
-.rating:hover > input:checked ~ label:before {
+.rating:hover>input:checked~label:before {
   opacity: 0.4;
 }
 
-body {
-  background: #222225;
-  color: white;
-}
-
-h1, p {
+h1,
+p {
   text-align: center;
 }
 
@@ -58,7 +54,128 @@ p {
   h1 {
     font-size: 14px;
   }
+
   p {
     font-size: 12px;
   }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+
+  background: #fdfdfd;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+h1 {
+  font-family: 'Fjalla One', sans-serif;
+  margin-bottom: 0.15rem;
+}
+
+h2 {
+  font-family: 'Cutive Mono', 'Courier New';
+  font-size: 1rem;
+  letter-spacing: 1px;
+  margin-bottom: 4rem;
+}
+
+label {
+  cursor: pointer;
+}
+
+svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0.15rem;
+}
+
+
+/* hide radio buttons */
+
+input[name="rating"] {
+  display: inline-block;
+  width: 0;
+  opacity: 0;
+  margin-left: -2px;
+}
+
+/* hide source svg */
+
+.rating-source {
+  width: 0;
+  height: 0;
+  visibility: hidden;
+}
+
+
+/* set initial color to transparent so fill is empty*/
+
+.rating {
+  color: transparent;
+  transition: color 0.2s ease-in-out;
+}
+
+
+/* set direction to row-reverse so 5th star is at the end and ~ can be used to fill all sibling stars that precede last starred element*/
+
+.rating-container {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: start;
+}
+
+label:hover~label .rating,
+svg.rating:hover,
+input[name="rating"]:focus~label .rating,
+input[name="rating"]:checked~label .rating {
+  color: #f0ec0f !important;
+}
+
+input[name="rating"]:checked+label .rating {
+  animation: starred 0.5s;
+}
+
+input[name="rating"]:checked+label {
+  animation: scaleup 1s;
+}
+
+@keyframes scaleup {
+  from {
+    transform: scale(1.2);
+  }
+
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes starred {
+  from {
+    color: #b68302 !important;
+  }
+
+  to {
+    color: #e3bd12 !important;
+  }
+}
+
+.star-container input:checked+label svg .star {
+  fill: url(#grad);
+  /* Use the linear gradient as the fill */
+}
+
+.star-container input:hover+label svg .star {
+  fill: url(#grad);
+  /* Apply the linear gradient on hover as well */
 }

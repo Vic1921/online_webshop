@@ -19,15 +19,17 @@ import { ReviewComponent } from '../review/review.component';
 })
 export class ProductDetailsComponent {
   product: ProductDTO | undefined;
-  productId! : number;
+  productId!: number;
+  averageRating: number | undefined;
 
-  constructor(private route: ActivatedRoute, private productService: ProductService, private loginService: LoginService, private shoppingCartService: ShoppingcartService, private customerService : CustomerService) {
+  constructor(private route: ActivatedRoute, private productService: ProductService, private loginService: LoginService, private shoppingCartService: ShoppingcartService, private customerService: CustomerService) {
     this.productId = Number(this.route.snapshot.paramMap.get('id'));
 
     console.log("This is the product id from product details", this.productId);
 
     this.productService.getProduct(this.productId).subscribe((product) => {
       this.product = product;
+      console.log('This are is the review length: ', this.product.reviewIds);
       console.log('Product details fetched:', product);
     }),
       (error: any) => {
@@ -36,7 +38,7 @@ export class ProductDetailsComponent {
 
 
   }
-  
+
   getProductImageStyle(imageUrl: string): object {
     return {
       'background-image': `url(${imageUrl})`,
@@ -46,10 +48,28 @@ export class ProductDetailsComponent {
     };
   }
 
+  getStarRating(rating: number): string[] {
+    const maxRating = 5;
+    const filledStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 !== 0;
+
+    const starRating: string[] = Array(maxRating).fill('fa fa-star');
+
+    for (let i = 0; i < filledStars; i++) {
+      starRating[i] = 'fa fa-star rating-color';
+    }
+
+    if (hasHalfStar && filledStars < maxRating) {
+      starRating[filledStars] = 'fa fa-star-half-alt rating-color';
+    }
+
+    return starRating;
+  }
+
   searchArticle() {
     throw new Error('Method not implemented.');
   }
-  addToCart(productId: number | undefined) : void {
+  addToCart(productId: number | undefined): void {
     if (productId == undefined) {
       console.error('Product Id is undefined');
       return;
@@ -59,9 +79,9 @@ export class ProductDetailsComponent {
       const customerId = this.loginService.getCustomerID();
       // Check if the customer has an existing cart
       let cartId: number | null = this.loginService.getCartID();
-      if(cartId == null) {
+      if (cartId == null) {
         console.info("Cart id should be null" + cartId);
-      }else{
+      } else {
         console.info("Cart id is not null" + cartId);
       }
 
@@ -83,8 +103,8 @@ export class ProductDetailsComponent {
         this.shoppingCartService.createCart(this.loginService.getCustomerID()).subscribe(
           (newCart) => {
             this.customerService.updateCart(customerId, newCart.cartId).subscribe(
-           
-              (ret) =>{
+
+              (ret) => {
                 this.loginService.setCartID(newCart.cartId);
                 console.log("Sucessfully updated the Customer with the new Cart ID");
               },
@@ -103,17 +123,24 @@ export class ProductDetailsComponent {
                 console.error('Error adding product to cart:', error);
               }
             );
-            
+
           },
           (error: any) => {
             console.log(this.loginService.getCustomerID());
             console.error('Error creating a new cart:', error);
           }
         );
-        
+
       }
     } else {
       console.log('User is not logged in. Please log in to add items to the cart.');
     }
+  }
+
+  updateAverageRating(averageRating: number) {
+    // Do whatever you need to do with the average rating in your product component
+    this.averageRating = averageRating;
+    console.log('Received average rating:', averageRating);
+
   }
 }

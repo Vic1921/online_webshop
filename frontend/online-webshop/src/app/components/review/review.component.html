@@ -37,14 +37,12 @@
                         </span>
                     </div>
                     <div class="bg-white rounded shadow-sm p-4 mb-4 clearfix graph-star-rating">
-                        <h5 class="mb-0 mb-4">Ratings and Reviews</h5>
                         <div class="graph-star-rating-header">
                             <div class="star-rating">
                                 <a href="#"><i class="icofont-ui-rating active"></i></a>
                                 <a href="#"><i class="icofont-ui-rating active"></i></a>
                                 <a href="#"><i class="icofont-ui-rating active"></i></a>
                                 <a href="#"><i class="icofont-ui-rating active"></i></a>
-                                <a href="#"><i class="icofont-ui-rating"></i></a> <b class="text-black ml-2">{{getReviewSize()}} Reviews</b>
                             </div>
                             <p class="text-black mb-4 mt-2">Rated {{calculateAverageRating()}} out of 5</p>
                         </div>
@@ -106,15 +104,13 @@
                                 <div class="rating-list-right text-black">02%</div>
                             </div>
                         </div>
-                        <div class="graph-star-rating-footer text-center mt-3 mb-3">
-                            <button type="button" (click)="this.writeReview()" class="btn btn-outline-primary btn-sm">Rate and Review</button>
-                        </div>
+                 
                     </div>
                     <div class="bg-white rounded shadow-sm p-4 mb-4">
                         <a href="#" class="btn btn-outline-primary btn-sm float-right">Top Rated</a>
                         <h5 class="mb-1">All Ratings and Reviews</h5>
 
-                        <div *ngFor="let review of reviews.slice(0, 5)">
+                        <div *ngFor="let review of reviews.slice(0, 6)">
 
                             <div class="reviews-members pt-4 pb-4">
                                 <div class="media">
@@ -154,4 +150,4 @@
     </div>
 </div>
 
-<app-writereview [productId]="productId"></app-writereview>
+<app-writereview [productId]="productId" (reviewAdded)="updateReviews()"></app-writereview>

@@ -1,187 +1,207 @@
-body{
-    background-color:#eef3f4;    
-    }
-    
-    .height-100{
-        height:100vh;
-    }
-    
-    .card{
-        width:380px;
-        border:none;
-        height:280px;
-    }
-    
-    .ratings{
-        margin-right:10px;
-    }
-    
-    .ratings i{
-        
-        color:#cecece;
-        font-size:32px;
-    }
-    
-    .rating-color{
-        color:#fbc634 !important;
-    }
-    
-    .review-count{
-        font-weight:400;
-        margin-bottom:2px;
-        font-size:24px !important;
-    }
-    
-    .small-ratings i{
-      color:#cecece;   
-    }
-    
-    .review-stat{
-        font-weight:300;
-        font-size:18px;
-        margin-bottom:2px;
-    }
+body {
+    background-color: #eef3f4;
+}
 
-    .bg-primary{
-        background-color: #fbc634 !important;
-    }
+.height-100 {
+    height: 100vh;
+}
 
-    body{
-        background:#dcdcdc;    
-        }
-        .total-like-user-main a {
-            display: inline-block;
-            margin: 0 -17px 0 0;
-        }
-        .total-like {
-            border: 1px solid;
-            border-radius: 50px;
-            display: inline-block;
-            font-weight: 500;
-            height: 34px;
-            line-height: 33px;
-            padding: 0 13px;
-            vertical-align: top;
-        }
+.card {
+    width: 380px;
+    border: none;
+    height: 280px;
+}
 
-        .graph-star-rating-header .star-rating {
-            font-size: 17px;
-        }
-        .progress {
-            background: #f2f4f8 none repeat scroll 0 0;
-            border-radius: 0;
-            height: 30px;
-        }
-        .rating-list {
-            display: inline-flex;
-            margin-bottom: 15px;
-            width: 100%;
-        }
-        .rating-list-left {
-            height: 16px;
-            line-height: 29px;
-            width: 10%;
-        }
-        .rating-list-center {
-            width: 80%;
-        }
-        .rating-list-right {
-            line-height: 29px;
-            text-align: right;
-            width: 10%;
-        }
+.ratings {
+    margin-right: 10px;
+}
 
-        .offer-dedicated-nav .nav-link.active,
-        .offer-dedicated-nav .nav-link:hover,
-        .offer-dedicated-nav .nav-link:focus {
-            border-color: #3868fb;
-            color: #3868fb;
-        }
-        .offer-dedicated-nav .nav-link {
-            border-bottom: 2px solid #fff;
-            color: #000000;
-            padding: 16px 0;
-            font-weight: 600;
-        }
-        .offer-dedicated-nav .nav-item {
-            margin: 0 37px 0 0;
-        }
+.ratings i {
 
-        .text-black {
-            color: #000000;
-        }
-        .icon-overlap {
-            bottom: -23px;
-            font-size: 74px;
-            opacity: 0.23;
-            position: absolute;
-            right: -32px;
-        }
-        .menu-list img {
-            width: 41px;
-            height: 41px;
-            object-fit: cover;
-        }
+    color: #cecece;
+    font-size: 32px;
+}
 
-        .reviews-members .media .mr-3 {
-            width: 56px;
-            height: 56px;
-            object-fit: cover;
-        }
-        .rounded-pill {
-            border-radius: 50rem!important;
-        }
-        .total-like-user {
-            border: 2px solid #fff;
-            height: 34px;
-            box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075)!important;
-            width: 34px;
-        }
-        .total-like-user-main a {
-            display: inline-block;
-            margin: 0 -17px 0 0;
-        }
-        .total-like {
-            border: 1px solid;
-            border-radius: 50px;
-            display: inline-block;
-            font-weight: 500;
-            height: 34px;
-            line-height: 33px;
-            padding: 0 13px;
-            vertical-align: top;
-        }
+.rating-color {
+    color: #fbc634 !important;
+}
 
-        .graph-star-rating-header .star-rating {
-            font-size: 17px;
-        }
-        .progress {
-            background: #f2f4f8 none repeat scroll 0 0;
-            border-radius: 0;
-            height: 30px;
-        }
-        .rating-list {
-            display: inline-flex;
-            margin-bottom: 15px;
-            width: 100%;
-        }
-        .rating-list-left {
-            height: 16px;
-            line-height: 29px;
-            width: 10%;
-        }
-        .rating-list-center {
-            width: 80%;
-        }
-        .rating-list-right {
-            line-height: 29px;
-            text-align: right;
-            width: 10%;
-        }
+.review-count {
+    font-weight: 400;
+    margin-bottom: 2px;
+    font-size: 24px !important;
+}
 
-        
-        .progress {
-            background: #f2f4f8 none repeat scroll 0 0;
-            border-radius: 0;
-            height: 30px;
-        }
+.small-ratings i {
+    color: #cecece;
+}
+
+.review-stat {
+    font-weight: 300;
+    font-size: 18px;
+    margin-bottom: 2px;
+}
+
+.bg-primary {
+    background-color: #fbc634 !important;
+}
+
+body {
+    background: #dcdcdc;
+}
+
+.total-like-user-main a {
+    display: inline-block;
+    margin: 0 -17px 0 0;
+}
+
+.total-like {
+    border: 1px solid;
+    border-radius: 50px;
+    display: inline-block;
+    font-weight: 500;
+    height: 34px;
+    line-height: 33px;
+    padding: 0 13px;
+    vertical-align: top;
+}
+
+.graph-star-rating-header .star-rating {
+    font-size: 17px;
+}
+
+.progress {
+    background: #f2f4f8 none repeat scroll 0 0;
+    border-radius: 0;
+    height: 30px;
+}
+
+.rating-list {
+    display: inline-flex;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.rating-list-left {
+    height: 16px;
+    line-height: 29px;
+    width: 10%;
+}
+
+.rating-list-center {
+    width: 80%;
+}
+
+.rating-list-right {
+    line-height: 29px;
+    text-align: right;
+    width: 10%;
+}
+
+.offer-dedicated-nav .nav-link.active,
+.offer-dedicated-nav .nav-link:hover,
+.offer-dedicated-nav .nav-link:focus {
+    border-color: #3868fb;
+    color: #3868fb;
+}
+
+.offer-dedicated-nav .nav-link {
+    border-bottom: 2px solid #fff;
+    color: #000000;
+    padding: 16px 0;
+    font-weight: 600;
+}
+
+.offer-dedicated-nav .nav-item {
+    margin: 0 37px 0 0;
+}
+
+.text-black {
+    color: #000000;
+}
+
+.icon-overlap {
+    bottom: -23px;
+    font-size: 74px;
+    opacity: 0.23;
+    position: absolute;
+    right: -32px;
+}
+
+.menu-list img {
+    width: 41px;
+    height: 41px;
+    object-fit: cover;
+}
+
+.reviews-members .media .mr-3 {
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+}
+
+.rounded-pill {
+    border-radius: 50rem !important;
+}
+
+.total-like-user {
+    border: 2px solid #fff;
+    height: 34px;
+    box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075) !important;
+    width: 34px;
+}
+
+.total-like-user-main a {
+    display: inline-block;
+    margin: 0 -17px 0 0;
+}
+
+.total-like {
+    border: 1px solid;
+    border-radius: 50px;
+    display: inline-block;
+    font-weight: 500;
+    height: 34px;
+    line-height: 33px;
+    padding: 0 13px;
+    vertical-align: top;
+}
+
+.graph-star-rating-header .star-rating {
+    font-size: 17px;
+}
+
+.progress {
+    background: #f2f4f8 none repeat scroll 0 0;
+    border-radius: 0;
+    height: 30px;
+}
+
+.rating-list {
+    display: inline-flex;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.rating-list-left {
+    height: 16px;
+    line-height: 29px;
+    width: 10%;
+}
+
+.rating-list-center {
+    width: 80%;
+}
+
+.rating-list-right {
+    line-height: 29px;
+    text-align: right;
+    width: 10%;
+}
+
+
+.progress {
+    background: #f2f4f8 none repeat scroll 0 0;
+    border-radius: 0;
+    height: 30px;
+}
