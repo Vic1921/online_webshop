@@ -1,20 +1,15 @@
 package at.wst.online_webshop.services;
 
-import at.wst.online_webshop.controller.CustomerController;
 import at.wst.online_webshop.convertors.CartItemConverter;
-import at.wst.online_webshop.convertors.CustomerConvertor;
-import at.wst.online_webshop.convertors.ProductConvertor;
 import at.wst.online_webshop.convertors.ShoppingCartConvertor;
 import at.wst.online_webshop.dtos.CartItemDTO;
-import at.wst.online_webshop.dtos.CustomerDTO;
-import at.wst.online_webshop.dtos.ProductDTO;
 import at.wst.online_webshop.dtos.ShoppingCartDTO;
 import at.wst.online_webshop.entities.CartItem;
 import at.wst.online_webshop.entities.Customer;
 import at.wst.online_webshop.entities.Product;
 import at.wst.online_webshop.entities.ShoppingCart;
-import at.wst.online_webshop.exception_handlers.CustomerNotFoundException;
-import at.wst.online_webshop.exception_handlers.InsufficientProductQuantityException;
+import at.wst.online_webshop.exceptions.CustomerNotFoundException;
+import at.wst.online_webshop.exceptions.InsufficientProductQuantityException;
 import at.wst.online_webshop.exceptions.FailedOrderException;
 import at.wst.online_webshop.exceptions.ShoppingCartNotFoundException;
 import at.wst.online_webshop.repositories.CartItemRepository;
@@ -23,14 +18,12 @@ import at.wst.online_webshop.repositories.ProductRepository;
 import at.wst.online_webshop.repositories.ShoppingCartRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

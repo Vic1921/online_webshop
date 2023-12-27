@@ -2,17 +2,13 @@ package at.wst.online_webshop.services;
 
 import at.wst.online_webshop.entities.Customer;
 import at.wst.online_webshop.entities.CustomerUserDetails;
-import at.wst.online_webshop.exception_handlers.CustomerNotFoundException;
 import at.wst.online_webshop.repositories.CustomerRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Optional;
 
 @Service

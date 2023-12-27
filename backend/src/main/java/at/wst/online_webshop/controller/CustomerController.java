@@ -2,20 +2,14 @@ package at.wst.online_webshop.controller;
 
 
 import at.wst.online_webshop.dtos.CustomerDTO;
-import at.wst.online_webshop.dtos.ShoppingCartDTO;
 import at.wst.online_webshop.dtos.requests.AuthenticationRequest;
 import at.wst.online_webshop.dtos.requests.CreatingCustomerRequest;
 import at.wst.online_webshop.dtos.requests.UpdateShoppingCartRequest;
-import at.wst.online_webshop.entities.Customer;
 import at.wst.online_webshop.entities.CustomerUserDetails;
-import at.wst.online_webshop.entities.ShoppingCart;
-import at.wst.online_webshop.exception_handlers.FailedSignUpException;
 import at.wst.online_webshop.security.JwtTokenUtil;
 import at.wst.online_webshop.services.CustomerDetailsService;
 import at.wst.online_webshop.services.CustomerService;
 import at.wst.online_webshop.services.ShoppingCartService;
-import org.apache.coyote.Response;
-import org.infinispan.protostream.annotations.impl.HasProtoSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +21,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import static at.wst.online_webshop.convertors.ShoppingCartConvertor.convertToEntity;
-
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 
 @RestController

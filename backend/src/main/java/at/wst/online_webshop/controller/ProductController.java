@@ -2,10 +2,8 @@ package at.wst.online_webshop.controller;
 
 
 import at.wst.online_webshop.dtos.ProductDTO;
-import at.wst.online_webshop.entities.Product;
-import at.wst.online_webshop.exception_handlers.ProductNotFoundException;
+import at.wst.online_webshop.exceptions.ProductNotFoundException;
 import at.wst.online_webshop.services.ProductService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
