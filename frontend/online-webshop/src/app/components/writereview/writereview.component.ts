@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ProductService } from '../../services/product.service';
@@ -17,6 +17,7 @@ import { HeaderComponent } from '../header/header.component';
 })
 export class WriteReviewComponent {
   @Input() productId: number | undefined;
+  @Output() reviewAdded = new EventEmitter<void>();
   selectedRating: number | null = null;
 
   reviewForm = new FormGroup({
@@ -48,6 +49,8 @@ export class WriteReviewComponent {
           this.reviewService.addReview(customerId, this.productId!, comment, rating!, orderId).subscribe(
             response => {
               // Handle success
+              this.reviewAdded.emit();
+
               console.log('Review added successfully', response);
             },
             error => {

@@ -31,7 +31,7 @@ public class ProductService {
         List<Product> products = this.productRepository.findAll();
         List<ProductDTO> productDTOS =  ProductConvertor.convertToDtoList(products);
         for (ProductDTO productDTO : productDTOS) {
-            logger.info("Order DTO details: {}", productDTO.toString());
+            logger.info("Product DTO details: {}", productDTO.toString());
         }
         return productDTOS;
     }

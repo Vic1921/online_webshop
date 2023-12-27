@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Review } from '../interfaces/review';
 import { Observable } from 'rxjs';
+import { EventEmitterService } from './eventemitter.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ import { Observable } from 'rxjs';
 export class ReviewService {
   private apiUrl = 'http://localhost:8089';
 
-  constructor(private http : HttpClient) { }
+  constructor(private http : HttpClient, private eventEmitterService : EventEmitterService) { }
 
   getReviewsByProductId(productId : number) : Observable<Review[]>{
     const url = `${this.apiUrl}/api/reviews/product/${productId}`;
@@ -25,6 +26,8 @@ export class ReviewService {
       rating : rating,
       orderId : orderId
     };
+
+    this.eventEmitterService.reviewUpdated();
 
     return this.http.post<Review>(endpoint, request);
 

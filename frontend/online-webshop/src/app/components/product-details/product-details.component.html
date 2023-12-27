@@ -20,7 +20,7 @@
 
 
 <body>
-    <app-header></app-header>
+    <app-header [isProductDetailsComponent]="true"></app-header>
 
     <div class="container mt-5 mb-5" style="background-color: white">
         <div class="card" style="background-color: transparent; border: none; overflow: hidden;">
@@ -44,19 +44,16 @@
                             <h3>{{ product?.productName }}</h3> <span class="heart"><i class='bx bx-heart'></i></span>
                         </div>
                         <div class="mt-2 pr-3 content">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                                ut labore et dolore magna aliqua</p>
+                            <p>{{product?.productDescription}}</p>
                         </div>
                         <h3>{{ product?.productPrice | currency : '€' }}</h3>
                         <div class="ratings d-flex flex-row align-items-center">
-                            <div class="d-flex flex-row">
-                                <i class='bx bxs-star'></i>
-                                <i class='bx bxs-star'></i>
-                                <i class='bx bxs-star'></i>
-                                <i class='bx bxs-star'></i>
-                                <i class='bx bx-star'></i>
+                            <div class="small-ratings">
+                                <i *ngFor="let star of getStarRating(this.averageRating!)"
+                                    [class]="star"></i>
                             </div>
-                            <span>441 reviews</span>
+                            <span>{{product?.reviewIds?.length}} reviews</span>
+
                         </div>
                         <div class="mt-5"> <span class="fw-bold">Color</span>
                             <div class="colors">
@@ -88,7 +85,7 @@
         </div>
 
         <h2 style="text-align: center; margin-top:100px;">Customer Reviews</h2>
-        <app-review *ngIf="product" [productId]="productId"></app-review>
+        <app-review *ngIf="product" [productId]="productId" (averageRatingEmitter)="updateAverageRating($event)"></app-review>
        
     </div>
 

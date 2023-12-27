@@ -8,5 +8,5 @@ export interface ProductDTO {
     productQuantity: number;
     vendorName : string;
     productImageUrl: string;
-    reviews: number[] 
+    reviewIds: number[] 
 }

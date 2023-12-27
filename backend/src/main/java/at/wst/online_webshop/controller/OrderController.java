@@ -66,12 +66,10 @@ public class OrderController {
 
     @GetMapping("/order-details")
     public ResponseEntity<OrderDTO> getOrderByProductAndCustomer(@RequestParam Long customerId, @RequestParam Long productId){
-        logger.info("RECEVIED REQUEST");
         try{
             OrderDTO orderDTO = orderService.getOrderByCustomerAndProduct(customerId, productId);
 
             if (orderDTO != null) {
-                logger.info(orderDTO.toString());
                 return ResponseEntity.ok(orderDTO);
             } else {
                 return ResponseEntity.notFound().build();

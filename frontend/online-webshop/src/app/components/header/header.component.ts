@@ -21,6 +21,9 @@ export class HeaderComponent {
   private databaseFilled = false;
   @Input() isOrderComponent: boolean = false;
   @Input() isHomeComponent: boolean = false;
+  @Input() isProductComponent: boolean = false;
+  @Input() isProductDetailsComponent: boolean = false;
+
 
   cart : ShoppingCart | undefined;
 

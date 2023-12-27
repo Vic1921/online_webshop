@@ -67,8 +67,8 @@
             </nav>
 
             <div class="d-flex" style="position: absolute !important;
-            top: 19% !important;
-            left: 50% !important;
+            top: 19.5% !important;
+            left: 46.5% !important;
             transform: translate(-50%,-50%) !important;">
 
                 <ul class="navbar-nav mr-auto mb-2 mb-lg-0" style="font-size: 26px; flex-direction: row;">
@@ -191,7 +191,7 @@
 
             <div class="d-flex" style="position: absolute !important;
             top: 30% !important;
-            left: 50% !important;
+            left: 46.5% !important;
             transform: translate(-50%,-50%) !important;">
 
                 <ul class="navbar-nav mr-auto mb-2 mb-lg-0" style="font-size: 26px; flex-direction: row;">
@@ -227,6 +227,219 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </header>
+    </div>
+
+    <div *ngIf="isProductComponent;">
+        <header class="hero-image" style="height:390px">
+            <!-- Responsive navbar-->
+            <nav class="navbar navbar-expand-lg navbar-dark bg-*">
+                <div class="container px-5" style="width:100%; height:100px">
+                    <a class="navbar-brand" style="width:100px" href="#!">Icerberg Lounge</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation"><span
+                            class="navbar-toggler-icon"></span></button>
+                    <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
+
+                        <div *ngIf="loginService.isLoggedIn(); else btnGroup" style="position: absolute !important;
+                        top: 50% !important;
+                        left: 57% !important;
+                        transform: translate(-50%,-50%) !important;">
+                            <div class="btn-group">
+                                <button class="button" style="padding-right: 40px; width: 100%; white-space: nowrap;"
+                                    (click)="navigateToSignup()">Mein Account</button>
+                                <button class="button" style="padding-right: 40px; width: 100%; white-space: nowrap;"
+                                    (click)="logout()">Logout</button>
+                                <button class="button" style="padding-right: 40px; width: 100%; white-space: nowrap;"
+                                    (click)="navigateToOrders()">Meine Bestellungen</button>
+                                <button class="button" style="padding-right: 40px; width: 100%; white-space: nowrap;"
+                                    (click)="navigateToShoppingCart()">
+                                    <button type="button" (click)="navigateToShoppingCart()" class="button">
+                                        Einkaufswagen
+                                        <span class="badge badge-dark"
+                                            style="background-color: rgba(0,0,0,.5);">{{getTotalItems()}}</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+                                            <path
+                                                d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+                                        </svg>
+                                    </button>
+                                </button>
+                            </div>
+                        </div>
+
+
+                        <ng-template #btnGroup>
+                            <div class="btn-group">
+                                <button class="button" style="padding-right: 40px; width: 100%; white-space: nowrap;"
+                                    (click)="navigateToLogin()">Login</button>
+                                <button class="button" style="padding-right: 40px; width: 100%; white-space: nowrap;"
+                                    (click)="navigateToSignup()">Account erstellen</button>
+                                <button class="button" style="padding-right: 40px; width: 100%; white-space: nowrap;"
+                                    (click)="checkDatabaseAndFetchProducts()">Fill Database</button>
+                                <button class="button" style="padding-right: 40px; width: 100%; white-space: nowrap;"
+                                    (click)="navigateToShoppingCart()">
+
+                                    <button type="button" (click)="navigateToShoppingCart()" class="button">
+                                        Einkaufswagen
+                                        <span class="badge badge-dark" style="background-color: rgba(0,0,0,.5);"></span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+                                            <path
+                                                d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+                                        </svg>
+                                    </button>
+                                </button>
+                            </div>
+                        </ng-template>
+
+                    </div>
+                </div>
+            </nav>
+
+            <div class="d-flex" style="position: absolute !important;
+            top: 30% !important;
+            left: 46.5% !important;
+            transform: translate(-50%,-50%) !important;">
+
+                <ul class="navbar-nav mr-auto mb-2 mb-lg-0" style="font-size: 26px; flex-direction: row;">
+                    <li class="nav-item" style="padding-right: 20px;"><a class="nav-link" style="color:white;"
+                            aria-current="page" href="#!">Schuhe</a></li>
+                    <li class="nav-item" style="padding-right: 20px;"><a class="nav-link" style="color:white;"
+                            href="#!">Outlet</a></li>
+                    <li class="nav-item" style="padding-right: 20px;"><a class="nav-link" style="color:white;"
+                            href="#!">Bekleidung</a></li>
+                    <li class="nav-item" style="padding-right: 20px;"><a class="nav-link" style="color:white;"
+                            href='/products'>Ausrüstung</a></li>
+                    <li class="nav-item" style="padding-right: 20px;"><a class="nav-link" style="color:white;"
+                            href='/products'>Sportwelten</a></li>
+
+                    <li class="nav-item" style="padding-right: 20px;"><a class="nav-link" style="color:white;"
+                            href='/products'>Ski</a></li>
+                    <li class="nav-item" style="padding-right: 20px;"><a class="nav-link" style="color:white;"
+                            href='/products'>Marken</a></li>
+                    <li class="nav-item" style="padding-right: 20px;"><a class="nav-link" style="color:white;"
+                            href='/products'>Club</a></li>
+
+
+
+                </ul>
+            </div>
+
+            <div class="container px-5">
+                <div class="row gx-5 justify-content-center">
+                    <div class="col-lg-6">
+                        <div class="text-center my-5">
+                            <h1 class="display-5 fw-bolder text-white mb-2" style="margin-top: 100px">Ausrüstung
+                            </h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+    </div>
+
+
+
+
+
+    <div *ngIf="isProductDetailsComponent;">
+        <header class="hero-image" style="height:390px">
+            <!-- Responsive navbar-->
+            <nav class="navbar navbar-expand-lg navbar-dark bg-*">
+                <div class="container px-5" style="width:100%; height:100px">
+                    <a class="navbar-brand" style="width:100px" href="#!">Icerberg Lounge</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation"><span
+                            class="navbar-toggler-icon"></span></button>
+                    <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
+
+                        <div *ngIf="loginService.isLoggedIn(); else btnGroup" style="position: absolute !important;
+                        top: 50% !important;
+                        left: 57% !important;
+                        transform: translate(-50%,-50%) !important;">
+                            <div class="btn-group">
+                                <button class="button" style="padding-right: 40px; width: 100%; white-space: nowrap;"
+                                    (click)="navigateToSignup()">Mein Account</button>
+                                <button class="button" style="padding-right: 40px; width: 100%; white-space: nowrap;"
+                                    (click)="logout()">Logout</button>
+                                <button class="button" style="padding-right: 40px; width: 100%; white-space: nowrap;"
+                                    (click)="navigateToOrders()">Meine Bestellungen</button>
+                                <button class="button" style="padding-right: 40px; width: 100%; white-space: nowrap;"
+                                    (click)="navigateToShoppingCart()">
+                                    <button type="button" (click)="navigateToShoppingCart()" class="button">
+                                        Einkaufswagen
+                                        <span class="badge badge-dark"
+                                            style="background-color: rgba(0,0,0,.5);">{{getTotalItems()}}</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+                                            <path
+                                                d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+                                        </svg>
+                                    </button>
+                                </button>
+                            </div>
+                        </div>
+
+
+                        <ng-template #btnGroup>
+                            <div class="btn-group">
+                                <button class="button" style="padding-right: 40px; width: 100%; white-space: nowrap;"
+                                    (click)="navigateToLogin()">Login</button>
+                                <button class="button" style="padding-right: 40px; width: 100%; white-space: nowrap;"
+                                    (click)="navigateToSignup()">Account erstellen</button>
+                                <button class="button" style="padding-right: 40px; width: 100%; white-space: nowrap;"
+                                    (click)="checkDatabaseAndFetchProducts()">Fill Database</button>
+                                <button class="button" style="padding-right: 40px; width: 100%; white-space: nowrap;"
+                                    (click)="navigateToShoppingCart()">
+
+                                    <button type="button" (click)="navigateToShoppingCart()" class="button">
+                                        Einkaufswagen
+                                        <span class="badge badge-dark" style="background-color: rgba(0,0,0,.5);"></span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+                                            <path
+                                                d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+                                        </svg>
+                                    </button>
+                                </button>
+                            </div>
+                        </ng-template>
+
+                    </div>
+                </div>
+            </nav>
+
+            <div class="d-flex" style="position: absolute !important;
+            top: 30% !important;
+            left: 46.5% !important;
+            transform: translate(-50%,-50%) !important;">
+
+                <ul class="navbar-nav mr-auto mb-2 mb-lg-0" style="font-size: 26px; flex-direction: row;">
+                    <li class="nav-item" style="padding-right: 20px;"><a class="nav-link" style="color:white;"
+                            aria-current="page" href="#!">Schuhe</a></li>
+                    <li class="nav-item" style="padding-right: 20px;"><a class="nav-link" style="color:white;"
+                            href="#!">Outlet</a></li>
+                    <li class="nav-item" style="padding-right: 20px;"><a class="nav-link" style="color:white;"
+                            href="#!">Bekleidung</a></li>
+                    <li class="nav-item" style="padding-right: 20px;"><a class="nav-link" style="color:white;"
+                            href='/products'>Ausrüstung</a></li>
+                    <li class="nav-item" style="padding-right: 20px;"><a class="nav-link" style="color:white;"
+                            href='/products'>Sportwelten</a></li>
+
+                    <li class="nav-item" style="padding-right: 20px;"><a class="nav-link" style="color:white;"
+                            href='/products'>Ski</a></li>
+                    <li class="nav-item" style="padding-right: 20px;"><a class="nav-link" style="color:white;"
+                            href='/products'>Marken</a></li>
+                    <li class="nav-item" style="padding-right: 20px;"><a class="nav-link" style="color:white;"
+                            href='/products'>Club</a></li>
+
+
+
+                </ul>
             </div>
         </header>
     </div>

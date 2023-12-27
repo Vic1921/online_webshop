@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Review } from '../../interfaces/review';
 import { ReviewService } from '../../services/review.service';
@@ -18,20 +18,14 @@ export class ReviewComponent implements OnChanges{
   @Input() productId: number | undefined;
   averageReviewRating: number | undefined;
 
+  @Output() averageRatingEmitter: EventEmitter<number> = new EventEmitter<number>();
+
+
   constructor(private reviewService: ReviewService, private router : Router) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['productId'] && this.productId) {
-      this.reviewService.getReviewsByProductId(this.productId).subscribe(
-        (reviews: Review[]) => {
-          this.reviews = reviews;
-          this.averageReviewRating = this.calculateAverageRating();
-          console.log('Reviews successfully fetched:', this.reviews);
-        },
-        (error: any) => {
-          console.error('Error fetching reviews:', error);
-        }
-      );
+      this.updateReviews(); // Initial update
     }
   }
 
@@ -65,12 +59,23 @@ export class ReviewComponent implements OnChanges{
     return starRating;
   }
 
+  updateReviews() {
+    if (this.productId) {
+      this.reviewService.getReviewsByProductId(this.productId).subscribe(
+        (reviews: Review[]) => {
+          this.reviews = reviews;
+          this.averageReviewRating = this.calculateAverageRating();
+          this.averageRatingEmitter.emit(this.averageReviewRating);
+          console.log('Reviews successfully updated:', this.reviews);
+        },
+        (error: any) => {
+          console.error('Error updating reviews:', error);
+        }
+      );
+    }
+  }
+
   getReviewSize(){
     return this.reviews.length;
   }
-
-  
-  writeReview() {
-    this.router.navigate(['/create-review']);
-    }
 }
