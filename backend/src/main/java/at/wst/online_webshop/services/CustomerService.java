@@ -1,18 +1,13 @@
 package at.wst.online_webshop.services;
 
-import at.wst.online_webshop.convertors.OrderConvertor;
 import at.wst.online_webshop.convertors.ShoppingCartConvertor;
 import at.wst.online_webshop.dtos.CustomerDTO;
-import at.wst.online_webshop.dtos.OrderDTO;
 import at.wst.online_webshop.dtos.ShoppingCartDTO;
 import at.wst.online_webshop.dtos.requests.CreatingCustomerRequest;
 import at.wst.online_webshop.entities.Customer;
-import at.wst.online_webshop.entities.Order;
 import at.wst.online_webshop.entities.ShoppingCart;
-import at.wst.online_webshop.exception_handlers.*;
-import at.wst.online_webshop.exceptions.ShoppingCartNotFoundException;
+import at.wst.online_webshop.exceptions.*;
 import at.wst.online_webshop.repositories.CustomerRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +16,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static at.wst.online_webshop.convertors.CustomerConvertor.convertToDto;
-import static at.wst.online_webshop.convertors.OrderConvertor.convertToEntity;
 
 @Service
 public class CustomerService {

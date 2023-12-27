@@ -1,18 +1,14 @@
 package at.wst.online_webshop.services;
 
 import at.wst.online_webshop.controller.OrderController;
-import at.wst.online_webshop.convertors.OrderConvertor;
 import at.wst.online_webshop.convertors.ProductConvertor;
-import at.wst.online_webshop.dtos.OrderDTO;
 import at.wst.online_webshop.dtos.ProductDTO;
-import at.wst.online_webshop.entities.Order;
 import at.wst.online_webshop.entities.Product;
 import at.wst.online_webshop.entities.Review;
-import at.wst.online_webshop.exception_handlers.ProductNotFoundException;
+import at.wst.online_webshop.exceptions.ProductNotFoundException;
 import at.wst.online_webshop.repositories.ProductRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
