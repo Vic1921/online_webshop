@@ -17,7 +17,9 @@ public class ProductConvertor {
     public static ProductDTO convertToDto(Product product) {
         ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
         List<Long> reviewIds = product.getReviews().stream().map(Review::getReviewId).collect(Collectors.toList());
+        productDTO.setVendorName(product.getVendor().getVendorName());
         productDTO.setReviewIds(reviewIds);
+        productDTO.setProductTotalSells(product.getProductTotalSells());
         return productDTO;
     }
 

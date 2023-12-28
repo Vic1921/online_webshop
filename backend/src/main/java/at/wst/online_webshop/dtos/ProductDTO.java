@@ -21,6 +21,7 @@ public class ProductDTO {
     private String productCategory;
     private Integer productQuantity;
     private String vendorName;
+    private Integer productTotalSells;
     private List<Long> reviewIds;
 
     @Override
