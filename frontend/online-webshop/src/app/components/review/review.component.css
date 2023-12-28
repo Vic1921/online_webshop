@@ -23,7 +23,7 @@ body {
 }
 
 .rating-color {
-    color: #fbc634 !important;
+    color: #5372F0 !important;
 }
 
 .review-count {
@@ -43,7 +43,7 @@ body {
 }
 
 .bg-primary {
-    background-color: #fbc634 !important;
+    background-color: #5372F0 !important;
 }
 
 body {
@@ -128,11 +128,6 @@ body {
     right: -32px;
 }
 
-.menu-list img {
-    width: 41px;
-    height: 41px;
-    object-fit: cover;
-}
 
 .reviews-members .media .mr-3 {
     width: 56px;

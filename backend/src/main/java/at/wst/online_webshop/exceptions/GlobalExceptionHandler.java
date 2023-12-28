@@ -55,11 +55,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(responseBody, HttpStatus.BAD_REQUEST);
     }
 
+    //dieser Teil wirft bei mir ein error weil er sagt, existingEmailExceptio wird schon oben verwendet
+    /*
     @ExceptionHandler(ExistingEmailException.class)
     public ResponseEntity<Object> handleUserNotFoundException(ExistingEmailException ex, WebRequest request) {
         Map<String, Object> responseBody = createErrorResponse(ex, request);
         return new ResponseEntity<>(responseBody, HttpStatus.NOT_FOUND);
     }
+     */
 
     @ExceptionHandler(CustomerNotFoundException.class)
     public ResponseEntity<Object> handleCustomerNotFoundException(CustomerNotFoundException ex, WebRequest request) {

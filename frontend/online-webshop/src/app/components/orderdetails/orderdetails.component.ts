@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Order } from '../../interfaces/order';
 import { OrderService } from '../../services/order.service';
@@ -7,6 +7,7 @@ import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
 import { LoginService } from '../../services/login.service';
 import { CustomerService } from '../../services/customer.service';
+
 
 @Component({
   selector: 'app-orderdetails',
@@ -18,6 +19,7 @@ import { CustomerService } from '../../services/customer.service';
 export class OrderdetailsComponent {
   order : Order | undefined;
   private orderTotal: number = 0;
+  paymentMethod!: string | null;
 
   constructor(private orderService : OrderService, private route : ActivatedRoute, private loginService : LoginService){
     const orderId = Number(this.route.snapshot.paramMap.get('orderId'));
@@ -26,6 +28,9 @@ export class OrderdetailsComponent {
         console.log('Order successfully fetched:', response);
         this.order = response;
         this.order.orderItems = response.orderItems;
+        this.paymentMethod = this.route.snapshot.paramMap.get('paymentMethod');
+            
+        console.log(this.paymentMethod);
         this.calculateOrderTotal();
 
         console.log(this.order);

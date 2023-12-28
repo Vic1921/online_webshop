@@ -1,9 +1,15 @@
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes" />
+  </head>
+  
+
 <body>
     <div *ngIf="isHomeComponent;">
         <header class="hero-image">
             <!-- Responsive navbar-->
-            <nav class="navbar navbar-expand-lg navbar-dark bg-*">
-                <div class="container px-5" style="width:100%; height:100px">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-* justify-content-center">
+                <div class="container px-5 justify-content-center" style="width:100%; height:100px">
                     <a class="navbar-brand" style="width:100px" href="#!">Icerberg Lounge</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -38,8 +44,11 @@
                         </div>
 
 
-                        <ng-template #btnGroup>
-                            <div class="btn-group">
+                        <ng-template #btnGroup >
+                            <div class="btn-group" style="position: absolute !important;
+                            top: 50% !important;
+                            left: 57% !important;
+                            transform: translate(-50%,-50%) !important;">
                                 <button class="button" style="padding-right: 40px; width: 100%; white-space: nowrap;"
                                     (click)="navigateToLogin()">Login</button>
                                 <button class="button" style="padding-right: 40px; width: 100%; white-space: nowrap;"
@@ -106,7 +115,7 @@
                             </div>
 
                             <ng-template #welcomeMessage>
-                                <p class="lead text-white mb-4">Wilkommen {{loginService.getCustomerName()}} Alles was
+                                <p class="lead text-white mb-4">Alles was
                                     du für deine Skitour brauchst</p>
 
                             </ng-template>
@@ -234,8 +243,8 @@
     <div *ngIf="isProductComponent;">
         <header class="hero-image" style="height:390px">
             <!-- Responsive navbar-->
-            <nav class="navbar navbar-expand-lg navbar-dark bg-*">
-                <div class="container px-5" style="width:100%; height:100px">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-* justify-content-center">
+                <div class="container px-5 justify-content-center" style="width:100%; height:100px">
                     <a class="navbar-brand" style="width:100px" href="#!">Icerberg Lounge</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
