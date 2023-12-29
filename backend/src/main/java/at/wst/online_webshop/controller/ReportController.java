@@ -2,6 +2,7 @@ package at.wst.online_webshop.controller;
 
 
 import at.wst.online_webshop.dtos.ProductDTO;
+import at.wst.online_webshop.dtos.ReviewDTO;
 import at.wst.online_webshop.services.ReportService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,9 +29,13 @@ public class ReportController {
 
     @GetMapping("/bestsellers")
     public List<ProductDTO> getTopProductsBetweenPriceRangeReport(@RequestParam double minValue, @RequestParam double maxValue, @RequestParam int limit){
-        logger.info("Params for reports " + String.valueOf(minValue) + "and" + String.valueOf(maxValue) + "and" + String.valueOf(limit));
         return reportService.generateTopProductsBetweenPriceRangeReport(minValue, maxValue, limit);
 
+    }
+
+    @GetMapping("/top-reviewers")
+    public List<ReviewDTO> getTopReviewersReport(@RequestParam double price, @RequestParam int limit){
+        return reportService.generateTopReviewersReport(price, limit);
     }
 
 

@@ -2,6 +2,7 @@ package at.wst.online_webshop.services;
 
 import at.wst.online_webshop.convertors.ProductConvertor;
 import at.wst.online_webshop.dtos.ProductDTO;
+import at.wst.online_webshop.dtos.ReviewDTO;
 import at.wst.online_webshop.entities.Product;
 import at.wst.online_webshop.repositories.OrderItemRepository;
 import at.wst.online_webshop.repositories.ProductRepository;
@@ -14,6 +15,7 @@ import javax.persistence.Query;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -77,5 +79,56 @@ public class ReportService {
         }
 
         return productDTOList;
+    }
+/*
+SELECT
+    c.customer_id,
+    c.name AS customer_name,
+    r.review_id,
+    r.review_rating,
+    r.review_comment,
+    p.product_id,
+    p.product_name,
+    p.product_price
+FROM
+    customers c
+        JOIN reviews r ON c.customer_id = r.customer_id
+        JOIN products p ON r.product_id = p.product_id
+WHERE
+        p.product_price > :price
+ORDER BY
+    r.review_rating DESC
+LIMIT : limit;
+ */
+    public List<ReviewDTO> generateTopReviewersReport(double price, int limit){
+        Query query = entityManager.createNativeQuery(
+                "SELECT c.customer_id, c.name AS customer_name, r.review_id, r.review_rating, " +
+                        "r.review_comment, r.review_date, p.product_id, p.product_name, p.product_price, p.product_imageurl " +
+                        "FROM customers c " +
+                        "JOIN reviews r ON c.customer_id = r.customer_id " +
+                        "JOIN products p ON r.product_id = p.product_id " +
+                        "WHERE p.product_price > :price " +
+                        "ORDER BY r.review_rating DESC " +
+                        "LIMIT :limit");
+
+        query.setParameter("price", price);
+        query.setParameter("limit", limit);
+
+        List<Object[]> result = query.getResultList();
+        List<ReviewDTO> reviewDTOS = new ArrayList<>();
+
+        for(Object[] row : result){
+            ReviewDTO reviewDTO = new ReviewDTO();
+            reviewDTO.setCustomerName((String) row[1]);
+            reviewDTO.setReviewId(((BigInteger) row[2]).longValue());
+            reviewDTO.setReviewRating((Integer) row[3]);
+            reviewDTO.setReviewComment((String) row[4]);
+            reviewDTO.setReviewDate((String) row[5]);
+            reviewDTO.setProductId(((BigInteger) row[6]).longValue());
+
+            reviewDTOS.add(reviewDTO);
+        }
+
+        return reviewDTOS;
     }
 }
