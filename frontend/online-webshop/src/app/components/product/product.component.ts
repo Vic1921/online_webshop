@@ -17,12 +17,17 @@ import { RouterModule } from '@angular/router';
 })
 export class ProductComponent{
   products : ProductDTO[] = [];
+  vendorNames : string[] = [];
+  vendorProductCounts: { [vendorName: string]: number } = {};
+
 
   constructor(private productService : ProductService){
     this.productService.getProductsFromHttp().subscribe(
       (data: any[]) => {
         this.productService.products = data;
         this.products = this.productService.products;
+        this.extractVendorNames();
+        this.calculateVendorProductCounts();
       },
       (error: any) => {
         console.error('Error fetching products:', error);
@@ -30,12 +35,33 @@ export class ProductComponent{
     );
   }
 
+  extractVendorNames() {
+    const vendorNamesSet = new Set<string>();
+
+    this.products.forEach(product => {
+      vendorNamesSet.add(product.vendorName);
+    });
+
+    this.vendorNames = Array.from(vendorNamesSet);
+  }
+
+  calculateVendorProductCounts() {
+    this.vendorProductCounts = this.products.reduce((accumulator, product) => {
+      const vendorName = product.vendorName;
+
+      // Increment the count for the current vendor or set it to 1 if it doesn't exist
+      accumulator[vendorName] = (accumulator[vendorName] || 0) + 1;
+
+      return accumulator;
+    }, {} as { [vendorName: string]: number }); // Explicitly specify the type here
+  }
+
  
   getProductImageStyle(imageUrl: string): object {
     return {
       'background-image': `url('./assets/images/products/${imageUrl}')`,
       'background-repeat': 'no-repeat',
-      'background-size': 'cover',
+      'background-size': 'contain',
       'background-position': 'center center'
     };
   }
