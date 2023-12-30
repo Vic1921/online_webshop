@@ -1,3 +1,23 @@
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Business Frontpage - Start Bootstrap Template</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+
+
 <body>
     <app-header [isHomeComponent]="true"></app-header>
     <!-- Features section-->
@@ -87,27 +107,27 @@
                 <!-- Pricing card free-->
                 <div *ngFor="let product of bestsellers" class="col-lg-6 col-xl-4">
                     <div class="card mb-5 mb-xl-0">
-                        <div class="card-body p-5">
-                            <div class="small text-uppercase fw-bold" style="height:60px">
+                        <div class="card-body p-5" style="width:auto;">
+                            <div class="text-uppercase fw-bold" style="font-size: 20px; height: fit-content; ">
                                 <i class="bi bi-star-fill text-warning"></i>
                                 {{product.productName}}
                             </div>
                             <div class="mb-3">
                                 <img [src]="'./assets/images/products/' + product?.productImageUrl" alt="Top seller"
-                                    width="100%" style="height:350px">
-                                <span class="display-4 fw-bold">{{product.productPrice}} €</span>
+                                    width="100%" style="height:300px; 
+                                    object-fit:scale-down;">
+                                <span class=" display-4 fw-bold justify-content-center" style="text-align: center; font-size: 36px; margin-left: 25%; margin-top: 10px;
+                                    margin-bottom: 10px;">{{product.productPrice}}
+                                    €</span>
                             </div>
-                            <ul class="list-unstyled mb-4">
-                                <li class="mb-2" style="font-size: 26px; white-space: nowrap;">
-                                    <i class="bi bi-check text-primary"></i>
+                            <ul class="list-unstyled mb-4" style="height: 300px;">
+                                <li class="mb-2 text-uppercase" style="font-size: 23px; white-space: nowrap;">
                                     <strong>{{product.vendorName}}</strong>
                                 </li>
-                                <li class="mb-2" style="white-space: nowrap;">
-                                    <i class="bi bi-check text-primary"></i>
+                                <li class="mb-2 text-uppercase fw-bold" style="font-size: 18px; white-space: nowrap;">
                                     {{product.productCategory}}
                                 </li>
-                                <li class="mb-2" style="white-space: nowrap;">
-                                    <i class="bi bi-check text-primary"></i>
+                                <li class="mb-2">
                                     {{product.productDescription}}
                                 </li>
 
@@ -153,37 +173,30 @@
             <div class="row gx-5 justify-content-center">
                 <div class="col-lg-6">
                     <!-- Testimonial 1-->
-                    <div class="card mb-4">
-                        <div class="card-body p-4">
-                            <div class="d-flex">
-                                <div class="flex-shrink-0"><i class="bi bi-chat-right-quote-fill text-primary fs-1"></i>
-                                </div>
-                                <div class="ms-4">
-                                    <p class="mb-1">Der von uns gewünschte Skihelm war in der Filiale in Liezen nicht
-                                        mehr lagernd, die Verkäuferin war sehr freundlich und hat sofort nachgesehen, ob
-                                        er online verfügbar ist und hat ihn dann für uns bestellt. Hat alles gut
-                                        geklappt, haben den Helm noch rechtzeitig vor Weihnachten erhalten.</p>
-                                    <div class="small text-muted">- Client Name, Location</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Testimonial 2-->
-                    <div class="card">
-                        <div class="card-body p-4">
-                            <div class="d-flex">
-                                <div class="flex-shrink-0"><i class="bi bi-chat-right-quote-fill text-primary fs-1"></i>
-                                </div>
-                                <div class="ms-4">
-                                    <p class="mb-1">Kostenloser Versand bei Abholung im Shop, gute Preise, Tolles
-                                        Personal. Zudem hatte ich einmal etwas falsches als Zusatz zu einem Produkt
-                                        bestellt und ohne etwas zu sagen, haben sie dennoch, das richtige montiert. Zwar
-                                        musste ich die Differenz zahlen, aber dafür war es Top.</p>
-                                    <div class="small text-muted">- Client Name, Location</div>
+                    <div *ngFor="let reviewer of topReviewers">
+
+                        <div class="card mb-4">
+                            <div class="card-body p-4">
+                                <div class="d-flex">
+                                    <div class="flex-shrink-0"><i
+                                            class="bi bi-chat-right-quote-fill text-primary fs-0.5"></i>
+                                    </div>
+                                    <div class="ms-4">
+                                        <div class="small-ratings">
+                                            <i *ngFor="let star of getStarRating(reviewer.reviewRating)"
+                                                [class]="star"></i>
+                                        </div>
+                                        <p class="mb-1">{{reviewer.reviewComment}}</p>
+
+                                        <div class="small text-muted">- {{reviewer.customerName}}, am {{
+                                            reviewer?.reviewDate| date:'d. MMMM yyyy' }}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
