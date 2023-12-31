@@ -139,7 +139,7 @@ label:hover~label .rating,
 svg.rating:hover,
 input[name="rating"]:focus~label .rating,
 input[name="rating"]:checked~label .rating {
-  color: #f0ec0f !important;
+  color: #5372F0 !important;
 }
 
 input[name="rating"]:checked+label .rating {
@@ -162,11 +162,11 @@ input[name="rating"]:checked+label {
 
 @keyframes starred {
   from {
-    color: #b68302 !important;
+    color: #5372F0 !important;
   }
 
   to {
-    color: #e3bd12 !important;
+    color: #5372F0 !important;
   }
 }
 
@@ -179,3 +179,5 @@ input[name="rating"]:checked+label {
   fill: url(#grad);
   /* Apply the linear gradient on hover as well */
 }
+
+

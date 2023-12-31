@@ -18,13 +18,16 @@
 </head>
 
 <body>
-    <div class="bg-white rounded shadow-sm p-4 mb-4">
+    <label>
+        <h5 class="mb-1" style="color: black; justify-content: start; margin-top: 30px;">Write Review</h5>
+    </label>
+    <div class="bg-white rounded shadow-sm p-4 mb-4" style="width: 1050px; justify-self: center; margin-left: 30px;">
         <div class="star-source">
             <svg>
                 <linearGradient x1="50%" y1="5.41294643%" x2="87.5527344%" y2="65.4921875%" id="grad">
-                    <stop stop-color="#FCE100" offset="0%"></stop> <!-- Yellow -->
-                    <stop stop-color="#FFD700" offset="60%"></stop> <!-- Deep yellow -->
-                    <stop stop-color="#FFEA00" offset="100%"></stop> <!-- Another shade of yellow -->
+                    <stop stop-color="#5372F0" offset="0%"></stop> 
+                    <stop stop-color="#2E3C89" offset="60%"></stop> <!-- Darker shade of blue -->
+                    <stop stop-color="#1D2769" offset="100%"></stop> <!-- Even darker shade of blue -->
                 </linearGradient>
                 <symbol id="star" viewBox="153 89 106 108">
                     <polygon id="star-shape" stroke="url(#grad)" stroke-width="5" fill="currentColor"
@@ -70,9 +73,7 @@
 
         <form [formGroup]="reviewForm" (submit)="onSubmit()">
             <div class="form-group">
-                <label>
-                    <h5 class="mb-1" style="color: black; justify-content: start;">Write Review</h5>
-                </label>
+    
                 <textarea formControlName="comment" class="form-control"></textarea>
             </div>
             <div class="form-group">

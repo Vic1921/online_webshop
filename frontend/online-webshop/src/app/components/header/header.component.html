@@ -1,9 +1,15 @@
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes" />
+  </head>
+  
+
 <body>
     <div *ngIf="isHomeComponent;">
         <header class="hero-image">
             <!-- Responsive navbar-->
-            <nav class="navbar navbar-expand-lg navbar-dark bg-*">
-                <div class="container px-5" style="width:100%; height:100px">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-* justify-content-center">
+                <div class="container px-5 justify-content-center" style="width:100%; height:100px">
                     <a class="navbar-brand" style="width:100px" href="#!">Icerberg Lounge</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -12,16 +18,16 @@
                     <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
                         <div *ngIf="loginService.isLoggedIn(); else btnGroup" style="position: absolute !important;
                         top: 50% !important;
-                        left: 57% !important;
+                        left: 58% !important;
                         transform: translate(-50%,-50%) !important;">
                             <div class="btn-group">
-                                <button class="button" style="padding-right: 20px; width: 100%; white-space: nowrap;"
+                                <button class="button" style="padding-right: 40px; width: 100%; white-space: nowrap;"
                                     (click)="navigateToSignup()">Mein Account</button>
-                                <button class="button" style="padding-right: 20px; width: 100%; white-space: nowrap;"
+                                <button class="button" style="padding-right: 40px; width: 100%; white-space: nowrap;"
                                     (click)="logout()">Logout</button>
-                                <button class="button" style="padding-right: 20px; width: 100%; white-space: nowrap;"
+                                <button class="button" style="padding-right: 40px; width: 100%; white-space: nowrap;"
                                     (click)="navigateToOrders()">Meine Bestellungen</button>
-                                <button class="button" style="padding-right: 20px; width: 100%; white-space: nowrap;"
+                                <button class="button" style="padding-right: 40px; width: 100%; white-space: nowrap;"
                                     (click)="navigateToShoppingCart()">
                                     <button type="button" (click)="navigateToShoppingCart()" class="button">
                                         Einkaufswagen
@@ -38,8 +44,11 @@
                         </div>
 
 
-                        <ng-template #btnGroup>
-                            <div class="btn-group">
+                        <ng-template #btnGroup >
+                            <div class="btn-group" style="position: absolute !important;
+                            top: 50% !important;
+                            left: 58% !important;
+                            transform: translate(-50%,-50%) !important;">
                                 <button class="button" style="padding-right: 40px; width: 100%; white-space: nowrap;"
                                     (click)="navigateToLogin()">Login</button>
                                 <button class="button" style="padding-right: 40px; width: 100%; white-space: nowrap;"
@@ -67,8 +76,8 @@
             </nav>
 
             <div class="d-flex" style="position: absolute !important;
-            top: 19.5% !important;
-            left: 46.5% !important;
+            top: 20% !important;
+            left: 50% !important;
             transform: translate(-50%,-50%) !important;">
 
                 <ul class="navbar-nav mr-auto mb-2 mb-lg-0" style="font-size: 26px; flex-direction: row;">
@@ -106,7 +115,7 @@
                             </div>
 
                             <ng-template #welcomeMessage>
-                                <p class="lead text-white mb-4">Wilkommen {{loginService.getCustomerName()}} Alles was
+                                <p class="lead text-white mb-4">Alles was
                                     du für deine Skitour brauchst</p>
 
                             </ng-template>
@@ -135,7 +144,7 @@
 
                         <div *ngIf="loginService.isLoggedIn(); else btnGroup" style="position: absolute !important;
                         top: 50% !important;
-                        left: 57% !important;
+                        left: 58% !important;
                         transform: translate(-50%,-50%) !important;">
                             <div class="btn-group">
                                 <button class="button" style="padding-right: 40px; width: 100%; white-space: nowrap;"
@@ -162,7 +171,10 @@
 
 
                         <ng-template #btnGroup>
-                            <div class="btn-group">
+                            <div class="btn-group" style="position: absolute !important;
+                            top: 50% !important;
+                            left: 58% !important;
+                            transform: translate(-50%,-50%) !important;">>
                                 <button class="button" style="padding-right: 40px; width: 100%; white-space: nowrap;"
                                     (click)="navigateToLogin()">Login</button>
                                 <button class="button" style="padding-right: 40px; width: 100%; white-space: nowrap;"
@@ -191,7 +203,7 @@
 
             <div class="d-flex" style="position: absolute !important;
             top: 30% !important;
-            left: 46.5% !important;
+            left: 50% !important;
             transform: translate(-50%,-50%) !important;">
 
                 <ul class="navbar-nav mr-auto mb-2 mb-lg-0" style="font-size: 26px; flex-direction: row;">
@@ -234,8 +246,8 @@
     <div *ngIf="isProductComponent;">
         <header class="hero-image" style="height:390px">
             <!-- Responsive navbar-->
-            <nav class="navbar navbar-expand-lg navbar-dark bg-*">
-                <div class="container px-5" style="width:100%; height:100px">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-* justify-content-center">
+                <div class="container px-5 justify-content-center" style="width:100%; height:100px">
                     <a class="navbar-brand" style="width:100px" href="#!">Icerberg Lounge</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -245,7 +257,7 @@
 
                         <div *ngIf="loginService.isLoggedIn(); else btnGroup" style="position: absolute !important;
                         top: 50% !important;
-                        left: 57% !important;
+                        left: 58% !important;
                         transform: translate(-50%,-50%) !important;">
                             <div class="btn-group">
                                 <button class="button" style="padding-right: 40px; width: 100%; white-space: nowrap;"
@@ -272,7 +284,10 @@
 
 
                         <ng-template #btnGroup>
-                            <div class="btn-group">
+                            <div class="btn-group" style="position: absolute !important;
+                            top: 50% !important;
+                            left: 58% !important;
+                            transform: translate(-50%,-50%) !important;">
                                 <button class="button" style="padding-right: 40px; width: 100%; white-space: nowrap;"
                                     (click)="navigateToLogin()">Login</button>
                                 <button class="button" style="padding-right: 40px; width: 100%; white-space: nowrap;"
@@ -301,7 +316,7 @@
 
             <div class="d-flex" style="position: absolute !important;
             top: 30% !important;
-            left: 46.5% !important;
+            left: 50% !important;
             transform: translate(-50%,-50%) !important;">
 
                 <ul class="navbar-nav mr-auto mb-2 mb-lg-0" style="font-size: 26px; flex-direction: row;">
@@ -359,7 +374,7 @@
 
                         <div *ngIf="loginService.isLoggedIn(); else btnGroup" style="position: absolute !important;
                         top: 50% !important;
-                        left: 57% !important;
+                        left: 58% !important;
                         transform: translate(-50%,-50%) !important;">
                             <div class="btn-group">
                                 <button class="button" style="padding-right: 40px; width: 100%; white-space: nowrap;"
@@ -415,7 +430,7 @@
 
             <div class="d-flex" style="position: absolute !important;
             top: 30% !important;
-            left: 46.5% !important;
+            left: 50% !important;
             transform: translate(-50%,-50%) !important;">
 
                 <ul class="navbar-nav mr-auto mb-2 mb-lg-0" style="font-size: 26px; flex-direction: row;">

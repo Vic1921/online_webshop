@@ -1,5 +1,6 @@
 package at.wst.online_webshop.config;
 
+
 import at.wst.online_webshop.security.JwtAuthenticationFilter;
 import at.wst.online_webshop.security.JwtTokenUtil;
 import at.wst.online_webshop.services.CustomerDetailsService;
@@ -7,27 +8,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
-import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-
-import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
@@ -59,6 +50,7 @@ public class SecurityConfig {
                         .antMatchers("/api/reviews/**").permitAll()
                         .antMatchers("/api/customers/**").permitAll()
                         .antMatchers("/api/orders/**").permitAll()
+                        .antMatchers("/api/reports/**").permitAll()
                         .antMatchers("/api/customers/register").permitAll()
                         .antMatchers("/api/customers/login").permitAll()
                         .antMatchers(HttpMethod.GET, "/**").permitAll()

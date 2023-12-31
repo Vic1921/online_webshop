@@ -11,7 +11,11 @@ body{
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #5372F0;
+  background: url('/assets/images/background3.jpg') !important;
+  background-size: cover !important;
+  background-position: center !important;
+  min-height: 100vh !important; /* Use viewport height to make sure it covers the entire viewport */
+  margin: 0 !important; /* Remove default margin to ensure the background covers the entire viewport */
 }
 ::selection{
   color: #fff;

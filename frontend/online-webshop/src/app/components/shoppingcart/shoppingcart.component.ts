@@ -153,8 +153,9 @@ export class ShoppingcartComponent {
           //delete the cart
           this.loginService.setCartID(null);
           console.log(orderId);
+          console.log(paymentMethod);
+          this.router.navigate(['/order', orderId, { paymentMethod: paymentMethod }]);
 
-          this.router.navigate(['/order', orderId]);
         },
         (error) => {
           console.log(customerId);

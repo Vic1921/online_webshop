@@ -6,39 +6,163 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Bootstrap icons-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet" />
+
 </head>
 
 
 <app-header [isProductComponent]="true"></app-header>
 
 <body>
-    <section class="section-products">
-        <div class="container">
-            <div class="row">
-                <!-- Single Product -->
-                <div *ngFor="let product of products" class="col-md-6 col-lg-4 col-xl-3">
-                    <div id="product-1" class="single-product">
-                        <div class="part-1" [ngStyle]="getProductImageStyle(product.productImageUrl)">
-                            <ul>
-                                <li>
-                                    <form action="addShoppingCart.php" method="POST">
-                                        <button type="submit" name="add_to_card" value="Zum Einkaufswagen hinzufügen"
-                                            class="btn btn-success">Zum Einkaufswagen hinzufügen</button>
-                                    </form>
-                                </li>
-                                <li><a [routerLink]="['/products', product.productId]"><i class="fa fa-expand"></i></a></li>
-                            </ul>
+
+    <div class="container">
+        <div class="row">
+            <aside class="col-md-3" style="padding-top: 30px;">
+
+                <div class="card">
+                    <article class="filter-group">
+                        <header class="card-header">
+                            <a href="#" data-toggle="collapse" data-target="#collapse_1" aria-expanded="true" class="">
+                                <i class="icon-control fa fa-chevron-down"></i>
+                                <h6 class="title">Product type</h6>
+                            </a>
+                        </header>
+                        <div class="filter-content collapse show" id="collapse_1" style="">
+                            <div class="card-body">
+                                <form class="pb-3">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Search">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-light" type="button"><i
+                                                    class="fa fa-search"></i></button>
+                                        </div>
+                                    </div>
+                                </form>
+
+                                <ul class="list-menu">
+                                    <li><a href="#">Schuhe </a></li>
+                                    <li><a href="#">Bekleidung </a></li>
+                                    <li><a href="#">Ski </a></li>
+                                    <li><a href="#">Ausrüstung </a></li>
+                                    <li><a href="#">Skistöcke </a></li>
+                                    <li><a href="#">Skischuhe</a></li>
+                                </ul>
+
+                            </div> <!-- card-body.// -->
                         </div>
-                        <div class="part-2">
-                            <h3 class="product-title">{{product.productName}}</h3>
-                            <h4 class="product-old-price">{{product.productPrice| currency : '€'}}</h4>
-                            <h4 class="product-price">{{product.productPrice| currency : '€'}}</h4>
+                    </article> <!-- filter-group  .// -->
+                    <article class="filter-group">
+                        <header class="card-header">
+                            <a href="#" data-toggle="collapse" data-target="#collapse_2" aria-expanded="true" class="">
+                                <i class="icon-control fa fa-chevron-down"></i>
+                                <h6 class="title">Brands </h6>
+                            </a>
+                        </header>
+                        <div class="filter-content collapse show" id="collapse_2" style="">
+                            <div class="card-body">
+                                <div *ngFor="let vendorName of vendorNames">
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" checked="" class="custom-control-input">
+                                        <div class="custom-control-label">
+                                            {{vendorName}}
+                                            <b class="badge badge-pill badge-light float-right">{{vendorProductCounts[vendorName]
+                                                || 0}}</b>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div> <!-- card-body.// -->
+                        </div>
+                    </article> <!-- filter-group .// -->
+                    <article class="filter-group">
+                        <header class="card-header">
+                            <a href="#" data-toggle="collapse" data-target="#collapse_3" aria-expanded="true" class="">
+                                <i class="icon-control fa fa-chevron-down"></i>
+                                <h6 class="title">Preisbereich </h6>
+                            </a>
+                        </header>
+                        <div class="filter-content collapse show" id="collapse_3" style="">
+                            <div class="card-body">
+                                <input type="range" class="custom-range" min="0" max="100" name="">
+                                <div class="form-row" style="padding-top: 10px;">
+                                    <div class="form-group col-md-6">
+                                        <input class="form-control" placeholder="$0" type="number">
+                                    </div>
+                                    <div class="form-group text-right col-md-6">
+                                        <input class="form-control" placeholder="$1,0000" type="number">
+                                    </div>
+                                </div> <!-- form-row.// -->
+                                <button class="btn btn-block btn-primary">Apply</button>
+                            </div><!-- card-body.// -->
+                        </div>
+                    </article> <!-- filter-group .// -->
+       
+                    
+                </div> <!-- card.// -->
+
+            </aside>
+            <main class="col-md-9">
+
+                <header class="border-bottom mb-4 pb-3" style="padding-top: 30px;">
+                    <div class="form-inline">
+                        <span class="mr-md-auto">{{products.length}} Artikel </span>
+                        <select class="mr-2 form-control">
+                            <option>Letzter Artikel</option>
+                            <option>Trending</option>
+                            <option>Most Popular</option>
+                            <option>Cheapest</option>
+                        </select>
+                        <div class="btn-group">
+                            <a href="#" class="btn btn-outline-secondary" data-toggle="tooltip" title=""
+                                data-original-title="List view">
+                                <i class="fa fa-bars"></i></a>
+                            <a href="#" class="btn  btn-outline-secondary active" data-toggle="tooltip" title=""
+                                data-original-title="Grid view">
+                                <i class="fa fa-th"></i></a>
                         </div>
                     </div>
-                </div>
-            </div>
+                </header><!-- sect-heading -->
+
+                <div class="row">
+                    <section class="section-products">
+                        <div class="container">
+                            <div class="row">
+                                <!-- Single Product -->
+                                <div *ngFor="let product of products" class="col-md-6 col-lg-4 col-xl-3">
+                                    <div id="product-1" class="single-product">
+                                        <div class="part-1" [ngStyle]="getProductImageStyle(product.productImageUrl)">
+                                            <ul>
+                                                <li><a [routerLink]="['/products', product.productId]"><i
+                                                            class="fa fa-expand"></i></a></li>
+                                                <li><a [routerLink]="['/products', product.productId]"><i
+                                                            class="fa fa-shopping-cart"></i></a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="part-2">
+                                            <h3 class="product-title">{{product.productName}}</h3>
+                                            <h4 class="product-old-price">{{product.productPrice| currency : '€'}}</h4>
+                                            <h4 class="product-price">{{product.productPrice| currency : '€'}}</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div> <!-- row end.// -->
+
+
+                <nav class="mt-4" aria-label="Page navigation sample">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                    </ul>
+                </nav>
+
+            </main>
         </div>
-    </section>  
+    </div>
+
 </body>
 
 <app-footer></app-footer>

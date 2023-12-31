@@ -21,9 +21,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -221,6 +219,27 @@ public class DBFiller {
         }
 
         orderItemRepository.saveAll(orderItems);
+
+        updateProductTotalSells(orderItems);
+    }
+
+    private void updateProductTotalSells(List<OrderItem> orderItems) {
+        Map<Product, Integer> productQuantityMap = new HashMap<>();
+
+        for (OrderItem orderItem : orderItems) {
+            Product orderedProduct = orderItem.getProduct();
+            int orderQuantity = orderItem.getOrderItemQuantity();
+            productQuantityMap.put(orderedProduct, productQuantityMap.getOrDefault(orderedProduct, 0) + orderQuantity);
+        }
+
+        //batch update product total sells
+        for (Map.Entry<Product, Integer> entry : productQuantityMap.entrySet()) {
+            Product product = entry.getKey();
+            int newTotalSells = product.getProductTotalSells() + entry.getValue();
+            product.setProductTotalSells(newTotalSells);
+        }
+
+        productRepository.saveAll(productQuantityMap.keySet());
     }
 
     private void fillReviews() {

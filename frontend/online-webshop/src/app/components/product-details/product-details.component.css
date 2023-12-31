@@ -101,7 +101,7 @@
 
 .search-option {
     position: relative;
-    background-color: #1e1e1e;
+    background-color: rgb(0, 0, 0);
     overflow: hidden;
     align-items: center;
     color: #fff;
@@ -177,7 +177,8 @@
 }
 
 .buttons .btn {
+    outline: 2px solid whitesmoke !important; /* Change 'red' to the desired color */
+
     height: 50px;
     width: 150px;
-    border-radius: 0px !important
 }
