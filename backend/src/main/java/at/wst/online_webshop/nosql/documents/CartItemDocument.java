@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class CartItemDocument {
     @Id
-    private Long cartItemId;
+    private String cartItemId;
     private Product product;
     private Integer cartItemQuantity;
     private BigDecimal cartItemSubprice;

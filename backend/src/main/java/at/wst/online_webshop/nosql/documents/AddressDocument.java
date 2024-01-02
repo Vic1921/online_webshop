@@ -4,7 +4,7 @@ import javax.persistence.Id;
 
 public class AddressDocument {
     @Id
-    private Long addressId;
+    private String addressId;
     private String street;
     private String city;
     private String postalCode;

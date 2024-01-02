@@ -24,6 +24,7 @@ public class ProductDocument {
     private String productDescription;
     private Integer productQuantity;
     private String productImage;
+    private VendorDocument vendor; // saves a join with product and vendors, therefore embedding would be a good choice
 
     private List<ReviewDocument> reviews; // Embedded directly if frequent read access is needed with products
 
