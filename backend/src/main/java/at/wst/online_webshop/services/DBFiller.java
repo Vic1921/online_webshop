@@ -48,13 +48,14 @@ public class DBFiller {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final ReviewRepository reviewRepository;
+    private final AddressRepository addressRepository;
     private final ShoppingCartRepository shoppingCartRepository;
     private final VendorRepository vendorRepository;
     private final CartItemRepository cartItemRepository;
     private final OrderItemRepository orderItemRepository;
 
     @Autowired
-    public DBFiller(OrderItemRepository orderItemRepository, CartItemRepository cartItemRepository, CustomerRepository customerRepository, OrderRepository orderRepository, ProductRepository productRepository, ReviewRepository reviewRepository, ShoppingCartRepository shoppingCartRepository, VendorRepository vendorRepository) {
+    public DBFiller(AddressRepository addressRepository, OrderItemRepository orderItemRepository, CartItemRepository cartItemRepository, CustomerRepository customerRepository, OrderRepository orderRepository, ProductRepository productRepository, ReviewRepository reviewRepository, ShoppingCartRepository shoppingCartRepository, VendorRepository vendorRepository) {
         this.customerRepository = customerRepository;
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
@@ -63,6 +64,7 @@ public class DBFiller {
         this.vendorRepository = vendorRepository;
         this.cartItemRepository = cartItemRepository;
         this.orderItemRepository = orderItemRepository;
+        this.addressRepository = addressRepository;
 
     }
 
@@ -123,7 +125,13 @@ public class DBFiller {
                     String name = faker.name().fullName();
                     String email = faker.internet().emailAddress();
                     String password = faker.internet().password();
-                    String address = faker.address().fullAddress();
+                    Address address = new Address(
+                            faker.address().streetAddress(),
+                            faker.address().city(),
+                            faker.address().zipCode(),
+                            faker.address().country()
+                    );
+                    addressRepository.save(address);
                     return new Customer(name, email, password, address);
                 })
                 .collect(Collectors.toList());

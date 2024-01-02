@@ -4,9 +4,11 @@ import at.wst.online_webshop.convertors.ShoppingCartConvertor;
 import at.wst.online_webshop.dtos.CustomerDTO;
 import at.wst.online_webshop.dtos.ShoppingCartDTO;
 import at.wst.online_webshop.dtos.requests.CreatingCustomerRequest;
+import at.wst.online_webshop.entities.Address;
 import at.wst.online_webshop.entities.Customer;
 import at.wst.online_webshop.entities.ShoppingCart;
 import at.wst.online_webshop.exceptions.*;
+import at.wst.online_webshop.repositories.AddressRepository;
 import at.wst.online_webshop.repositories.CustomerRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,12 +25,15 @@ public class CustomerService {
 
     private final ShoppingCartService shoppingCartService;
 
+    private final AddressRepository addressRepository;
+
     private final PasswordEncoder passwordEncoder;
 
-    public CustomerService(CustomerRepository customerRepository, PasswordEncoder passwordEncoder, ShoppingCartService shoppingCartService) {
+    public CustomerService(AddressRepository addressRepository, CustomerRepository customerRepository, PasswordEncoder passwordEncoder, ShoppingCartService shoppingCartService) {
         this.customerRepository = customerRepository;
         this.passwordEncoder = passwordEncoder;
         this.shoppingCartService = shoppingCartService;
+        this.addressRepository = addressRepository;
     }
 
     public List<Customer> getAllCustomer() {
@@ -77,8 +82,20 @@ public class CustomerService {
             throw new FailedSignUpException("Name cannot be empty");
         }
 
-        if (customerRequest.getAddress().isBlank()) {
-            throw new FailedSignUpException("Address cannot be empty");
+        if (customerRequest.getStreet().isBlank()) {
+            throw new FailedSignUpException("Street cannot be empty");
+        }
+
+        if (customerRequest.getCountry().isBlank()) {
+            throw new FailedSignUpException("Country cannot be empty");
+        }
+
+        if (customerRequest.getPostalCode().isBlank()) {
+            throw new FailedSignUpException("Postal code cannot be empty");
+        }
+
+        if (customerRequest.getCity().isBlank()) {
+            throw new FailedSignUpException("City cannot be empty");
         }
 
         if (customerRepository.findByEmail(customerRequest.getEmail()).isPresent()) {
@@ -94,9 +111,10 @@ public class CustomerService {
         }
 
         String encodedPassword = passwordEncoder.encode(customerRequest.getPassword());
+        Address newCustomerAddress = new Address(customerRequest.getStreet(), customerRequest.getCity(), customerRequest.getPostalCode(), customerRequest.getCountry());
+        Customer newCustomer = new Customer(customerRequest.getName(), customerRequest.getEmail(), encodedPassword,newCustomerAddress);
 
-        Customer newCustomer = new Customer(customerRequest.getName(), customerRequest.getEmail(), encodedPassword, customerRequest.getAddress());
-
+        addressRepository.save(newCustomerAddress);
         customerRepository.save(newCustomer);
         return convertToDto(newCustomer);
     }

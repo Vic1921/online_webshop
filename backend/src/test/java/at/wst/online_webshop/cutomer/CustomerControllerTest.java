@@ -28,7 +28,10 @@ public class CustomerControllerTest {
         request.setName("Max Mustermann");
         request.setEmail("max8989@gmail.com");
         request.setPassword("password");
-        request.setAddress("Währingerstraße 29");
+        request.setStreet("Währingerstraße 29");
+        request.setCity("Vienna");
+        request.setStreet("1010");
+        request.setStreet("Austria");
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/customers/register")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -43,7 +46,10 @@ public class CustomerControllerTest {
         request.setName("Max Mustermann");
         request.setEmail("max8989@gmail.com");
         request.setPassword("IMSEistcool23");
-        request.setAddress("Währingerstraße 29");
+        request.setStreet("Währingerstraße 29");
+        request.setCity("Vienna");
+        request.setStreet("1010");
+        request.setStreet("Austria");
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/customers/register")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -57,7 +63,10 @@ public class CustomerControllerTest {
         request.setName("Max Mustermann");
         request.setEmail("amazon.com");
         request.setPassword("password");
-        request.setAddress("Währingerstraße 29");
+        request.setStreet("Währingerstraße 29");
+        request.setCity("Vienna");
+        request.setStreet("1010");
+        request.setStreet("Austria");
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/customers/register")
                         .contentType(MediaType.APPLICATION_JSON)
