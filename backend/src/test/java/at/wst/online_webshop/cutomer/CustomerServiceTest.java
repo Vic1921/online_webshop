@@ -2,6 +2,7 @@ package at.wst.online_webshop.cutomer;
 
 import at.wst.online_webshop.dtos.CustomerDTO;
 import at.wst.online_webshop.dtos.requests.CreatingCustomerRequest;
+import at.wst.online_webshop.entities.Address;
 import at.wst.online_webshop.entities.Customer;
 import at.wst.online_webshop.repositories.CustomerRepository;
 import at.wst.online_webshop.services.CustomerService;
@@ -30,7 +31,10 @@ public class CustomerServiceTest {
         request.setName("Max Mustermann");
         request.setEmail("max8989@gmail.com");
         request.setPassword("IMSEistcool23");
-        request.setAddress("Währingerstraße 29");
+        request.setStreet("Währingerstraße 29");
+        request.setCity("Vienna");
+        request.setStreet("1010");
+        request.setStreet("Austria");
 
         //Mock repository interactions
         ArgumentCaptor<Customer> customerArgumentCaptor = ArgumentCaptor.forClass(Customer.class);

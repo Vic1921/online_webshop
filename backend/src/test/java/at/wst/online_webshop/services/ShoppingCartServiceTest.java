@@ -7,10 +7,7 @@ import java.util.Optional;
 
 import at.wst.online_webshop.OnlineWebshopApplication;
 import at.wst.online_webshop.dtos.ShoppingCartDTO;
-import at.wst.online_webshop.entities.CartItem;
-import at.wst.online_webshop.entities.Customer;
-import at.wst.online_webshop.entities.Product;
-import at.wst.online_webshop.entities.ShoppingCart;
+import at.wst.online_webshop.entities.*;
 import at.wst.online_webshop.repositories.CartItemRepository;
 import at.wst.online_webshop.repositories.CustomerRepository;
 import at.wst.online_webshop.repositories.ProductRepository;
@@ -50,8 +47,11 @@ class ShoppingCartServiceTest {
         Long shoppingCartId = 2L;
         Long productId = 3L;
 
+        Address address = new Address("Währingerstraße 29", "Vienna", "1010", "Austria");
+
+
         ShoppingCart existingShoppingCart = new ShoppingCart(null, new ArrayList<CartItem>());
-        Customer existingCustomer = new Customer("John Doe", "john@example.com", "password", "Address");
+        Customer existingCustomer = new Customer("John Doe", "john@example.com", "password", address);
         Product existingProduct = new Product("Product", "Description", "Category", 10.0, "SKU", 20, "image.jpg", null);
 
         when(shoppingCartRepository.findById(shoppingCartId)).thenReturn(Optional.of(existingShoppingCart));

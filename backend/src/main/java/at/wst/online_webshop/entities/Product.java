@@ -49,10 +49,6 @@ public class Product {
     @Column(name = "product_total_sells")
     private Integer productTotalSells = 0;
 
-    @ManyToOne
-    @JoinColumn(name = "cart_id")
-    private ShoppingCart shoppingCart;
-
     //JsonIgnore to handle the bidirectional relationship between reviews and products, because there is infinite recursion during serialization
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
@@ -98,7 +94,6 @@ public class Product {
                 ", productDescription='" + productDescription + '\'' +
                 ", productQuantity=" + productQuantity +
                 ", productImageUrl='" + productImageUrl + '\'' +
-                ", shoppingCart=" + shoppingCart +
                 '}';
     }
 }

@@ -27,8 +27,9 @@ public class Customer {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "address", nullable = false)
-    private String address;
+    @OneToOne
+    @JoinColumn(name = "address_id")
+    private Address address;
 
     @Column(name = "password", nullable = false)
     private String password;
@@ -50,7 +51,7 @@ public class Customer {
     @JoinColumn(name = "recommended_by")
     private Customer recommendedBy;
 
-    public Customer(String name, String email, String password, String address) {
+    public Customer(String name, String email, String password, Address address) {
         this.name = name;
         this.email = email;
         this.password = password;

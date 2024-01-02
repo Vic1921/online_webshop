@@ -67,8 +67,8 @@
                             </div>
                         </div>
                         <div class="buttons d-flex flex-row mt-5 gap-3">
-                            <button class="btn btn-outline-dark">Buy Now</button>
-                            <button class="btn btn-dark" (click)="addToCart(product?.productId)">Add to Cart</button>
+                            <button class="btn btn-outline-dark">Jetzt kaufen</button>
+                            <button class="btn btn-dark" style="width: fit-content; background-color: #5372F0; color: whitesmoke; border-color: whitesmoke; outline: whitesmoke;" (click)="addToCart(product?.productId)">Zum Einkaufswagen hinzufügen</button>
                         </div>
                         <div class="search-option" style="height: 125px;"> <i class='bx bx-search-alt-2 first-search'></i>
                             <div class="inputs">
@@ -84,7 +84,7 @@
             </div>
         </div>
 
-        <h2 style="text-align: center; margin-top:100px;">Customer Reviews</h2>
+        <h2 class="mb-1 bold fw-bold" style="text-align: center; padding-top: 40px;">Kundenrezensionen</h2>
         <app-review *ngIf="product" [productId]="productId" (averageRatingEmitter)="updateAverageRating($event)"></app-review>
        
     </div>

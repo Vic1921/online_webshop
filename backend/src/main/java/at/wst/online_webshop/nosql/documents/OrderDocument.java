@@ -25,6 +25,8 @@ public class OrderDocument {
     @DBRef
     private CustomerDocument customer;
 
+    // embedding the orderItems would make sense, because first 1:n relationship,
+    // and second uppn fetching the details of the order, you can immediately see what the order items are in the order
     private List<OrderItemDocument> orderItems;
 
 }

@@ -1,10 +1,13 @@
 package at.wst.online_webshop.nosql.documents;
 
+import at.wst.online_webshop.entities.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import javax.persistence.Id;
 
 @Getter
 @Setter
@@ -12,8 +15,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @Document(collection = "orderItems")
 public class OrderItemDocument {
-    private String productId;
+    @Id
+    private String orderItemId;
     private int quantity;
-    private Double price;
+    private Product product;
 
 }

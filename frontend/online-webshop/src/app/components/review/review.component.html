@@ -20,7 +20,7 @@
 
 <link rel="stylesheet" href="https://allyoucan.cloud/cdn/icofont/1.0.1/icofont.css"
     integrity="sha384-jbCTJB16Q17718YM9U22iJkhuGbS0Gd2LjaWb4YJEZToOPmnKDjySVa323U+W7Fv" crossorigin="anonymous">
-<div class="container">
+<div *ngIf="reviews.length > 0" class="container">
     <div class="col-md-12">
         <div class="offer-dedicated-body-left">
             <div class="tab-content" id="pills-tabContent">
@@ -37,7 +37,7 @@
                         </span>
                     </div>
                     <div class="bg-white rounded shadow-sm p-4 mb-4 clearfix graph-star-rating">
-                        <div class="graph-star-rating-header">
+                        <div *ngIf="reviews.length > 0" class="graph-star-rating-header">
                             <div class="star-rating">
                                 <a href="#"><i class="icofont-ui-rating active"></i></a>
                                 <a href="#"><i class="icofont-ui-rating active"></i></a>
@@ -46,7 +46,7 @@
                             </div>
                             <p class="text-black mb-4 mt-2">Rated {{calculateAverageRating()}} out of 5</p>
                         </div>
-                        <div class="graph-star-rating-body">
+                        <div *ngIf="reviews.length > 0" class="graph-star-rating-body">
                             <div class="rating-list">
                                 <div class="rating-list-left text-black">
                                     5 Star
@@ -108,7 +108,6 @@
                     </div>
                     <div class="bg-white rounded shadow-sm p-4 mb-4">
                         <a href="#" class="btn btn-outline-primary btn-sm float-right">Top Rated</a>
-                        <h5 class="mb-1">All Ratings and Reviews</h5>
 
                         <div *ngFor="let review of reviews.slice(0, 6)">
 
@@ -137,7 +136,7 @@
                                 </div>
                             </div>
                         </div>
-                        <a class="text-center w-100 d-block mt-4 font-weight-bold" href="#" style="color: black;">See All Reviews</a>
+                        <a class="text-center w-100 d-block mt-4 font-weight-bold" href="#" style="color: black;">Siehe Kundenrezensionen</a>
                     </div>
                 
                 </div>
