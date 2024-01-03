@@ -47,12 +47,12 @@ class ShoppingCartServiceTest {
         Long shoppingCartId = 2L;
         Long productId = 3L;
 
-        Address address = new Address("Währingerstraße 29", "Vienna", "1010", "Austria");
-
+        Address address = new Address("Währingerstraße 29", "Vienna", "1010", "Austria", new ArrayList<>());
 
         ShoppingCart existingShoppingCart = new ShoppingCart(null, new ArrayList<CartItem>());
         Customer existingCustomer = new Customer("John Doe", "john@example.com", "password", address);
         Product existingProduct = new Product("Product", "Description", "Category", 10.0, "SKU", 20, "image.jpg", null);
+        address.getCustomers().add(existingCustomer);
 
         when(shoppingCartRepository.findById(shoppingCartId)).thenReturn(Optional.of(existingShoppingCart));
         when(customerRepository.findById(customerId)).thenReturn(Optional.of(existingCustomer));

@@ -129,15 +129,18 @@ public class DBFiller {
                             faker.address().streetAddress(),
                             faker.address().city(),
                             faker.address().zipCode(),
-                            faker.address().country()
+                            faker.address().country(),
+                            new ArrayList<>()
                     );
                     addressRepository.save(address);
-                    return new Customer(name, email, password, address);
+                    Customer customer = new Customer(name, email, password, address);
+                    address.getCustomers().add(customer);
+                    return customer;
                 })
                 .collect(Collectors.toList());
-
         customerRepository.saveAll(customers);
     }
+
 
     public void fillVendors() {
         var faker = Faker.instance();

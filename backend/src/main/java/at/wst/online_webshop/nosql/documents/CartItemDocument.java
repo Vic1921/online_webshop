@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+
 import javax.persistence.Id;
 import java.math.BigDecimal;
 
@@ -15,12 +17,14 @@ import java.math.BigDecimal;
 public class CartItemDocument {
     @Id
     private String cartItemId;
-    private Product product;
+    //Because Product is referenced by multiple entities, by the CartItem and by the OrderItem
+    @DBRef
+    private ProductDocument productDocument;
     private Integer cartItemQuantity;
     private BigDecimal cartItemSubprice;
 
-    public CartItemDocument(Product product, int cartItemQuantity, BigDecimal cartItemSubprice) {
-        this.product = product;
+    public CartItemDocument(ProductDocument productDocument, int cartItemQuantity, BigDecimal cartItemSubprice) {
+        this.productDocument = productDocument;
         this.cartItemQuantity = cartItemQuantity;
         this.cartItemSubprice = cartItemSubprice;
 

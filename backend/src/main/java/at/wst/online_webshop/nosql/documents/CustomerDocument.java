@@ -1,6 +1,5 @@
 package at.wst.online_webshop.nosql.documents;
 
-import at.wst.online_webshop.entities.Customer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,16 +22,11 @@ public class CustomerDocument {
     private String email;
     private AddressDocument address;
     private String name;
-    // Other fields like password should be handled with care for security
-    @Field("encryptedPassword")
     private String password;
     private ShoppingCartDocument shoppingCart;
     @DBRef
-    private List<OrderDocument> orders;
-
-    @DBRef
     private List<ReviewDocument> reviews;
-
-    private Customer recommendedBy;
+    @DBRef
+    private CustomerDocument recommendedBy;
 
 }

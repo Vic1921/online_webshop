@@ -1,6 +1,7 @@
 package at.wst.online_webshop.controller;
 
 import at.wst.online_webshop.services.DBFiller;
+import at.wst.online_webshop.services.NoSQLMigrationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class ApiController {
     private final DBFiller dbFiller;
+    private final NoSQLMigrationService migrator;
 
     @RequestMapping("/version")
     public Long apiVersion()   {
@@ -36,9 +38,9 @@ public class ApiController {
         }
     }
 
-    /*@GetMapping("/migratedatabase")
+    @GetMapping("/migratedatabase")
     public void migrateDatabase() {
-        migrator.migrateDatabase();
-    }*/
+        migrator.migrateToNoSQL();
+    }
 
 }

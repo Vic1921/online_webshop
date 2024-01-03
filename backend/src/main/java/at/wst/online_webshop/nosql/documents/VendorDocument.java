@@ -13,9 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VendorDocument {
-    private Long vendorId;
+    private String vendorId;
     private String vendorName;
     private String vendorAddress;
-    @DBRef
-    private List<Product> products;
 }

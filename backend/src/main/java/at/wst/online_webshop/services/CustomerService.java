@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -111,11 +112,25 @@ public class CustomerService {
         }
 
         String encodedPassword = passwordEncoder.encode(customerRequest.getPassword());
-        Address newCustomerAddress = new Address(customerRequest.getStreet(), customerRequest.getCity(), customerRequest.getPostalCode(), customerRequest.getCountry());
-        Customer newCustomer = new Customer(customerRequest.getName(), customerRequest.getEmail(), encodedPassword,newCustomerAddress);
+        String street = customerRequest.getStreet();
+        String city = customerRequest.getCity();
+        String postalCode = customerRequest.getPostalCode();
+        String country = customerRequest.getCountry();
+        Optional<Address> existingAddress = addressRepository.findByStreetAndCityAndPostalCodeAndCountry(
+                street, city, postalCode, country
+        );
+        Address newCustomerAddress;
+        if (existingAddress.isPresent()) {
+            newCustomerAddress = existingAddress.get();
+        } else {
+            newCustomerAddress = new Address(street, city, postalCode, country, new ArrayList<>());
+        }
 
+        Customer newCustomer = new Customer(customerRequest.getName(), customerRequest.getEmail(), encodedPassword, newCustomerAddress);
+        newCustomerAddress.getCustomers().add(newCustomer);
         addressRepository.save(newCustomerAddress);
         customerRepository.save(newCustomer);
+
         return convertToDto(newCustomer);
     }
 
