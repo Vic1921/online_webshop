@@ -27,7 +27,7 @@ public class Customer {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "address_id")
     private Address address;
 

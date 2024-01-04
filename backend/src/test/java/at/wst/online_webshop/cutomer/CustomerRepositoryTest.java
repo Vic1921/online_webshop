@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -20,9 +22,9 @@ public class CustomerRepositoryTest {
     @Test
     public void saveCustomerTest() {
         // Arrange
-        Address address = new Address("Währingerstraße 29", "Vienna", "1010", "Austria");
+        Address address = new Address("Währingerstraße 29", "Vienna", "1010", "Austria", new ArrayList<>());
         Customer customer = new Customer("Max Mustermann", "max8989@gmail.com", "password", address);
-
+        address.getCustomers().add(customer);
         // Act
         Customer savedCustomer = customerRepository.save(customer);
 

@@ -12,6 +12,7 @@ public class CustomerConvertor {
 
     public static CustomerDTO convertToDto(Customer customer) {
         CustomerDTO customerDTO = modelMapper.map(customer, CustomerDTO.class);
+        customerDTO.setCustomerId(String.valueOf(customer.getCustomerId()));
         return customerDTO;
     }
 

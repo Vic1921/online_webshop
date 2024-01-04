@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @Entity
 @RequiredArgsConstructor
@@ -28,10 +30,14 @@ public class Address {
     @Column(name = "country",  nullable = false)
     private String country;
 
-    public Address(String street, String city, String postalCode, String country) {
+    @OneToMany(mappedBy = "address")
+    private List<Customer> customers;
+
+    public Address(String street, String city, String postalCode, String country, List<Customer> customers) {
         this.street = street;
         this.city = city;
         this.postalCode = postalCode;
         this.country = country;
+        this.customers = customers;
     }
 }

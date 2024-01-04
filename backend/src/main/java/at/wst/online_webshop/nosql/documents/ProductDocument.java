@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
@@ -17,14 +19,16 @@ import java.util.List;
 public class ProductDocument {
     @Id
     private String id;
+    @Indexed
     private String productName;
     private Double productPrice;
+    @Indexed(unique = true)
     private String productSKU;
     private String productCategory;
     private String productDescription;
     private Integer productQuantity;
     private String productImage;
-
-    private List<ReviewDocument> reviews; // Embedded directly if frequent read access is needed with products
-
+    private VendorDocument vendor;
+    @DBRef
+    private List<ReviewDocument> reviews;
 }

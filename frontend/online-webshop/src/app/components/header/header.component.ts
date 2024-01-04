@@ -8,6 +8,8 @@ import { ProductService } from '../../services/product.service';
 import { filter, switchMap, take } from 'rxjs/operators'; // Import switchMap and take from 'rxjs/operators'
 import { ShoppingCart } from '../../interfaces/shoppingcart';
 import { ShoppingcartService } from '../../services/shoppingcart.service';
+import { MigrationNoSQLService } from '../../services/migrationnosql.service';
+import { ConfigService } from '../../config.service';
 
 
 @Component({
@@ -27,7 +29,8 @@ export class HeaderComponent {
 
   cart : ShoppingCart | undefined;
 
-  constructor(private router: Router, private activatedRouter : ActivatedRoute, public loginService : LoginService, private databaseFillerService: DbfillerService, private productService: ProductService, private shoppingCartService : ShoppingcartService) {
+  constructor(public configService : ConfigService, private router: Router, private activatedRouter : ActivatedRoute, private migrationService : MigrationNoSQLService,  public loginService : LoginService, private databaseFillerService: DbfillerService, private productService: ProductService, private shoppingCartService : ShoppingcartService) {
+    console.log(configService.useNoSQL);
     if (this.loginService.isLoggedIn()) {
       const cartId = Number(this.loginService.getCartID());
 
@@ -74,6 +77,19 @@ export class HeaderComponent {
     );
   }
 
+  migrateDatabaseToNoSQL(): void {
+    this.migrationService.migrateNoSQL().subscribe(
+      response => {
+        this.configService.setUseNoSQL(true);
+        console.log(`useNoSQL = ${this.configService.useNoSQL}`);
+        console.log("Successfully migrated: ", response);
+      },
+      error => {
+        console.error("Error migrating: ", error);
+      }
+    );
+  }
+
   checkDatabaseAndFetchProducts(): void {
     if (!this.databaseFilled) {
       this.fillDatabaseAndFetchProducts();
@@ -101,6 +117,9 @@ export class HeaderComponent {
   }
 
   logout(){
-    this.loginService.logout();
+    console.log("LOG OUT IS BEING CLICKED");
+      this.loginService.logout();
+      this.router.navigate(['']);
+
   }
 }
