@@ -15,18 +15,9 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CartItemDocument {
-    //Because Product is referenced by multiple entities, by the CartItem and by the OrderItem
     @DBRef
     private ProductDocument productDocument;
     private Integer cartItemQuantity;
     private BigDecimal cartItemSubprice;
-
-    public CartItemDocument(ProductDocument productDocument, int cartItemQuantity, BigDecimal cartItemSubprice) {
-        this.productDocument = productDocument;
-        this.cartItemQuantity = cartItemQuantity;
-        this.cartItemSubprice = cartItemSubprice;
-
-    }
-
 
 }
