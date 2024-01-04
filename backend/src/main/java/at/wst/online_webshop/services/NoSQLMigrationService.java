@@ -78,6 +78,7 @@ public class NoSQLMigrationService {
 
     @Transactional
     public void migrateToNoSQL(){
+        clearCollections();
         migrateProducts();
         migrateCustomers();
         migrateOrders();
@@ -91,6 +92,13 @@ public class NoSQLMigrationService {
             CustomerDocument nosqlCustomer = transformCustomer(rdbmsCustomer);
             customerNoSqlRepository.save(nosqlCustomer);
         }
+    }
+
+    @Transactional
+    private void clearCollections(){
+        productNoSqlRepository.deleteAll();
+        customerNoSqlRepository.deleteAll();
+        orderNoSqlRepository.deleteAll();
     }
 
     private void migrateProducts(){
@@ -157,7 +165,6 @@ public class NoSQLMigrationService {
 
     private VendorDocument transformVendor(Vendor rdbmsVendor){
         VendorDocument vendorDocument = new VendorDocument();
-        vendorDocument.setVendorId(String.valueOf(rdbmsVendor.getVendorId()));
         vendorDocument.setVendorName(rdbmsVendor.getVendorName());
         vendorDocument.setVendorAddress(rdbmsVendor.getVendorAddress());
         return vendorDocument;
@@ -165,7 +172,7 @@ public class NoSQLMigrationService {
 
     private CustomerDocument transformCustomer(Customer rdbmsCustomer){
         CustomerDocument nosqlCustomer = new CustomerDocument();
-        nosqlCustomer.setId(String.valueOf(rdbmsCustomer.getCustomerId()));
+        nosqlCustomer.setCustomerId(String.valueOf(rdbmsCustomer.getCustomerId()));
         nosqlCustomer.setEmail(rdbmsCustomer.getEmail());
         AddressDocument nosqlAddress = transformAddress(rdbmsCustomer.getAddress());
         if(rdbmsCustomer.getShoppingCart() != null){
@@ -189,12 +196,11 @@ public class NoSQLMigrationService {
     }
 
     private AddressDocument transformAddress(Address rdbmsAddress){
-        String addressId = String.valueOf(rdbmsAddress.getAddressId());
         String street = rdbmsAddress.getStreet();
         String city = rdbmsAddress.getCity();
         String postalCode = rdbmsAddress.getPostalCode();
         String country = rdbmsAddress.getCountry();
-        AddressDocument addressDocument = new AddressDocument(addressId, street, city, postalCode, country);
+        AddressDocument addressDocument = new AddressDocument(street, city, postalCode, country);
         return addressDocument;
     }
 

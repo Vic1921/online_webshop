@@ -1,23 +1,22 @@
 package at.wst.online_webshop.nosql.convertors;
 
+import at.wst.online_webshop.dtos.CustomerDTO;
 import at.wst.online_webshop.entities.Customer;
 import at.wst.online_webshop.nosql.documents.CustomerDocument;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.modelmapper.ModelMapper;
 
 public class CustomerConvertorNoSQL {
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private static ModelMapper modelMapper = new ModelMapper();
 
-    public CustomerDocument transformCustomer(Customer rdbmsCustomer) {
+    public static CustomerDTO convertJsonToDTO(CustomerDocument customerDocument) {
         try {
-            String jsonString = objectMapper.writeValueAsString(rdbmsCustomer);
-            CustomerDocument nosqlCustomer = objectMapper.readValue(jsonString, CustomerDocument.class);
-            if(rdbmsCustomer.getShoppingCart() == null){
-                nosqlCustomer.setShoppingCart(null);
-            }
-            return nosqlCustomer;
+            CustomerDTO customerDTO =  modelMapper.map(customerDocument, CustomerDTO.class);
+
+            return customerDTO;
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            throw new RuntimeException("Error converting JSON to CustomerDTO", e);
         }
     }
 }

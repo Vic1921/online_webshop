@@ -4,6 +4,7 @@ import { FormControl, ReactiveFormsModule, Validators, FormGroup } from '@angula
 import { LoginService } from '../../services/login.service';
 import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
+import { ConfigService } from '../../config.service';
 
 
 
@@ -24,7 +25,7 @@ export class LoginComponent {
   errorText: string | null = null;
 
 
-  constructor(private loginService: LoginService, private router: Router) { }
+  constructor(private configService : ConfigService, private loginService: LoginService, private router: Router) { }
 
   onSubmit(): void {
     if (this.loginForm.valid && !this.loading) {
