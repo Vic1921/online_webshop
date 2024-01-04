@@ -26,8 +26,12 @@ public class CustomerDocument {
     private String name;
     private String password;
     private ShoppingCartDocument shoppingCart;
+    // is useful for the Second Report usercase: Customer Review Analysis.
+    // could be done wit a query on all reviews, but this is more efficient
     @DBRef
     private List<ReviewDocument> reviews;
+    // no point in referencing because this read wont happen so often so embedding would provide sufficient performance
+    // TODO: remove DBRef
     @DBRef
     private CustomerDocument recommendedBy;
 

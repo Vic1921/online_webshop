@@ -16,6 +16,7 @@ public class OrderItemDocument {
     @Id
     private String orderItemId;
     private int quantity;
+    // is this ok?
     @DBRef
     private ProductDocument product;
 
