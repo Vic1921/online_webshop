@@ -15,10 +15,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Service
 public class NoSQLMigrationService {
@@ -121,7 +119,8 @@ public class NoSQLMigrationService {
     private OrderDocument transformOrder(Order rdbmsOrder){
         OrderDocument orderDocument = new OrderDocument();
         orderDocument.setId(String.valueOf(rdbmsOrder.getOrderId()));
-        LocalDateTime orderDate = LocalDateTime.parse(rdbmsOrder.getOrderDate());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
+        LocalDateTime orderDate = LocalDateTime.parse(rdbmsOrder.getOrderDate(), formatter);
         orderDocument.setOrderDate(orderDate);
         Optional<CustomerDocument> optionalCustomerDocument = customerNoSqlRepository.findById(String.valueOf(rdbmsOrder.getCustomer().getCustomerId()));
         if(optionalCustomerDocument.isPresent()){
@@ -166,23 +165,25 @@ public class NoSQLMigrationService {
 
     private CustomerDocument transformCustomer(Customer rdbmsCustomer){
         CustomerDocument nosqlCustomer = new CustomerDocument();
-        String id = String.valueOf(rdbmsCustomer.getCustomerId());
-        String email = rdbmsCustomer.getEmail();
+        nosqlCustomer.setId(String.valueOf(rdbmsCustomer.getCustomerId()));
+        nosqlCustomer.setEmail(rdbmsCustomer.getEmail());
         AddressDocument nosqlAddress = transformAddress(rdbmsCustomer.getAddress());
         if(rdbmsCustomer.getShoppingCart() != null){
             ShoppingCartDocument nosqlShoppingCart = transformShoppingCart(rdbmsCustomer.getShoppingCart());
             nosqlCustomer.setShoppingCart(nosqlShoppingCart);
         }
+        nosqlCustomer.setName(rdbmsCustomer.getName());
+        nosqlCustomer.setAddress(nosqlAddress);
         nosqlCustomer.setPassword(rdbmsCustomer.getPassword());
-        Optional<CustomerDocument> optionalCustomerDocument = customerNoSqlRepository.findById(String.valueOf(rdbmsCustomer.getCustomerId()));
-        if(optionalCustomerDocument.isPresent()){
-            CustomerDocument recommender = optionalCustomerDocument.get();
-            nosqlCustomer.setRecommendedBy(recommender);
-        }else{
-            logger.info("CustomerDocument (Recommender) not found for customerID: " + rdbmsCustomer.getCustomerId());
-            throw new CustomerNotFoundException("\"CustomerDocument in nosqlCustomerRepository when transforming the recommender not found \"");
-        }
+        if(rdbmsCustomer.getRecommendedBy() != null){
+            Optional<CustomerDocument> optionalCustomerDocument = customerNoSqlRepository.findById(String.valueOf(rdbmsCustomer.getRecommendedBy().getCustomerId()));
+            if(optionalCustomerDocument.isPresent()){
+                CustomerDocument recommender = optionalCustomerDocument.get();
+                nosqlCustomer.setRecommendedBy(recommender);
+            }
 
+        }
+        logger.info(nosqlCustomer.toString());
         //still need to transform the reviews into nosql
         return nosqlCustomer;
     }
@@ -199,7 +200,6 @@ public class NoSQLMigrationService {
 
     private ShoppingCartDocument transformShoppingCart(ShoppingCart rdbmsShoppingCart){
         ShoppingCartDocument nosqlShoppingCart = new ShoppingCartDocument();
-        nosqlShoppingCart.setCartId(String.valueOf(rdbmsShoppingCart.getCartId()));
         List<CartItemDocument> cartItemDocuments = transformCartItems(rdbmsShoppingCart.getCartItems());
         nosqlShoppingCart.setCartItems(cartItemDocuments);
         return nosqlShoppingCart;
@@ -210,7 +210,6 @@ public class NoSQLMigrationService {
 
         for (CartItem cartItem : cartItems) {
             CartItemDocument cartItemDocument = new CartItemDocument();
-            cartItemDocument.setCartItemId(String.valueOf(cartItem.getCartItemId()));
             Optional<ProductDocument> optionalProductDocument = productNoSqlRepository.findById(String.valueOf(cartItem.getProduct().getProductId()));
             if (optionalProductDocument.isPresent()) {
                 ProductDocument productDocument = optionalProductDocument.get();

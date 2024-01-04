@@ -1,8 +1,8 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes" />
-  </head>
-  
+</head>
+
 
 <body>
     <div *ngIf="isHomeComponent;">
@@ -44,7 +44,7 @@
                         </div>
 
 
-                        <ng-template #btnGroup >
+                        <ng-template #btnGroup>
                             <div class="btn-group" style="position: absolute !important;
                             top: 50% !important;
                             left: 58% !important;
@@ -55,6 +55,9 @@
                                     (click)="navigateToSignup()">Account erstellen</button>
                                 <button class="button" style="padding-right: 40px; width: 100%; white-space: nowrap;"
                                     (click)="checkDatabaseAndFetchProducts()">Fill Database</button>
+                                <button class="button" style="padding-right: 40px; width: 100%; white-space: nowrap;"
+                                    (click)="migrateDatabaseToNoSQL()">
+                                    Migrate Database</button>
                                 <button class="button" style="padding-right: 40px; width: 100%; white-space: nowrap;"
                                     (click)="navigateToShoppingCart()">
 
@@ -400,7 +403,7 @@
                         </div>
 
 
-                        <ng-template #btnGroup >
+                        <ng-template #btnGroup>
                             <div class="btn-group" style="position: absolute !important;
                             top: 50% !important;
                             left: 58% !important;

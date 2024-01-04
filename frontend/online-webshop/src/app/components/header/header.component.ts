@@ -8,6 +8,7 @@ import { ProductService } from '../../services/product.service';
 import { filter, switchMap, take } from 'rxjs/operators'; // Import switchMap and take from 'rxjs/operators'
 import { ShoppingCart } from '../../interfaces/shoppingcart';
 import { ShoppingcartService } from '../../services/shoppingcart.service';
+import { MigrationNoSQLService } from '../../services/migrationnosql.service';
 
 
 @Component({
@@ -27,7 +28,7 @@ export class HeaderComponent {
 
   cart : ShoppingCart | undefined;
 
-  constructor(private router: Router, private activatedRouter : ActivatedRoute, public loginService : LoginService, private databaseFillerService: DbfillerService, private productService: ProductService, private shoppingCartService : ShoppingcartService) {
+  constructor(private router: Router, private activatedRouter : ActivatedRoute, private migrationService : MigrationNoSQLService,  public loginService : LoginService, private databaseFillerService: DbfillerService, private productService: ProductService, private shoppingCartService : ShoppingcartService) {
     if (this.loginService.isLoggedIn()) {
       const cartId = Number(this.loginService.getCartID());
 
@@ -70,6 +71,17 @@ export class HeaderComponent {
       },
       (error: any) => {
         console.error('Error fetching products:', error);
+      }
+    );
+  }
+
+  migrateDatabaseToNoSQL(): void {
+    this.migrationService.migrateNoSQL().subscribe(
+      response => {
+        console.log("Successfully migrated: ", response);
+      },
+      error => {
+        console.error("Error migrating: ", error);
       }
     );
   }

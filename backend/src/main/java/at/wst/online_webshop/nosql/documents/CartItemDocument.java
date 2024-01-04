@@ -15,8 +15,6 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CartItemDocument {
-    @Id
-    private String cartItemId;
     //Because Product is referenced by multiple entities, by the CartItem and by the OrderItem
     @DBRef
     private ProductDocument productDocument;

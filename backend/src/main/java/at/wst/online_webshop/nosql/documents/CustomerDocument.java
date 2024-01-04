@@ -29,4 +29,14 @@ public class CustomerDocument {
     @DBRef
     private CustomerDocument recommendedBy;
 
+    @Override
+    public String toString() {
+        return "CustomerDocument{" +
+                "id='" + id + '\'' +
+                ", email='" + email + '\'' +
+                ", address=" + address +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
 }

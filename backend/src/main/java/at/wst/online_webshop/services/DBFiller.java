@@ -19,7 +19,9 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -33,9 +35,10 @@ public class DBFiller {
     private static final int NUMBER_OF_ORDERS = 100;
     private static final int NUMBER_OF_PRODUCTS = 36;
     private static final int NUMBER_OF_REVIEWS = 300;
-    private static final int NUMBER_OF_SHOPPING_CARTS = 10;
+    private static final int NUMBER_OF_SHOPPING_CARTS = 70;
     private static final int NUMBER_OF_VENDORS = 20;
-    private static final int NUMBER_OF_ORDER_ITEMS = 5;
+    private static final int NUMBER_OF_ORDER_ITEMS = 2;
+    private static final int NUMBER_OF_CART_ITEMS = 5;
 
     private static final Logger logger = LoggerFactory.getLogger(DBFiller.class);
 
@@ -77,7 +80,8 @@ public class DBFiller {
         fillOrders();
         fillOrderItems();
         fillReviews();
-        //fillShoppingCarts();
+        fillShoppingCarts();
+        fillCartItems();
     }
 
     @Transactional
@@ -163,7 +167,6 @@ public class DBFiller {
         List<String[]> productFiles = readFile(this.products);
 
         List<Product> products = IntStream.range(0, NUMBER_OF_PRODUCTS)
-                //i dont know why you put parallel it fucked everything up i can't get the right amoutn of entries from vendorRepository the number always changed
                 .mapToObj(i -> {
                     String[] record = productFiles.get(i % productFiles.size()); // Get the record for the current product
 
@@ -200,18 +203,12 @@ public class DBFiller {
         var faker = Faker.instance();
 
         for (int i = 0; i < NUMBER_OF_ORDERS; i++) {
-            var orderDate = faker.date().birthday();
+            Date orderDate = faker.date().between(
+                    Date.from(LocalDate.of(2020, 1, 1).atStartOfDay(ZoneId.systemDefault()).toInstant()),
+                    Date.from(LocalDate.of(2023, 12, 31).atStartOfDay(ZoneId.systemDefault()).toInstant())
+            );
             var customer = customerRepository.findById((long) faker.number().numberBetween(1, NUMBER_OF_CUSTOMERS)).orElseThrow();
-            var orderItems = orderItemRepository.findAll()
-                    .stream()
-                    .collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
-                        Collections.shuffle(list);
-                        return list.stream().limit(5).collect(Collectors.toList());
-                    }));
-            double totalPrice = orderItems.stream()
-                    .mapToDouble(item -> item.getProduct().getProductPrice() * item.getOrderItemQuantity())
-                    .sum();
-            orders.add(new Order(orderDate, totalPrice, customer, orderItems));
+            orders.add(new Order(orderDate, 0, customer, new ArrayList<>()));
         }
         orderRepository.saveAll(orders);
     }
@@ -220,18 +217,52 @@ public class DBFiller {
         Faker faker = Faker.instance();
         List<OrderItem> orderItems = new ArrayList<>();
 
-        for (int i = 0; i < NUMBER_OF_ORDERS * NUMBER_OF_ORDER_ITEMS; i++) {
-            Order order = orderRepository.findById((long) faker.number().numberBetween(1, NUMBER_OF_ORDERS)).orElseThrow();
-            Product product = productRepository.findById((long) faker.number().numberBetween(1, NUMBER_OF_PRODUCTS)).orElseThrow();
-            int quantity = faker.number().numberBetween(1,5);
-            OrderItem orderItem = new OrderItem(order, product, quantity);
+        for (long orderId = 1; orderId <= NUMBER_OF_ORDERS; orderId++) {
+            Order order = orderRepository.findById(orderId).orElseThrow();
+            BigDecimal orderTotalMount = BigDecimal.ZERO;
 
-            orderItems.add(orderItem);
+            for (int i = 0; i < NUMBER_OF_ORDER_ITEMS; i++) {
+                Product product = productRepository.findById((long) faker.number().numberBetween(1, NUMBER_OF_PRODUCTS)).orElseThrow();
+                int quantity = faker.number().numberBetween(1, 2);
+
+                // Check if an OrderItem with the same Product already exists in the Order
+                OrderItem existingOrderItem = getOrderItemByProduct(order, product);
+
+                if (existingOrderItem != null) {
+                    // If the OrderItem already exists, increase the quantity
+                    existingOrderItem.setOrderItemQuantity(existingOrderItem.getOrderItemQuantity() + quantity);
+
+                    // Calculate and add the subtotal for the existing OrderItem
+                    BigDecimal subtotal = new BigDecimal(product.getProductPrice()).multiply(BigDecimal.valueOf(existingOrderItem.getOrderItemQuantity()));
+                    orderTotalMount = orderTotalMount.add(subtotal);
+
+                    // Optionally, you can save the changes to the existing OrderItem
+                    orderItemRepository.save(existingOrderItem);
+                } else {
+                    // If the OrderItem doesn't exist, create a new OrderItem
+                    OrderItem orderItem = new OrderItem(order, product, quantity);
+
+                    // Calculate and add the subtotal for the current OrderItem
+                    BigDecimal subtotal = new BigDecimal(product.getProductPrice()).multiply(BigDecimal.valueOf(quantity));
+                    orderTotalMount = orderTotalMount.add(subtotal);
+
+                    order.getOrderItems().add(orderItem);
+                    orderItems.add(orderItem);
+                }
+            }
+
+            order.setOrderTotalMount(orderTotalMount.doubleValue());
         }
-
         orderItemRepository.saveAll(orderItems);
 
         updateProductTotalSells(orderItems);
+    }
+
+    private OrderItem getOrderItemByProduct(Order order, Product product) {
+        return order.getOrderItems().stream()
+                .filter(orderItem -> orderItem.getProduct().equals(product))
+                .findFirst()
+                .orElse(null);
     }
 
     private void updateProductTotalSells(List<OrderItem> orderItems) {
@@ -291,21 +322,53 @@ public class DBFiller {
             }
         }
     }
-
     private void fillShoppingCarts() {
         List<ShoppingCart> shoppingCarts = new ArrayList<>(NUMBER_OF_SHOPPING_CARTS);
         var faker = Faker.instance();
 
-        for (int i = 0; i < NUMBER_OF_SHOPPING_CARTS; i++) {
-            var customer = customerRepository.findById((long) faker.number().numberBetween(1, NUMBER_OF_CUSTOMERS)).orElseThrow();
-            var cartItems = cartItemRepository.findAll()
-                    .stream()
-                    .collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
-                        Collections.shuffle(list);
-                        return list.stream().limit(5).collect(Collectors.toList());
-                    }));
-            shoppingCarts.add(new ShoppingCart(customer, cartItems));
+        for (long customerId = 1; customerId < NUMBER_OF_SHOPPING_CARTS; customerId++) {
+            Customer customer = customerRepository.findById(customerId).orElseThrow();
+            ShoppingCart shoppingCart = new ShoppingCart(customer, new ArrayList<>());
+            customer.setShoppingCart(shoppingCart);
+            shoppingCarts.add(shoppingCart);
         }
+
         shoppingCartRepository.saveAll(shoppingCarts);
     }
+
+    private void fillCartItems() {
+        Faker faker = Faker.instance();
+        List<CartItem> cartItems = new ArrayList<>();
+
+        for (int i = 0; i < NUMBER_OF_SHOPPING_CARTS * NUMBER_OF_CART_ITEMS; i++) {
+            ShoppingCart shoppingCart = shoppingCartRepository.findById((long) faker.number().numberBetween(1, NUMBER_OF_SHOPPING_CARTS)).orElseThrow();
+            Product product = productRepository.findById((long) faker.number().numberBetween(1, NUMBER_OF_PRODUCTS)).orElseThrow();
+            int quantity = faker.number().numberBetween(1, 5);
+            double productPrice = product.getProductPrice();
+            BigDecimal cartItemSubprice = BigDecimal.valueOf(productPrice).multiply(BigDecimal.valueOf(quantity));
+
+            CartItem existingCartItem = getCartItemByProduct(shoppingCart, product);
+
+            if (existingCartItem != null) {
+                existingCartItem.setCartItemQuantity(existingCartItem.getCartItemQuantity() + quantity);
+                BigDecimal subprice = existingCartItem.getCartItemSubprice().add(cartItemSubprice);
+                existingCartItem.setCartItemSubprice(subprice);
+            } else {
+                CartItem cartItem = new CartItem(shoppingCart, product, quantity, cartItemSubprice);
+                shoppingCart.getCartItems().add(cartItem);
+                cartItems.add(cartItem);
+            }
+        }
+
+        cartItemRepository.saveAll(cartItems);
+    }
+
+    private CartItem getCartItemByProduct(ShoppingCart shoppingCart, Product product) {
+        return shoppingCart.getCartItems().stream()
+                .filter(cartItem -> cartItem.getProduct().equals(product))
+                .findFirst()
+                .orElse(null);
+    }
+
+
 }
