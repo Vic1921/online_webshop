@@ -7,13 +7,10 @@ import lombok.Setter;
 
 import java.util.List;
 
-//we embed shopping cart to customer
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class ShoppingCartDocument{
     private List<CartItemDocument> cartItems;
-
-
 }
