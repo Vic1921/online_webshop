@@ -7,6 +7,7 @@ import { switchMap } from 'rxjs';
 import { DbfillerService } from '../../services/dbfiller.service';
 import { ProductDTO } from '../../interfaces/product';
 import { RouterModule } from '@angular/router';
+import { ConfigService } from '../../config.service';
 
 @Component({
   selector: 'app-product',

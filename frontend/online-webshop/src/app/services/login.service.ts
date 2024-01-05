@@ -99,10 +99,7 @@ export class LoginService {
   }
 
   isLoggedIn(): boolean {
-    if (this.configService.useNoSQL == false) {
-      return !!this.getToken();
-    }
-    return this.loggedIn;
+    return !!this.getToken();
   }
 
   logout(): void {

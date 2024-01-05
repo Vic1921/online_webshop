@@ -152,9 +152,9 @@ public class NoSQLMigrationService {
         productDocument.setProductPrice(rdbmsProduct.getProductPrice());
         productDocument.setProductSKU(rdbmsProduct.getProductSKU());
         productDocument.setProductCategory(rdbmsProduct.getProductCategory());
+        productDocument.setProductImageUrl(rdbmsProduct.getProductImageUrl());
         productDocument.setProductDescription(rdbmsProduct.getProductDescription());
         productDocument.setProductQuantity(rdbmsProduct.getProductQuantity());
-        productDocument.setProductImage(rdbmsProduct.getProductImageUrl());
         VendorDocument vendorDocument = transformVendor(rdbmsProduct.getVendor());
         productDocument.setVendor(vendorDocument);
 

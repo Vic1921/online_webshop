@@ -13,7 +13,8 @@ import javax.transaction.Transactional;
 
 import java.util.Optional;
 
-import static at.wst.online_webshop.nosql.convertors.CustomerConvertorNoSQL.convertJsonToDTO;
+import static at.wst.online_webshop.nosql.convertors.CustomerConvertorNoSQL.convertDocumentToDTO;
+
 
 @Service
 public class CustomerNoSQLService {
@@ -73,7 +74,7 @@ public class CustomerNoSQLService {
 
         customerNoSqlRepository.save(newCustomer);
 
-        return convertJsonToDTO(newCustomer);
+        return convertDocumentToDTO(newCustomer);
     }
 
     private boolean isValidEmail(String email){

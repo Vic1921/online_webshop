@@ -24,7 +24,8 @@ public class ProductDocument {
     private String productCategory;
     private String productDescription;
     private Integer productQuantity;
-    private String productImage;
+    private String productImageUrl;
+    private Integer productTotalSells = 0;
     private VendorDocument vendor; // saves a join with product and vendors, therefore embedding would be a good choice
     //good for the use case of listing and filtering products, but the drawback is the higher redundancy
     //no need for join, more data locality

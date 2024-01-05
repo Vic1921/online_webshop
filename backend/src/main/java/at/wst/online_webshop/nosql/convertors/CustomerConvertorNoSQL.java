@@ -9,7 +9,7 @@ import org.modelmapper.ModelMapper;
 public class CustomerConvertorNoSQL {
     private static ModelMapper modelMapper = new ModelMapper();
 
-    public static CustomerDTO convertJsonToDTO(CustomerDocument customerDocument) {
+    public static CustomerDTO convertDocumentToDTO(CustomerDocument customerDocument) {
         try {
             CustomerDTO customerDTO =  modelMapper.map(customerDocument, CustomerDTO.class);
 

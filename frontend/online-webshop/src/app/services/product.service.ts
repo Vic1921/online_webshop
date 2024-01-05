@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { ProductDTO } from '../interfaces/product';
+import { ConfigService } from '../config.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,10 +10,19 @@ import { ProductDTO } from '../interfaces/product';
 export class ProductService {
   private apiUrl = 'http://localhost:8089';
   products : ProductDTO[] = [];
-  constructor(private http : HttpClient) { }
+  constructor(private configService : ConfigService, private http : HttpClient) { }
 
   getProductsFromHttp(): Observable<ProductDTO[]>{
-    return this.http.get<ProductDTO[]>(`${this.apiUrl}/api/products/get-products`)
+
+    if(this.configService.useNoSQL == false){
+      return this.getProductsFromSQL();
+    }
+
+    return this.getProductsFromNoSQL();
+  }
+
+  getProductsFromSQL(): Observable<ProductDTO[]>{
+    return this.http.get<ProductDTO[]>(`${this.apiUrl}/api/sql/products/get-products`)
     .pipe(
       tap(
         response => console.log('Response:', response),
@@ -21,21 +31,31 @@ export class ProductService {
     );
   }
 
-  getProducts(): Observable<ProductDTO[]> {
-    // If products array is already populated, return it as an observable
-    if (this.products.length > 0) {
-      return new Observable<ProductDTO[]>((observer) => {
-        observer.next(this.products);
-        observer.complete();
-      });
-    } else {
-      // If products array is not populated, fetch from HTTP
-      return this.getProductsFromHttp();
-    }
+  getProductsFromNoSQL() : Observable<ProductDTO[]>{
+    return this.http.get<ProductDTO[]>(`${this.apiUrl}/api/nosql/products/get-products`)
+    .pipe(
+      tap(
+        response => console.log('Response:', response),
+        error => console.error('Error:', error)
+      )
+    )
+
+  }
+
+  getProductFromSQL(productId: number) : Observable<ProductDTO>{
+    return this.http.get<ProductDTO>(`${this.apiUrl}/api/sql/products/${productId}`);
+  }
+
+  getProductFromNoSQL(productId: number) : Observable<ProductDTO>{
+    return this.http.get<ProductDTO>(`${this.apiUrl}/api/nosql/products/${productId}`);
   }
 
 
   getProduct(productId : number) : Observable<ProductDTO>{
-    return this.http.get<ProductDTO>(`${this.apiUrl}/api/products/${productId}`);
+    if(this.configService.useNoSQL == false){
+      return this.getProductFromSQL(productId);
+    }
+
+    return this.getProductFromNoSQL(productId);
   }
 }

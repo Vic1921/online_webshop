@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HomeComponent } from './home/home.component';
 import { RouterModule , RouterLink } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
+import { ConfigService } from '../config.service';
 
 
 
@@ -14,6 +15,8 @@ import { HttpClientModule } from '@angular/common/http';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent {
+export class AppComponent{
+
   title = 'Home';
+
 }
