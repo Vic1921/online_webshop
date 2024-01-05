@@ -28,7 +28,6 @@ public class CustomerDocument {
     private ShoppingCartDocument shoppingCart;
     @DBRef
     private List<ReviewDocument> reviews;
-    @DBRef
     private CustomerDocument recommendedBy;
 
     @Override

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 
@@ -20,6 +21,7 @@ public class ReviewDocument {
     private String id;
     private Integer reviewRating;
     private String reviewComment;
+    @Indexed
     private LocalDateTime reviewDate;
 
     @DBRef
