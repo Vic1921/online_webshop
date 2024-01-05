@@ -18,6 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.Query;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -55,8 +57,12 @@ public class CustomerNoSQLController {
         CustomerDocument customerDocument = customerNoSQLService.getCustomerByEmail(request.getEmail());
 
         if (passwordEncoder.matches(enteredPassword, customerDocument.getPassword())) {
-            // Authentication successful
-            return ResponseEntity.ok("MongoDB authentication successful");
+            Map<String, String> result = new HashMap<>();
+            result.put("customerID", String.valueOf(customerDocument.getCustomerId()));
+            result.put("customerName", customerDocument.getName());
+            result.put("customerAddress", customerDocument.getAddress().getStreet());
+
+            return ResponseEntity.ok(result);
         }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");

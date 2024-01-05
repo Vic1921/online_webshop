@@ -47,14 +47,15 @@ export class ShoppingcartComponent {
 
       // Subscribe to getCart observable
       if (this.cartId != null && this.cartId != 0) {
-        this.shoppingCartService.getCart(this.cartId).subscribe(
+        let customerId = this.loginService.getCustomerID();
+        this.shoppingCartService.getCart(this.cartId, customerId!).subscribe(
           (cart: ShoppingCart) => {
             this.cart = cart;
             console.log(cart);
 
             // Now, this.cart contains the shopping cart details including product details
             // Fetch product details based on productIds
-            this.shoppingCartService.getShoppingCartItems(cart.cartId).subscribe(
+            this.shoppingCartService.getShoppingCartItems(cart.cartId, customerId!).subscribe(
               (cartItems: Cartitem[] | null) => {
                 if (cartItems !== null) {
                   const productIds = cartItems.map((item) => item.productId);

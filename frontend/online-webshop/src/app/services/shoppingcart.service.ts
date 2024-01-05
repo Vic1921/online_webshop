@@ -6,17 +6,32 @@ import { ProductDTO } from '../interfaces/product';
 import { Cartitem } from '../interfaces/cartitem';
 import { EventEmitter } from '@angular/core';
 import { EventEmitterService } from './eventemitter.service';
+import { ConfigService } from '../config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ShoppingcartService {
   private apiUrl = 'http://localhost:8089';
-  constructor(private http : HttpClient, private eventEmitterService : EventEmitterService) { }
+  constructor(private configService : ConfigService, private http : HttpClient, private eventEmitterService : EventEmitterService) { }
 
-  getCart(cartID : number) : Observable<ShoppingCart>{
+  getCart(cartID : number, customerId : number) : Observable<ShoppingCart>{
+    if(this.configService.useNoSQL == false){
+      return this.getCartSQL(cartID);
+    }
+
+    return this.getCartNoSQL(customerId);
+  }
+
+  getCartSQL(cartID : number) : Observable<ShoppingCart>{
     return this.http.get<ShoppingCart>(`${this.apiUrl}/api/sql/shopping-cart/get?id=${cartID}`);
   }
+
+  getCartNoSQL(customerId : number) : Observable<ShoppingCart>{
+    return this.http.get<ShoppingCart>(`${this.apiUrl}/api/nosql/shopping-cart/get?id=${customerId}`);
+  }
+
+
 
   createCart(customerId : number) : Observable<ShoppingCart>{
     return this.http.post<ShoppingCart>(`${this.apiUrl}/api/sql/shopping-cart/create`, customerId);
@@ -38,8 +53,17 @@ export class ShoppingcartService {
     return this.http.post<ShoppingCart>(`${this.apiUrl}/api/sql/shopping-cart/add-item/`, request);
   }
 
-  getShoppingCartItems(cartID : number) : Observable<Cartitem[]>{
-    const url = `${this.apiUrl}/api/sql/shopping-cart/get-items?id=${cartID}`;
+  getShoppingCartItems(cartID : number, customerId : number) : Observable<Cartitem[]>{
+    if (this.configService.useNoSQL == false) {
+      const url = `${this.apiUrl}/api/sql/shopping-cart/get-items?id=${cartID}`;
+      return this.http.get<Cartitem[]>(url);
+    }
+
+    return this.getShoppingCartItemsNoSQL(customerId);
+  }
+
+  getShoppingCartItemsNoSQL(customerId : number) : Observable<Cartitem[]> {
+    const url = `${this.apiUrl}/api/nosql/shopping-cart/get-items?id=${customerId}`;
     return this.http.get<Cartitem[]>(url);
   }
 

@@ -8,10 +8,7 @@ import at.wst.online_webshop.entities.CartItem;
 import at.wst.online_webshop.entities.Customer;
 import at.wst.online_webshop.entities.Product;
 import at.wst.online_webshop.entities.ShoppingCart;
-import at.wst.online_webshop.exceptions.CustomerNotFoundException;
-import at.wst.online_webshop.exceptions.InsufficientProductQuantityException;
-import at.wst.online_webshop.exceptions.FailedOrderException;
-import at.wst.online_webshop.exceptions.ShoppingCartNotFoundException;
+import at.wst.online_webshop.exceptions.*;
 import at.wst.online_webshop.repositories.CartItemRepository;
 import at.wst.online_webshop.repositories.CustomerRepository;
 import at.wst.online_webshop.repositories.ProductRepository;
@@ -100,10 +97,10 @@ public class ShoppingCartService {
                 .orElseThrow(() -> new ShoppingCartNotFoundException(shoppingCartId));
 
         Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new FailedOrderException("Customer not found."));
+                .orElseThrow(() -> new CustomerNotFoundException("Customer not found."));
 
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new FailedOrderException("Product not found."));
+                .orElseThrow(() -> new ProductNotFoundException("Product not found."));
 
         // Subtract product quantity
         int quantityToAdd = 1;
@@ -114,8 +111,7 @@ public class ShoppingCartService {
             throw new InsufficientProductQuantityException("Not enough quantity available for the product.");
         }
 
-        //creating new Cartitem
-        CartItem cartItem = updateOrCreateCartItem(shoppingCart, product, quantityToAdd);
+        updateOrCreateCartItem(shoppingCart, product, quantityToAdd);
 
         //update product and shopping cart
         productRepository.save(product);
@@ -126,9 +122,6 @@ public class ShoppingCartService {
         ShoppingCartDTO shoppingCartDTO = ShoppingCartConvertor.convertToDto(shoppingCart);
         shoppingCartDTO.setCustomerId(customerId);
         shoppingCartDTO.setTotalPrice(calculateTotalPriceShoppingCart(shoppingCart).doubleValue());
-
-        // Create a CartItemDTO based on the product and quantity
-       CartItemDTO cartItemDTO = CartItemConverter.convertToDto(cartItem);
 
         shoppingCartDTO.setCartItemDTOS(cartItemDTOS);
         return shoppingCartDTO;

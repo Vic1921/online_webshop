@@ -41,11 +41,12 @@ export class HeaderComponent{
 
     if (this.loginService.isLoggedIn()) {
       const cartId = Number(this.loginService.getCartID());
+      const customerId = this.loginService.getCustomerID();
 
       console.log(cartId);
 
       if(cartId != null && cartId != 0){
-        this.shoppingCartService.getCart(cartId).subscribe(
+        this.shoppingCartService.getCart(cartId, customerId).subscribe(
           (cart: ShoppingCart) => {
             this.cart = cart;
             console.log(this.cart); // Log inside the subscribe callback
