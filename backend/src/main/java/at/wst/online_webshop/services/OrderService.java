@@ -1,8 +1,10 @@
 package at.wst.online_webshop.services;
 
 import at.wst.online_webshop.controller.OrderController;
-import at.wst.online_webshop.convertors.*;
-import at.wst.online_webshop.dtos.*;
+import at.wst.online_webshop.convertors.OrderConvertor;
+import at.wst.online_webshop.convertors.OrderItemConvertor;
+import at.wst.online_webshop.dtos.OrderDTO;
+import at.wst.online_webshop.dtos.OrderItemDTO;
 import at.wst.online_webshop.entities.*;
 import at.wst.online_webshop.exceptions.FailedOrderException;
 import at.wst.online_webshop.exceptions.OrderNotFoundException;
@@ -12,13 +14,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 import static at.wst.online_webshop.convertors.OrderConvertor.convertToDto;
@@ -27,14 +28,13 @@ import static at.wst.online_webshop.convertors.OrderConvertor.convertToEntity;
 
 @Service
 public class OrderService {
+    private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
     private OrderRepository orderRepository;
     private ShoppingCartRepository shoppingCartRepository;
     private CustomerRepository customerRepository;
     private OrderItemRepository orderItemRepository;
     private ProductRepository productRepository;
     private ShoppingCartService shoppingCartService;
-
-    private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
 
 
     @Autowired
@@ -57,15 +57,15 @@ public class OrderService {
 
     public OrderDTO getOrderById(Long id) {
         Order order = orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException(id));
-        if(order.getOrderItems() == null){
+        if (order.getOrderItems() == null) {
             logger.info("THIS IS EMPTY");
-        }else{
+        } else {
             logger.info("THIS IS THE ORDER: {}", order.toString());
         }
         OrderDTO orderDTO = OrderConvertor.convertToDto(order);
         logger.info("THIS IS THE ORDER DTO: {}", orderDTO.toString());
         List<OrderItemDTO> orderItemDTOS = OrderItemConvertor.convertToDtoList(order.getOrderItems());
-        logger.info("THIS ARE THE ORDER DTOS: {}" , orderItemDTOS.toString());
+        logger.info("THIS ARE THE ORDER DTOS: {}", orderItemDTOS.toString());
         orderDTO.setOrderItems(orderItemDTOS);
         return orderDTO;
     }
@@ -77,7 +77,7 @@ public class OrderService {
         return convertToDto(updatedOrder);
     }
 
-    public List<OrderDTO> getOrdersByCustomerId(Long customerId){
+    public List<OrderDTO> getOrdersByCustomerId(Long customerId) {
         List<Order> orders = this.orderRepository.findByCustomer_CustomerId(customerId);
         List<OrderDTO> orderDTOS = OrderConvertor.convertToDtoList(orders);
         for (OrderDTO orderDTO : orderDTOS) {
@@ -86,7 +86,7 @@ public class OrderService {
         return orderDTOS;
     }
 
-    public OrderDTO getOrderByCustomerAndProduct(Long customerId, Long productId){
+    public OrderDTO getOrderByCustomerAndProduct(Long customerId, Long productId) {
         Order order = orderRepository.findByCustomerCustomerIdAndOrderItems_Product_ProductId(customerId, productId);
         OrderDTO orderDTO = OrderConvertor.convertToDto(order);
 
@@ -129,7 +129,10 @@ public class OrderService {
 
         // create Order
         Order order = new Order();
-        order.setOrderDate(LocalDateTime.now().toString());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss yyyy", Locale.GERMAN);
+        String formattedOrderDate = LocalDateTime.now().format(formatter);
+
+        order.setOrderDate(formattedOrderDate);
         order.setOrderTotalMount(totalAmount);
         order.setCustomer(customer);
 
@@ -160,8 +163,8 @@ public class OrderService {
         return newOrderDTO;
     }
 
-    private void updateProductTotalSells(List<OrderItem> orderItems){
-        for(OrderItem orderItem : orderItems){
+    private void updateProductTotalSells(List<OrderItem> orderItems) {
+        for (OrderItem orderItem : orderItems) {
             Product orderedProduct = orderItem.getProduct();
             int orderQuantity = orderItem.getOrderItemQuantity();
 
@@ -176,7 +179,7 @@ public class OrderService {
         List<Long> productIds = shoppingCart.getCartItems().stream().map(CartItem::getCartItemId).collect(Collectors.toList());
 
         productRepository.findAllById(productIds).forEach(product -> {
-            if (product.getProductQuantity() <= 0 ) {
+            if (product.getProductQuantity() <= 0) {
                 throw new FailedOrderException("Not enough products in stock.");
             }
         });

@@ -8,7 +8,6 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -38,8 +37,8 @@ public class Order {
     @Size(min = 1)
     private List<OrderItem> orderItems;
 
-    public Order(Date orderDate, double totalPrice, Customer customer, List<OrderItem> orderItems) {
-        this.orderDate = orderDate.toString();
+    public Order(String orderDate, double totalPrice, Customer customer, List<OrderItem> orderItems) {
+        this.orderDate = orderDate;
         this.orderTotalMount = totalPrice;
         this.customer = customer;
         this.orderItems = orderItems;

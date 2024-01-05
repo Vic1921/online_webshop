@@ -22,7 +22,7 @@ public class OrderDocument {
     private String id;
     @Indexed
     private LocalDateTime orderDate;
-    private Double orderTotalAmount;
+    private Double orderTotalMount;
 
     @DBRef
     private CustomerDocument customer;

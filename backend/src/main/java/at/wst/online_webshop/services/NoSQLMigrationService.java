@@ -166,7 +166,7 @@ public class NoSQLMigrationService {
     private OrderDocument transformOrder(Order rdbmsOrder) {
         OrderDocument orderDocument = new OrderDocument();
         orderDocument.setId(String.valueOf(rdbmsOrder.getOrderId()));
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss yyyy", Locale.GERMAN);
         LocalDateTime orderDate = LocalDateTime.parse(rdbmsOrder.getOrderDate(), formatter);
         orderDocument.setOrderDate(orderDate);
         Optional<CustomerDocument> optionalCustomerDocument = customerNoSqlRepository.findById(String.valueOf(rdbmsOrder.getCustomer().getCustomerId()));
@@ -177,7 +177,7 @@ public class NoSQLMigrationService {
             logger.info("CustomerDocument not found for customerID: " + rdbmsOrder.getCustomer().getCustomerId());
             throw new CustomerNotFoundException("\"CustomerDocument in nosqlCustomerRepository when transforming cartItems not found \"");
         }
-        orderDocument.setOrderTotalAmount(rdbmsOrder.getOrderTotalMount());
+        orderDocument.setOrderTotalMount(rdbmsOrder.getOrderTotalMount());
         List<OrderItemDocument> orderItemDocuments = transformOrderItems(rdbmsOrder.getOrderItems());
         orderDocument.setOrderItems(orderItemDocuments);
 
