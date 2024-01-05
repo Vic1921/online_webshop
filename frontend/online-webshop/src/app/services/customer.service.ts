@@ -16,6 +16,6 @@ export class CustomerService {
       cartId: cartId
     };
 
-    return this.http.post<any>(`${this.apiUrl}/api/customers/update-cart`, requestBody);
+    return this.http.post<any>(`${this.apiUrl}/api/sql/customers/update-cart`, requestBody);
   }
 }
