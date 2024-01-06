@@ -8,7 +8,10 @@ import at.wst.online_webshop.entities.CartItem;
 import at.wst.online_webshop.entities.Customer;
 import at.wst.online_webshop.entities.Product;
 import at.wst.online_webshop.entities.ShoppingCart;
-import at.wst.online_webshop.exceptions.*;
+import at.wst.online_webshop.exceptions.CustomerNotFoundException;
+import at.wst.online_webshop.exceptions.InsufficientProductQuantityException;
+import at.wst.online_webshop.exceptions.ProductNotFoundException;
+import at.wst.online_webshop.exceptions.ShoppingCartNotFoundException;
 import at.wst.online_webshop.repositories.CartItemRepository;
 import at.wst.online_webshop.repositories.CustomerRepository;
 import at.wst.online_webshop.repositories.ProductRepository;
@@ -18,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
@@ -30,17 +32,13 @@ import static at.wst.online_webshop.convertors.ShoppingCartConvertor.convertToEn
 @Service
 public class ShoppingCartService {
 
+    private static final Logger logger = LoggerFactory.getLogger(ShoppingCartService.class);
     private final ShoppingCartRepository shoppingCartRepository;
-
     private final CustomerRepository customerRepository;
-
     private final ProductRepository productRepository;
-
     private final CartItemRepository cartItemRepository;
 
-    private static final Logger logger = LoggerFactory.getLogger(ShoppingCartService.class);
-
-    public ShoppingCartService(ShoppingCartRepository shoppingCartRepository, CustomerRepository customerRepository, ProductRepository productRepository, CartItemRepository cartItemRepository){
+    public ShoppingCartService(ShoppingCartRepository shoppingCartRepository, CustomerRepository customerRepository, ProductRepository productRepository, CartItemRepository cartItemRepository) {
         this.productRepository = productRepository;
         this.shoppingCartRepository = shoppingCartRepository;
         this.customerRepository = customerRepository;
@@ -69,10 +67,10 @@ public class ShoppingCartService {
     @Transactional
     public ShoppingCartDTO updateShoppingCart(ShoppingCartDTO shoppingCartDTO) {
         ShoppingCart shoppingCart = convertToEntity(shoppingCartDTO);
-        if(shoppingCart == null){
+        if (shoppingCart == null) {
             logger.info(shoppingCart.toString());
             throw new ShoppingCartNotFoundException("there is no such Shopping cart");
-        }else{
+        } else {
             logger.info("NOT NULL" + shoppingCart.toString());
         }
         ShoppingCart updatedShoppingCart = shoppingCartRepository.save(shoppingCart);
@@ -128,7 +126,7 @@ public class ShoppingCartService {
     }
 
     @Transactional
-    public CartItem updateOrCreateCartItem(ShoppingCart shoppingCart, Product product, int quantityToAdd){
+    public CartItem updateOrCreateCartItem(ShoppingCart shoppingCart, Product product, int quantityToAdd) {
         Optional<CartItem> existingCartItem = shoppingCart.getCartItems().stream()
                 .filter(cartItem -> cartItem.getProduct().equals(product))
                 .findFirst();
@@ -140,7 +138,8 @@ public class ShoppingCartService {
             cartItemToUpdate.setShoppingCart(shoppingCart);
 
             BigDecimal newSubprice = new BigDecimal(product.getProductPrice())
-                    .multiply(BigDecimal.valueOf(cartItemToUpdate.getCartItemQuantity())).setScale(2, RoundingMode.HALF_UP);;
+                    .multiply(BigDecimal.valueOf(cartItemToUpdate.getCartItemQuantity())).setScale(2, RoundingMode.HALF_UP);
+            ;
             cartItemToUpdate.setCartItemSubprice(newSubprice);
 
             // Save the updated CartItem
@@ -149,7 +148,7 @@ public class ShoppingCartService {
         } else {
             // Create a new CartItem
             CartItem newCartItem = new CartItem(shoppingCart, product, quantityToAdd,
-                    new BigDecimal(product.getProductPrice()).multiply(BigDecimal.valueOf(quantityToAdd)));
+                    new BigDecimal(product.getProductPrice()).multiply(BigDecimal.valueOf(quantityToAdd)).setScale(2, RoundingMode.HALF_UP));
             newCartItem.setShoppingCart(shoppingCart);
 
             // Add the new CartItem to the shopping cart
@@ -161,7 +160,7 @@ public class ShoppingCartService {
         }
     }
 
-    private BigDecimal calculateTotalPriceShoppingCart(ShoppingCart shoppingCart){
+    private BigDecimal calculateTotalPriceShoppingCart(ShoppingCart shoppingCart) {
         return shoppingCart.getCartItems().stream()
                 .map(CartItem::getCartItemSubprice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add).setScale(2, RoundingMode.HALF_UP);

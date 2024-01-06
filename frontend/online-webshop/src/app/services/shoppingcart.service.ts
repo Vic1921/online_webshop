@@ -34,14 +34,36 @@ export class ShoppingcartService {
 
 
   createCart(customerId : number) : Observable<ShoppingCart>{
+    if(this.configService.useNoSQL == false){
+      return this.createCartFromSQL(customerId);
+    }
+
+    return this.createCartFromNoSQL(customerId);
+  }
+
+  createCartFromSQL(customerId : number) : Observable<ShoppingCart>{
     return this.http.post<ShoppingCart>(`${this.apiUrl}/api/sql/shopping-cart/create`, customerId);
   }
+
+  createCartFromNoSQL(customerId : number) : Observable<ShoppingCart>{
+    return this.http.post<ShoppingCart>(`${this.apiUrl}/api/nosql/shopping-cart/create`, customerId);
+
+  }
+
 
   updateCart(shoppingCart: ShoppingCart): Observable<ShoppingCart> {
     return this.http.put<ShoppingCart>(`${this.apiUrl}/api/sql/shopping-cart/update`, shoppingCart);
   }
 
   addToCart(customerId: number, shoppingCartId: number, productId: number): Observable<ShoppingCart> {
+    if(this.configService.useNoSQL == false){
+      return this.addToCartFromSQL(customerId, shoppingCartId, productId);
+    }
+
+    return this.addToCartFromNoSQL(customerId, productId);
+  }
+
+  addToCartFromSQL(customerId: number, shoppingCartId: number, productId: number): Observable<ShoppingCart>{
     const request = {
       customerId: customerId,
       shoppingCartId: shoppingCartId,
@@ -51,6 +73,17 @@ export class ShoppingcartService {
     this.eventEmitterService.emitCartUpdated();
 
     return this.http.post<ShoppingCart>(`${this.apiUrl}/api/sql/shopping-cart/add-item/`, request);
+  }
+
+  addToCartFromNoSQL(customerId: number, productId: number): Observable<ShoppingCart>{
+    const request = {
+      customerId: customerId,
+      productId: productId
+    };
+
+    this.eventEmitterService.emitCartUpdated();
+
+    return this.http.post<ShoppingCart>(`${this.apiUrl}/api/nosql/shopping-cart/add-item/`, request);
   }
 
   getShoppingCartItems(cartID : number, customerId : number) : Observable<Cartitem[]>{

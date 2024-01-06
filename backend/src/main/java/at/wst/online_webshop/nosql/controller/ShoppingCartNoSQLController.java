@@ -3,6 +3,7 @@ package at.wst.online_webshop.nosql.controller;
 
 import at.wst.online_webshop.dtos.CartItemDTO;
 import at.wst.online_webshop.dtos.ShoppingCartDTO;
+import at.wst.online_webshop.nosql.request.ShoppingCartItemRequestNoSQL;
 import at.wst.online_webshop.nosql.services.ShoppingCartNoSQLService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +21,7 @@ public class ShoppingCartNoSQLController {
     @Autowired
     private ShoppingCartNoSQLService shoppingCartNoSQLService;
 
-    @PostMapping("/add-item/")
+    @PostMapping("/add-create")
     public ResponseEntity<ShoppingCartDTO> createShoppingCart(@RequestBody Long customerId) {
         ShoppingCartDTO result = shoppingCartNoSQLService.createShoppingCart(customerId);
         logger.info("Creating: " + result.toString());
@@ -40,6 +41,15 @@ public class ShoppingCartNoSQLController {
         ShoppingCartDTO shoppingCart = shoppingCartNoSQLService.getShoppingCartById(id);
         logger.info("Get " + shoppingCart.toString());
         return ResponseEntity.ok(shoppingCart);
+    }
+
+    @PostMapping("/add-item/")
+    public ResponseEntity<ShoppingCartDTO> addItemToShoppingCart(@RequestBody ShoppingCartItemRequestNoSQL request) {
+        ShoppingCartDTO shoppingCartDTO = shoppingCartNoSQLService.addItemToShoppingCart(
+                request.getCustomerId(),
+                request.getProductId());
+        logger.info("ADDING: " + shoppingCartDTO.toString());
+        return ResponseEntity.ok(shoppingCartDTO);
     }
 }
 

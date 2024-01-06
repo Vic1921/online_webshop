@@ -42,9 +42,8 @@ public class ReviewNoSQLService {
                 unwind("product"),
                 lookup("customers", "customer.customerId", "customerId", "customer"),
                 unwind("customer"),
-                project("reviewId", "reviewRating", "reviewComment", "reviewDate")
+                project("reviewRating", "reviewComment", "reviewDate")
                         .and("product.productName").as("productName")
-                        .and("customer._id").as("customerId")
                         .and("customer.name").as("customerName")
         );
 

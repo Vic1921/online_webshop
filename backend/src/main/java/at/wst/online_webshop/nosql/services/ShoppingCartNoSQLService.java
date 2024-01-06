@@ -2,10 +2,11 @@ package at.wst.online_webshop.nosql.services;
 
 import at.wst.online_webshop.dtos.CartItemDTO;
 import at.wst.online_webshop.dtos.ShoppingCartDTO;
-import at.wst.online_webshop.entities.CartItem;
 import at.wst.online_webshop.exceptions.CustomerNotFoundException;
 import at.wst.online_webshop.exceptions.InsufficientProductQuantityException;
 import at.wst.online_webshop.exceptions.ProductNotFoundException;
+import at.wst.online_webshop.nosql.convertors.CartItemsConvertorNoSql;
+import at.wst.online_webshop.nosql.convertors.ShoppingCartConvertorNoSql;
 import at.wst.online_webshop.nosql.documents.CartItemDocument;
 import at.wst.online_webshop.nosql.documents.CustomerDocument;
 import at.wst.online_webshop.nosql.documents.ProductDocument;
@@ -22,6 +23,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static at.wst.online_webshop.nosql.convertors.CartItemsConvertorNoSql.convertDocumentToDtoList;
 
@@ -52,6 +54,7 @@ public class ShoppingCartNoSQLService {
         return shoppingCartDTO;
     }
 
+    @Transactional
     public ShoppingCartDTO addItemToShoppingCart(Long customerId, Long productId) {
         CustomerDocument customer = customerNoSqlRepository.findById(String.valueOf(customerId))
                 .orElseThrow(() -> new CustomerNotFoundException("Customer not found."));
@@ -72,8 +75,13 @@ public class ShoppingCartNoSQLService {
         //update product and shopping cart
         productNoSqlRepository.save(product);
 
-        return null;
-
+        List<CartItemDTO> cartItemDTOS = CartItemsConvertorNoSql.convertDocumentToDtoList(customer.getShoppingCart().getCartItems());
+        ShoppingCartDTO shoppingCartDTO = ShoppingCartConvertorNoSql.convertDocumentToDTO(customer.getShoppingCart());
+        shoppingCartDTO.setCustomerId(Long.parseLong(customer.getCustomerId()));
+        shoppingCartDTO.setTotalPrice(calculateTotalPriceShoppingCart(customer.getShoppingCart()).doubleValue());
+        shoppingCartDTO.setCartItemDTOS(cartItemDTOS);
+        customerNoSqlRepository.save(customer);
+        return shoppingCartDTO;
     }
 
 
@@ -87,15 +95,35 @@ public class ShoppingCartNoSQLService {
         return shoppingCartDTO;
     }
 
-    private BigDecimal calculateTotalPriceShoppingCart(ShoppingCartDocument shoppingCart) {
-        return shoppingCart.getCartItems().stream()
-                .map(CartItemDocument::getCartItemSubprice)
-                .reduce(BigDecimal.ZERO, BigDecimal::add).setScale(2, RoundingMode.HALF_UP);
+    @Transactional
+    public CartItemDocument updateOrCreateCartItem(ShoppingCartDocument shoppingCart, ProductDocument product, int quantityToAdd) {
+        Optional<CartItemDocument> existingCartItem = shoppingCart.getCartItems().stream()
+                .filter(cartItem -> cartItem.getProductDocument().equals(product))
+                .findFirst();
+
+        if (existingCartItem.isPresent()) {
+            CartItemDocument cartItemToUpdate = existingCartItem.get();
+            cartItemToUpdate.setCartItemQuantity(cartItemToUpdate.getCartItemQuantity() + quantityToAdd);
+            BigDecimal newSubprice = new BigDecimal(product.getProductPrice())
+                    .multiply(BigDecimal.valueOf(cartItemToUpdate.getCartItemQuantity())).setScale(2, RoundingMode.HALF_UP);
+            ;
+            cartItemToUpdate.setCartItemSubprice(newSubprice);
+            return cartItemToUpdate;
+        } else {
+            CartItemDocument cartItemDocument = new CartItemDocument();
+            cartItemDocument.setProductDocument(product);
+            cartItemDocument.setCartItemQuantity(quantityToAdd);
+            cartItemDocument.setCartItemSubprice(new BigDecimal(product.getProductPrice()).multiply(BigDecimal.valueOf(quantityToAdd)).setScale(2, RoundingMode.HALF_UP));
+
+            shoppingCart.getCartItems().add(cartItemDocument);
+            return cartItemDocument;
+        }
     }
 
-    @Transactional
-    public CartItem updateOrCreateCartItem(ShoppingCartDocument shoppingCart, ProductDocument product, int quantityToAdd) {
-        return null;
+    private BigDecimal calculateTotalPriceShoppingCart(ShoppingCartDocument shoppingCartDocument) {
+        return shoppingCartDocument.getCartItems().stream()
+                .map(CartItemDocument::getCartItemSubprice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add).setScale(2, RoundingMode.HALF_UP);
     }
 }
 

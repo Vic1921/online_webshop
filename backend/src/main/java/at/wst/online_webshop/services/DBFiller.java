@@ -85,6 +85,7 @@ public class DBFiller {
         System.out.println("Before clearing database...");
         logger.info("Before clearing database...");
         customerRepository.deleteAll();
+        orderItemRepository.deleteAll();
         orderRepository.deleteAll();
         productRepository.deleteAll();
         reviewRepository.deleteAll();
