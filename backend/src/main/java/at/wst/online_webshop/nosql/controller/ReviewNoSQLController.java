@@ -25,7 +25,7 @@ public class ReviewNoSQLController {
 
     @GetMapping("/product/{productId}")
     public ResponseEntity<List<ReviewDTO>> getReviewsByProductId(@PathVariable Long productId) {
-        List<ReviewDTO> reviews = reviewNoSQLService.getReviewsByProductId(productId);
+        List<ReviewDTO> reviews = reviewNoSQLService.getReviewsWithCustomerByProductId(String.valueOf(productId));
         logger.info(reviews.toString());
         return ResponseEntity.ok(reviews);
     }

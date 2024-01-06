@@ -125,6 +125,7 @@ public class NoSQLMigrationService {
 
     private void migrateReviews() {
         List<Review> rdbmsReviews = reviewRepository.findAll();
+
         for (Review rdbmsReview : rdbmsReviews) {
             ReviewDocument nosqlReview = transformReview(rdbmsReview);
             reviewNoSqlRepository.save(nosqlReview);
@@ -139,14 +140,12 @@ public class NoSQLMigrationService {
         reviewDocument.setReviewDate(reviewDate);
         reviewDocument.setReviewRating(rbdmsReview.getReviewRating());
         reviewDocument.setReviewId(String.valueOf(rbdmsReview.getReviewId()));
+        reviewDocument.setReviewId(String.valueOf(rbdmsReview.getReviewId()));
         reviewDocument.setReviewComment(rbdmsReview.getReviewComment());
         Optional<ProductDocument> optionalProductDocument = productNoSqlRepository.findById(String.valueOf(rbdmsReview.getProduct().getProductId()));
         if (optionalProductDocument.isPresent()) {
             ProductDocument productDocument = optionalProductDocument.get();
             reviewDocument.setProduct(productDocument);
-            productDocument.getReviews().add(reviewDocument);
-            productNoSqlRepository.save(productDocument);
-
         } else {
             logger.info("ProductDocument not found for productId: " + rbdmsReview.getProduct().getProductId());
             throw new ProductNotFoundException("\"ProductDocument in nosqlProductRepository when transforming reviews not found \"");
@@ -157,6 +156,7 @@ public class NoSQLMigrationService {
             reviewer.getReviews().add(reviewDocument);
             customerNoSqlRepository.save(reviewer);
         } else {
+            logger.info("CustomerDocument not found for customerId: " + rbdmsReview.getProduct().getProductId());
             logger.info("CustomerDocument not found for customerId: " + rbdmsReview.getCustomer().getCustomerId());
             throw new CustomerNotFoundException("\"CustomerDocument in nosqlCustomerRepository when transforming reviews not found \"");
         }
@@ -199,7 +199,6 @@ public class NoSQLMigrationService {
         productDocument.setProductQuantity(rdbmsProduct.getProductQuantity());
         VendorDocument vendorDocument = transformVendor(rdbmsProduct.getVendor());
         productDocument.setVendor(vendorDocument);
-        productDocument.setReviews(new ArrayList<>());
 
         return productDocument;
     }

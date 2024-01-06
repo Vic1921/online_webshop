@@ -17,6 +17,7 @@ public class ReviewDTO {
     private String reviewDate;
     private Integer reviewRating;
     private String reviewComment;
+    private Long customerId;
 
     @Override
     public String toString() {

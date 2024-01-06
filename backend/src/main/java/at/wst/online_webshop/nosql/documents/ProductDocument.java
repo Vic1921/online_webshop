@@ -6,10 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.util.List;
 
 @Getter
 @Setter
@@ -30,8 +27,6 @@ public class ProductDocument {
     private String productImageUrl;
     private Integer productTotalSells = 0;
     private VendorDocument vendor;
-    @DBRef
-    private List<ReviewDocument> reviews;
 
     @Override
     public String toString() {
@@ -46,7 +41,6 @@ public class ProductDocument {
                 ", productImageUrl='" + productImageUrl + '\'' +
                 ", productTotalSells=" + productTotalSells +
                 ", vendor=" + vendor +
-                ", reviews=" + reviews +
                 '}';
     }
 }
