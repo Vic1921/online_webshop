@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -100,7 +102,6 @@ public class OrderService {
 
     @Transactional
     public OrderDTO placeOrder(Long customerId, Long shoppingCartId, String paymentMethod, String shippingDetails) {
-        logger.info("DO WE REACH THIS CODE");
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new FailedOrderException("Customer not found."));
 
@@ -121,8 +122,7 @@ public class OrderService {
         }
 
         double totalAmount = orderItems.stream().mapToDouble(item -> item.getProduct().getProductPrice() * item.getOrderItemQuantity()).sum();
-
-        logger.info("DO WE REACH THIS CODE2");
+        BigDecimal roundedTotalAmount = BigDecimal.valueOf(totalAmount).setScale(2, RoundingMode.HALF_UP);
 
         List<Long> productIds = shoppingCart.getCartItems().stream().map(CartItem::getProduct).map(Product::getProductId).collect(Collectors.toList());
         var products = productRepository.findAllById(productIds);
@@ -133,7 +133,7 @@ public class OrderService {
         String formattedOrderDate = LocalDateTime.now().format(formatter);
 
         order.setOrderDate(formattedOrderDate);
-        order.setOrderTotalMount(totalAmount);
+        order.setOrderTotalMount(roundedTotalAmount.doubleValue());
         order.setCustomer(customer);
 
         //reference Order
@@ -147,7 +147,6 @@ public class OrderService {
             productRepository.save(product);
         });
 
-        logger.info("DO WE REACH THIS CODE3");
         List<OrderItemDTO> orderItemDTOS = OrderItemConvertor.convertToDtoList(order.getOrderItems());
 
         // Save order to database
@@ -158,8 +157,6 @@ public class OrderService {
         newOrderDTO.setOrderId(order.getOrderId());
         // Delete shopping cart and save
         this.shoppingCartService.deleteShoppingCart(shoppingCartId);
-
-        logger.info("NEW ORDER DTO IS: {}", newOrderDTO.toString());
         return newOrderDTO;
     }
 
@@ -195,7 +192,6 @@ public class OrderService {
             throw new FailedOrderException("Shipping details are required.");
         }
 
-        //ich habe das jetzt mal nur geändert weil in der website paymnet methods wir paypal, bankverbindung und kreditkarte anbieten
         if (paymentMethod.length() == 0) {
             throw new FailedOrderException("Payment shouldnt be empty");
         }

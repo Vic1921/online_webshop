@@ -32,4 +32,21 @@ public class ProductDocument {
     private VendorDocument vendor;
     @DBRef
     private List<ReviewDocument> reviews;
+
+    @Override
+    public String toString() {
+        return "ProductDocument{" +
+                "id='" + id + '\'' +
+                ", productName='" + productName + '\'' +
+                ", productPrice=" + productPrice +
+                ", productSKU='" + productSKU + '\'' +
+                ", productCategory='" + productCategory + '\'' +
+                ", productDescription='" + productDescription + '\'' +
+                ", productQuantity=" + productQuantity +
+                ", productImageUrl='" + productImageUrl + '\'' +
+                ", productTotalSells=" + productTotalSells +
+                ", vendor=" + vendor +
+                ", reviews=" + reviews +
+                '}';
+    }
 }

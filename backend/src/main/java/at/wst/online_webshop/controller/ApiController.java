@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 public class ApiController {
+    private static final Logger logger = LoggerFactory.getLogger(ApiController.class);
     private final DBFiller dbFiller;
     private final NoSQLMigrationService migrator;
-    private static final Logger logger = LoggerFactory.getLogger(ApiController.class);
 
     @RequestMapping("/version")
-    public Long apiVersion()   {
+    public Long apiVersion() {
         return 1L;
     }
 
@@ -44,7 +44,11 @@ public class ApiController {
     @GetMapping("/migratedatabase")
     public void migrateDatabase() {
         logger.info("WE ARE MIGRATING");
-        migrator.migrateToNoSQL();
+        try {
+            migrator.migrateToNoSQL();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

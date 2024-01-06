@@ -101,6 +101,7 @@ public class NoSQLMigrationService {
         productNoSqlRepository.deleteAll();
         customerNoSqlRepository.deleteAll();
         orderNoSqlRepository.deleteAll();
+        reviewNoSqlRepository.deleteAll();
     }
 
     private void migrateProducts() {
@@ -124,11 +125,11 @@ public class NoSQLMigrationService {
 
     private void migrateReviews() {
         List<Review> rdbmsReviews = reviewRepository.findAll();
-
         for (Review rdbmsReview : rdbmsReviews) {
             ReviewDocument nosqlReview = transformReview(rdbmsReview);
             reviewNoSqlRepository.save(nosqlReview);
         }
+
     }
 
     private ReviewDocument transformReview(Review rbdmsReview) {
@@ -137,7 +138,7 @@ public class NoSQLMigrationService {
         LocalDate reviewDate = LocalDate.parse(rbdmsReview.getReviewDate(), formatter);
         reviewDocument.setReviewDate(reviewDate);
         reviewDocument.setReviewRating(rbdmsReview.getReviewRating());
-        reviewDocument.setId(String.valueOf(rbdmsReview.getReviewId()));
+        reviewDocument.setReviewId(String.valueOf(rbdmsReview.getReviewId()));
         reviewDocument.setReviewComment(rbdmsReview.getReviewComment());
         Optional<ProductDocument> optionalProductDocument = productNoSqlRepository.findById(String.valueOf(rbdmsReview.getProduct().getProductId()));
         if (optionalProductDocument.isPresent()) {
@@ -156,9 +157,11 @@ public class NoSQLMigrationService {
             reviewer.getReviews().add(reviewDocument);
             customerNoSqlRepository.save(reviewer);
         } else {
-            logger.info("CustomerDocument not found for customerId: " + rbdmsReview.getProduct().getProductId());
+            logger.info("CustomerDocument not found for customerId: " + rbdmsReview.getCustomer().getCustomerId());
             throw new CustomerNotFoundException("\"CustomerDocument in nosqlCustomerRepository when transforming reviews not found \"");
         }
+
+        logger.info(reviewDocument.toString());
 
         return reviewDocument;
     }
@@ -229,8 +232,6 @@ public class NoSQLMigrationService {
 
         }
         nosqlCustomer.setReviews(new ArrayList<>());
-        logger.info(nosqlCustomer.toString());
-
         return nosqlCustomer;
     }
 

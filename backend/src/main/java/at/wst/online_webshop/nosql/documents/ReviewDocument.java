@@ -18,7 +18,7 @@ import java.time.LocalDate;
 @Document(collection = "reviews")
 public class ReviewDocument {
     @Id
-    private String id;
+    private String reviewId;
     private Integer reviewRating;
     private String reviewComment;
     @Indexed
@@ -27,7 +27,19 @@ public class ReviewDocument {
     @DBRef
     private ProductDocument product;
 
+    //i delete this because bi directional referencing in nosql impacts extremely the performance, i noticed it in the migration process where it takes forever,
+    //i think we should generally avoid circular dependencies in nosql,
+    /*
     @DBRef
     private CustomerDocument customer;
-
+*/
+    @Override
+    public String toString() {
+        return "ReviewDocument{" +
+                "id='" + reviewId + '\'' +
+                ", reviewRating=" + reviewRating +
+                ", reviewComment='" + reviewComment + '\'' +
+                ", reviewDate=" + reviewDate +
+                '}';
+    }
 }
