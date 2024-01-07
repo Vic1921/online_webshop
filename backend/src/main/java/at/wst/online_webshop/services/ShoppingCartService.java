@@ -100,12 +100,9 @@ public class ShoppingCartService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ProductNotFoundException("Product not found."));
 
-        // Subtract product quantity
         int quantityToAdd = 1;
 
-        if (product.getProductQuantity() >= quantityToAdd) {
-            product.setProductQuantity(product.getProductQuantity() - quantityToAdd);
-        } else {
+        if (product.getProductQuantity() < quantityToAdd) {
             throw new InsufficientProductQuantityException("Not enough quantity available for the product.");
         }
 

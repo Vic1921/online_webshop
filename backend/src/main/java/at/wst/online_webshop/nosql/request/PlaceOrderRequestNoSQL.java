@@ -1,14 +1,14 @@
 package at.wst.online_webshop.nosql.request;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-public class ShoppingCartItemRequestNoSQL {
+public class PlaceOrderRequestNoSQL {
     private String customerId;
-    private Long productId;
+    private String paymentMethod;
+    private String shippingDetails;
 }

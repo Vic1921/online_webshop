@@ -11,6 +11,7 @@ import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Router } from '@angular/router';
 import { CustomerService } from '../../services/customer.service';
 import { ConfigService } from '../../config.service';
+import { ObjectId } from 'bson';
 
 @Component({
   selector: 'app-shoppingcart',
@@ -37,7 +38,7 @@ export class ShoppingcartComponent {
     private productService: ProductService,
     private configService: ConfigService,
     private orderService: OrderService,
-    private customerService : CustomerService,
+    private customerService: CustomerService,
     private cdr: ChangeDetectorRef,
     private router: Router
   ) {
@@ -94,13 +95,13 @@ export class ShoppingcartComponent {
             console.error('Error fetching shopping cart:', error);
           }
         );
-      }else{
+      } else {
         this.getCartByNoSQL();
       }
     }
   }
 
-  getCartByNoSQL(){
+  getCartByNoSQL() {
     const customerId = this.loginService.getCustomerIDFromNoSQL();
     this.shoppingCartService.getCartNoSQL(customerId!).subscribe(
       (cart: ShoppingCart) => {
@@ -148,7 +149,12 @@ export class ShoppingcartComponent {
     );
   }
 
-  addToCart(productId: number | undefined) : void {
+  convertToObjectId(id : number): string {
+    const objectId = new ObjectId(id.toString());
+    return objectId.toHexString();
+  }
+
+  addToCart(productId: number | undefined): void {
     if (productId == undefined) {
       console.error('Product Id is undefined');
       return;
@@ -158,9 +164,9 @@ export class ShoppingcartComponent {
       const customerId = this.loginService.getCustomerID();
       // Check if the customer has an existing cart
       let cartId: number | null = this.loginService.getCartID();
-      if(cartId == null) {
+      if (cartId == null) {
         console.info("Cart id should be null" + cartId);
-      }else{
+      } else {
         console.info("Cart id is not null" + cartId);
 
       }
@@ -173,7 +179,7 @@ export class ShoppingcartComponent {
             // Handle the success response
             this.cart = shoppingCart; // Updated shopping cart
             this.cdr.detectChanges();
-    
+
             console.log('Product added to existing cart. Updated shopping cart:', shoppingCart);
           },
           (error: any) => {
@@ -183,26 +189,62 @@ export class ShoppingcartComponent {
             console.error('Error adding product to cart:', error);
           }
         );
-      } 
+      }
     }
   }
 
   placeOrder() {
+    if (this.configService.useNoSQL == true) {
+      if (this.loginService.isLoggedIn()) {
+        const customerId = this.loginService.getCustomerID();
+        const shoppingCartId = this.loginService.getCartID() ?? 0;
+        const formValues = this.orderForm.value;
+        const paymentMethod = formValues.paymentMethod ?? '';
+        const shippingDetails = formValues.shippingDetails ?? '';  // Provide an empty string as the default value
+
+
+
+        // Call the service to place the order
+        this.orderService.placeOrderFromSQL(customerId, shoppingCartId, paymentMethod, shippingDetails).subscribe(
+          (response) => {
+            console.log('Order placed successfully:', response);
+            //redirect the customer to the order details component with the right order id
+            const orderId = response.orderId;
+            //delete the cart
+            this.loginService.setCartID(null);
+            console.log(orderId);
+            console.log(paymentMethod);
+            this.router.navigate(['/order', orderId, { paymentMethod: paymentMethod }]);
+
+          },
+          (error) => {
+            console.log(customerId);
+            console.log(shoppingCartId);
+            console.log(paymentMethod);
+            console.log(shippingDetails);
+
+            console.error('Error placing order:', error);
+          }
+        );
+      }
+    }else{
+      this.placeOrderNoSQL();
+    }
+  }
+
+  placeOrderNoSQL() {
     if (this.loginService.isLoggedIn()) {
-      const customerId = this.loginService.getCustomerID();
-      const shoppingCartId = this.loginService.getCartID() ?? 0;
+      const customerId = this.loginService.getCustomerIDFromNoSQL();
       const formValues = this.orderForm.value;
       const paymentMethod = formValues.paymentMethod ?? '';
       const shippingDetails = formValues.shippingDetails ?? '';  // Provide an empty string as the default value
 
-
-
       // Call the service to place the order
-      this.orderService.placeOrder(customerId, shoppingCartId, paymentMethod, shippingDetails).subscribe(
+      this.orderService.placeOrderFromNoSQL(customerId!, paymentMethod, shippingDetails).subscribe(
         (response) => {
           console.log('Order placed successfully:', response);
           //redirect the customer to the order details component with the right order id
-          const orderId = response.orderId;
+          const orderId = this.convertToObjectId(response.orderId);
           //delete the cart
           this.loginService.setCartID(null);
           console.log(orderId);
@@ -212,7 +254,6 @@ export class ShoppingcartComponent {
         },
         (error) => {
           console.log(customerId);
-          console.log(shoppingCartId);
           console.log(paymentMethod);
           console.log(shippingDetails);
 
@@ -222,12 +263,12 @@ export class ShoppingcartComponent {
     }
   }
 
-  getTotalItems() : number{
+  getTotalItems(): number {
     const totalQuantity: number = this.cart?.cartItemDTOS?.reduce(
       (sum, cartItem) => sum + (cartItem.cartItemQuantity || 0),
       0) || 0;
 
-      return totalQuantity;
+    return totalQuantity;
   }
 
 

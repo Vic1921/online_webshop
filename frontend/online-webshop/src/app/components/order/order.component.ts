@@ -20,7 +20,7 @@ export class OrderComponent {
 
   constructor(private orderService : OrderService, private loginService : LoginService, private router : Router){
     const customerId = loginService.getCustomerID();
-    this.orderService.getOrdersByCustomerId(customerId).subscribe(
+    this.orderService.getOrdersByCustomerIdFromSQL(customerId).subscribe(
       (repsonse) => {
         this.orders = repsonse;
         console.log('Successfully fetched order list', this.orders);

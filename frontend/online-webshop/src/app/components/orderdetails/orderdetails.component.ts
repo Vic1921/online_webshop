@@ -7,6 +7,7 @@ import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
 import { LoginService } from '../../services/login.service';
 import { CustomerService } from '../../services/customer.service';
+import { ConfigService } from '../../config.service';
 
 
 @Component({
@@ -21,9 +22,37 @@ export class OrderdetailsComponent {
   private orderTotal: number = 0;
   paymentMethod!: string | null;
 
-  constructor(private orderService : OrderService, private route : ActivatedRoute, private loginService : LoginService){
+  constructor(private configService : ConfigService, private orderService : OrderService, private route : ActivatedRoute, private loginService : LoginService){
+    if(configService.useNoSQL == false){
+      this.getOrderSQL();
+    }else{
+      this.getOrderNoSQL();
+    }
+  }
+
+  getOrderSQL(){
     const orderId = Number(this.route.snapshot.paramMap.get('orderId'));
-    this.orderService.getOrderByID(orderId).subscribe(
+    this.orderService.getOrderByIDFromSQL(orderId).subscribe(
+      (response) => {
+        console.log('Order successfully fetched:', response);
+        this.order = response;
+        this.order.orderItems = response.orderItems;
+        this.paymentMethod = this.route.snapshot.paramMap.get('paymentMethod');
+            
+        console.log(this.paymentMethod);
+        this.calculateOrderTotal();
+
+        console.log(this.order);
+      },
+      (error : any) =>{
+        console.error('Error fetching order:', error);
+      }
+    )
+  }
+
+  getOrderNoSQL(){
+    const orderId = this.route.snapshot.paramMap.get('orderId');
+    this.orderService.getOrderByIDFromNoSQL(orderId!).subscribe(
       (response) => {
         console.log('Order successfully fetched:', response);
         this.order = response;

@@ -173,7 +173,8 @@ public class OrderService {
     }
 
     private void validateCart(ShoppingCart shoppingCart) {
-        List<Long> productIds = shoppingCart.getCartItems().stream().map(CartItem::getCartItemId).collect(Collectors.toList());
+        List<Long> productIds = shoppingCart.getCartItems().stream().map(cartItem -> cartItem.getProduct().getProductId())
+                .collect(Collectors.toList());
 
         productRepository.findAllById(productIds).forEach(product -> {
             if (product.getProductQuantity() <= 0) {
@@ -190,10 +191,6 @@ public class OrderService {
 
         if (shippingDetails == null || shippingDetails.isEmpty()) {
             throw new FailedOrderException("Shipping details are required.");
-        }
-
-        if (paymentMethod.length() == 0) {
-            throw new FailedOrderException("Payment shouldnt be empty");
         }
     }
 }
