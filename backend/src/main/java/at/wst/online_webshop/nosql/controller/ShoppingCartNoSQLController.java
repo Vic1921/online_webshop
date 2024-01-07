@@ -29,7 +29,7 @@ public class ShoppingCartNoSQLController {
     }
 
     @GetMapping("/get-items")
-    public ResponseEntity<List<CartItemDTO>> getItemsFromShoppingCart(@RequestParam Long id) {
+    public ResponseEntity<List<CartItemDTO>> getItemsFromShoppingCart(@RequestParam String id) {
         logger.info("Shopping Cart items are being fetched from nosql ");
         ShoppingCartDTO shoppingCartDTO = shoppingCartNoSQLService.getShoppingCartById(id);
         List<CartItemDTO> productsFromShoppingCart = shoppingCartDTO.getCartItemDTOS();
@@ -37,7 +37,7 @@ public class ShoppingCartNoSQLController {
     }
 
     @GetMapping("/get")
-    public ResponseEntity<ShoppingCartDTO> getShoppingCartById(@RequestParam Long id) {
+    public ResponseEntity<ShoppingCartDTO> getShoppingCartById(@RequestParam String id) {
         ShoppingCartDTO shoppingCart = shoppingCartNoSQLService.getShoppingCartById(id);
         logger.info("Get " + shoppingCart.toString());
         return ResponseEntity.ok(shoppingCart);

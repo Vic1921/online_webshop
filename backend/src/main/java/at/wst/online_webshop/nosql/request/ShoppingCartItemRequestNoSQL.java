@@ -11,6 +11,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ShoppingCartItemRequestNoSQL {
-    private Long customerId;
+    private String customerId;
     private Long productId;
 }

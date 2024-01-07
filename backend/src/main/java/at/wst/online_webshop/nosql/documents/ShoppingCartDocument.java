@@ -11,6 +11,13 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ShoppingCartDocument{
+public class ShoppingCartDocument {
     private List<CartItemDocument> cartItems;
+
+    @Override
+    public String toString() {
+        return "ShoppingCartDocument{" +
+                "cartItems=" + cartItems +
+                '}';
+    }
 }

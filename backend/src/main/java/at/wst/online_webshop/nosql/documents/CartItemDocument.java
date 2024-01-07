@@ -18,4 +18,12 @@ public class CartItemDocument {
     private Integer cartItemQuantity;
     private BigDecimal cartItemSubprice;
 
+    @Override
+    public String toString() {
+        return "CartItemDocument{" +
+                "productDocument=" + productDocument +
+                ", cartItemQuantity=" + cartItemQuantity +
+                ", cartItemSubprice=" + cartItemSubprice +
+                '}';
+    }
 }

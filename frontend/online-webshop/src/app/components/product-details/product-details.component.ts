@@ -167,6 +167,8 @@ export class ProductDetailsComponent {
         // If the customer does not have a cart, create a new cart and add the product
         this.shoppingCartService.createCartFromNoSQL(customerId!).subscribe(
           (newCart) => {
+            //setting a fake cart id 
+            this.loginService.setCartID(1);
             // Now that a new cart is created, add the product to the new cart
             this.shoppingCartService.addToCartFromNoSQL(customerId!, productId!).subscribe(
               (shoppingCart) => {

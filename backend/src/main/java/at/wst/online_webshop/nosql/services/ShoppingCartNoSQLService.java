@@ -60,8 +60,8 @@ public class ShoppingCartNoSQLService {
     }
 
     @Transactional
-    public ShoppingCartDTO addItemToShoppingCart(Long customerId, Long productId) {
-        CustomerDocument customer = customerNoSqlRepository.findById(String.valueOf(customerId))
+    public ShoppingCartDTO addItemToShoppingCart(String customerId, Long productId) {
+        CustomerDocument customer = customerNoSqlRepository.findById(customerId)
                 .orElseThrow(() -> new CustomerNotFoundException("Customer not found."));
 
         ProductDocument product = productNoSqlRepository.findById(String.valueOf(productId))
@@ -79,19 +79,23 @@ public class ShoppingCartNoSQLService {
 
         //update product and shopping cart
         productNoSqlRepository.save(product);
+        customerNoSqlRepository.save(customer);
+        logger.info("SHOPPING CART IS ");
+        logger.info(customer.getShoppingCart().toString());
+
 
         List<CartItemDTO> cartItemDTOS = CartItemsConvertorNoSql.convertDocumentToDtoList(customer.getShoppingCart().getCartItems());
         ShoppingCartDTO shoppingCartDTO = ShoppingCartConvertorNoSql.convertDocumentToDTO(customer.getShoppingCart());
-        shoppingCartDTO.setCustomerId(Long.parseLong(customer.getCustomerId()));
+        BigInteger customerIdBigInt = new BigInteger(customerId, 16);
+        shoppingCartDTO.setCustomerId(customerIdBigInt.longValue());
         shoppingCartDTO.setTotalPrice(calculateTotalPriceShoppingCart(customer.getShoppingCart()).doubleValue());
         shoppingCartDTO.setCartItemDTOS(cartItemDTOS);
-        customerNoSqlRepository.save(customer);
         return shoppingCartDTO;
     }
 
 
-    public ShoppingCartDTO getShoppingCartById(Long customerId) {
-        CustomerDocument customerDocument = customerNoSqlRepository.findById(String.valueOf(customerId)).orElseThrow(() -> new CustomerNotFoundException("Customer not found"));
+    public ShoppingCartDTO getShoppingCartById(String customerId) {
+        CustomerDocument customerDocument = customerNoSqlRepository.findById(customerId).orElseThrow(() -> new CustomerNotFoundException("Customer not found"));
         List<CartItemDTO> cartItemDTOList = convertDocumentToDtoList(customerDocument.getShoppingCart().getCartItems());
         ShoppingCartDTO shoppingCartDTO = new ShoppingCartDTO();
         shoppingCartDTO.setCartItemDTOS(cartItemDTOList);
@@ -115,12 +119,14 @@ public class ShoppingCartNoSQLService {
             cartItemToUpdate.setCartItemSubprice(newSubprice);
             return cartItemToUpdate;
         } else {
+            logger.info("SHOPPING CART IS BEFORE ::: + " + shoppingCart.toString());
             CartItemDocument cartItemDocument = new CartItemDocument();
             cartItemDocument.setProductDocument(product);
             cartItemDocument.setCartItemQuantity(quantityToAdd);
             cartItemDocument.setCartItemSubprice(new BigDecimal(product.getProductPrice()).multiply(BigDecimal.valueOf(quantityToAdd)).setScale(2, RoundingMode.HALF_UP));
 
             shoppingCart.getCartItems().add(cartItemDocument);
+            logger.info("SHOPPING CART IS AFTER ::: + " + shoppingCart.toString());
             return cartItemDocument;
         }
     }

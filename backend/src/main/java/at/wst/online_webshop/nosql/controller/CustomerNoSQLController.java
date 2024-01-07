@@ -54,6 +54,8 @@ public class CustomerNoSQLController {
             result.put("customerAddress", customerDocument.getAddress().getStreet());
             if (customerDocument.getShoppingCart() == null) {
                 result.put("cartID", null);
+            } else {
+                result.put("cartID", "1");
             }
             return ResponseEntity.ok(result);
         }

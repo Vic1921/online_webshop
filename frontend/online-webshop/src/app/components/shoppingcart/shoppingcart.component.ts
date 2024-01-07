@@ -10,6 +10,7 @@ import { OrderService } from '../../services/order.service';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CustomerService } from '../../services/customer.service';
+import { ConfigService } from '../../config.service';
 
 @Component({
   selector: 'app-shoppingcart',
@@ -34,6 +35,7 @@ export class ShoppingcartComponent {
     private shoppingCartService: ShoppingcartService,
     public loginService: LoginService,
     private productService: ProductService,
+    private configService: ConfigService,
     private orderService: OrderService,
     private customerService : CustomerService,
     private cdr: ChangeDetectorRef,
@@ -46,7 +48,7 @@ export class ShoppingcartComponent {
       this.cartId = Number(this.loginService.getCartID());
 
       // Subscribe to getCart observable
-      if (this.cartId != null && this.cartId != 0) {
+      if (this.cartId != null && configService.useNoSQL == false) {
         let customerId = this.loginService.getCustomerID();
         this.shoppingCartService.getCart(this.cartId, customerId!).subscribe(
           (cart: ShoppingCart) => {
@@ -92,8 +94,58 @@ export class ShoppingcartComponent {
             console.error('Error fetching shopping cart:', error);
           }
         );
+      }else{
+        this.getCartByNoSQL();
       }
     }
+  }
+
+  getCartByNoSQL(){
+    const customerId = this.loginService.getCustomerIDFromNoSQL();
+    this.shoppingCartService.getCartNoSQL(customerId!).subscribe(
+      (cart: ShoppingCart) => {
+        this.cart = cart;
+        console.log(cart);
+
+        // Now, this.cart contains the shopping cart details including product details
+        // Fetch product details based on productIds
+        this.shoppingCartService.getShoppingCartItemsNoSQL(customerId!).subscribe(
+          (cartItems: Cartitem[] | null) => {
+            if (cartItems !== null) {
+              const productIds = cartItems.map((item) => item.productId);
+              this.cart.cartItemDTOS = cartItems;
+              console.log(this.cart.cartItemDTOS);
+
+              // Iterate through productIds and fetch products
+              productIds.forEach((productId) => {
+                this.productService.getProduct(productId).subscribe(
+                  (product) => {
+                    // Push the fetched product to the products array
+                    this.products.push(product);
+
+                    // Now, this.cart contains the shopping cart details including products
+                  },
+                  (error) => {
+                    console.error(`Error fetching product with ID ${productId}:`, error);
+                  }
+                );
+              });
+
+
+            } else {
+              console.log(this.cart);
+              console.error('Cart items are null.');
+            }
+          },
+          (error) => {
+            console.error('Error fetching shopping cart items:', error);
+          }
+        );
+      },
+      (error) => {
+        console.error('Error fetching shopping cart:', error);
+      }
+    );
   }
 
   addToCart(productId: number | undefined) : void {

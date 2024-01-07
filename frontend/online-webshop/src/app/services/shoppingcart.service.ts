@@ -16,18 +16,14 @@ export class ShoppingcartService {
   constructor(private configService : ConfigService, private http : HttpClient, private eventEmitterService : EventEmitterService) { }
 
   getCart(cartID : number, customerId : number) : Observable<ShoppingCart>{
-    if(this.configService.useNoSQL == false){
       return this.getCartSQL(cartID);
-    }
-
-    return this.getCartNoSQL(customerId);
   }
 
   getCartSQL(cartID : number) : Observable<ShoppingCart>{
     return this.http.get<ShoppingCart>(`${this.apiUrl}/api/sql/shopping-cart/get?id=${cartID}`);
   }
 
-  getCartNoSQL(customerId : number) : Observable<ShoppingCart>{
+  getCartNoSQL(customerId : string) : Observable<ShoppingCart>{
     return this.http.get<ShoppingCart>(`${this.apiUrl}/api/nosql/shopping-cart/get?id=${customerId}`);
   }
 
@@ -79,15 +75,11 @@ export class ShoppingcartService {
   }
 
   getShoppingCartItems(cartID : number, customerId : number) : Observable<Cartitem[]>{
-    if (this.configService.useNoSQL == false) {
       const url = `${this.apiUrl}/api/sql/shopping-cart/get-items?id=${cartID}`;
       return this.http.get<Cartitem[]>(url);
-    }
-
-    return this.getShoppingCartItemsNoSQL(customerId);
   }
 
-  getShoppingCartItemsNoSQL(customerId : number) : Observable<Cartitem[]> {
+  getShoppingCartItemsNoSQL(customerId : string) : Observable<Cartitem[]> {
     const url = `${this.apiUrl}/api/nosql/shopping-cart/get-items?id=${customerId}`;
     return this.http.get<Cartitem[]>(url);
   }
