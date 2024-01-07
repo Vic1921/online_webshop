@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,13 +45,17 @@ public class ShoppingCartNoSQLService {
 
     //in frontend customerService updateCart() careful
     @Transactional
-    public ShoppingCartDTO createShoppingCart(Long customerId) {
-        CustomerDocument customerDocument = customerNoSqlRepository.findById(String.valueOf(customerId)).orElseThrow(() -> new CustomerNotFoundException("Customer not found"));
+    public ShoppingCartDTO createShoppingCart(String customerId) {
+        CustomerDocument customerDocument = customerNoSqlRepository.findById(customerId).orElseThrow(() -> new CustomerNotFoundException("Customer not found"));
         ShoppingCartDocument shoppingCartDocument = new ShoppingCartDocument(new ArrayList<>());
         customerDocument.setShoppingCart(shoppingCartDocument);
         customerNoSqlRepository.save(customerDocument);
-        ShoppingCartDTO shoppingCartDTO = new ShoppingCartDTO(customerId);
 
+        BigInteger customerIdBigInt = new BigInteger(customerId, 16);
+
+        ShoppingCartDTO shoppingCartDTO = new ShoppingCartDTO(customerIdBigInt.longValue());
+        logger.info("CREATING CART");
+        logger.info(shoppingCartDTO.toString());
         return shoppingCartDTO;
     }
 

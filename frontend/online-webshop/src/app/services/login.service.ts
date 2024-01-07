@@ -69,6 +69,10 @@ export class LoginService {
     return customerId
   }
 
+  getCustomerIDFromNoSQL(): string | null{
+    return localStorage.getItem(this.customerKey);
+  }
+
   getCustomerName(): string | null {
     return localStorage.getItem(this.customerName);
   }

@@ -34,18 +34,14 @@ export class ShoppingcartService {
 
 
   createCart(customerId : number) : Observable<ShoppingCart>{
-    if(this.configService.useNoSQL == false){
       return this.createCartFromSQL(customerId);
-    }
-
-    return this.createCartFromNoSQL(customerId);
   }
 
   createCartFromSQL(customerId : number) : Observable<ShoppingCart>{
     return this.http.post<ShoppingCart>(`${this.apiUrl}/api/sql/shopping-cart/create`, customerId);
   }
 
-  createCartFromNoSQL(customerId : number) : Observable<ShoppingCart>{
+  createCartFromNoSQL(customerId : string) : Observable<ShoppingCart>{
     return this.http.post<ShoppingCart>(`${this.apiUrl}/api/nosql/shopping-cart/create`, customerId);
 
   }
@@ -56,11 +52,7 @@ export class ShoppingcartService {
   }
 
   addToCart(customerId: number, shoppingCartId: number, productId: number): Observable<ShoppingCart> {
-    if(this.configService.useNoSQL == false){
       return this.addToCartFromSQL(customerId, shoppingCartId, productId);
-    }
-
-    return this.addToCartFromNoSQL(customerId, productId);
   }
 
   addToCartFromSQL(customerId: number, shoppingCartId: number, productId: number): Observable<ShoppingCart>{
@@ -75,7 +67,7 @@ export class ShoppingcartService {
     return this.http.post<ShoppingCart>(`${this.apiUrl}/api/sql/shopping-cart/add-item/`, request);
   }
 
-  addToCartFromNoSQL(customerId: number, productId: number): Observable<ShoppingCart>{
+  addToCartFromNoSQL(customerId: string, productId: number): Observable<ShoppingCart>{
     const request = {
       customerId: customerId,
       productId: productId

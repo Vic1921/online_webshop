@@ -21,8 +21,8 @@ public class ShoppingCartNoSQLController {
     @Autowired
     private ShoppingCartNoSQLService shoppingCartNoSQLService;
 
-    @PostMapping("/add-create")
-    public ResponseEntity<ShoppingCartDTO> createShoppingCart(@RequestBody Long customerId) {
+    @PostMapping("/create")
+    public ResponseEntity<ShoppingCartDTO> createShoppingCart(@RequestBody String customerId) {
         ShoppingCartDTO result = shoppingCartNoSQLService.createShoppingCart(customerId);
         logger.info("Creating: " + result.toString());
         return ResponseEntity.ok(result);
