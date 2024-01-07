@@ -19,7 +19,7 @@ import java.util.List;
 @Document(collection = "orders")
 public class OrderDocument {
     @Id
-    private String id;
+    private String orderId;
     @Indexed
     private LocalDateTime orderDate;
     private Double orderTotalMount;
@@ -31,4 +31,13 @@ public class OrderDocument {
     // and second uppn fetching the details of the order, you can immediately see what the order items are in the order
     private List<OrderItemDocument> orderItems;
 
+    @Override
+    public String toString() {
+        return "OrderDocument{" +
+                "id='" + orderId + '\'' +
+                ", orderDate=" + orderDate.toString() +
+                ", orderTotalMount=" + orderTotalMount +
+                ", customer=" + customer +
+                '}';
+    }
 }

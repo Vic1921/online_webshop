@@ -168,7 +168,7 @@ public class NoSQLMigrationService {
 
     private OrderDocument transformOrder(Order rdbmsOrder) {
         OrderDocument orderDocument = new OrderDocument();
-        orderDocument.setId(String.valueOf(rdbmsOrder.getOrderId()));
+        orderDocument.setOrderId(String.valueOf(rdbmsOrder.getOrderId()));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss yyyy", Locale.GERMAN);
         LocalDateTime orderDate = LocalDateTime.parse(rdbmsOrder.getOrderDate(), formatter);
         orderDocument.setOrderDate(orderDate);

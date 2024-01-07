@@ -11,7 +11,6 @@ import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Router } from '@angular/router';
 import { CustomerService } from '../../services/customer.service';
 import { ConfigService } from '../../config.service';
-import { ObjectId } from 'bson';
 
 @Component({
   selector: 'app-shoppingcart',
@@ -149,11 +148,6 @@ export class ShoppingcartComponent {
     );
   }
 
-  convertToObjectId(id : number): string {
-    const objectId = new ObjectId(id.toString());
-    return objectId.toHexString();
-  }
-
   addToCart(productId: number | undefined): void {
     if (productId == undefined) {
       console.error('Product Id is undefined');
@@ -194,7 +188,7 @@ export class ShoppingcartComponent {
   }
 
   placeOrder() {
-    if (this.configService.useNoSQL == true) {
+    if (this.configService.useNoSQL == false) {
       if (this.loginService.isLoggedIn()) {
         const customerId = this.loginService.getCustomerID();
         const shoppingCartId = this.loginService.getCartID() ?? 0;
@@ -233,6 +227,7 @@ export class ShoppingcartComponent {
   }
 
   placeOrderNoSQL() {
+    console.log("placing order in nosql ");
     if (this.loginService.isLoggedIn()) {
       const customerId = this.loginService.getCustomerIDFromNoSQL();
       const formValues = this.orderForm.value;
@@ -244,12 +239,14 @@ export class ShoppingcartComponent {
         (response) => {
           console.log('Order placed successfully:', response);
           //redirect the customer to the order details component with the right order id
-          const orderId = this.convertToObjectId(response.orderId);
+          const orderId = response.orderId;
           //delete the cart
           this.loginService.setCartID(null);
           console.log(orderId);
           console.log(paymentMethod);
-          this.router.navigate(['/order', orderId, { paymentMethod: paymentMethod }]);
+          setTimeout(() => {
+            this.router.navigate(['/order', orderId, { paymentMethod: paymentMethod }]);
+          }, 500);
 
         },
         (error) => {

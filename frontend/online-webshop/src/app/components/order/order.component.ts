@@ -7,6 +7,8 @@ import { Order } from '../../interfaces/order';
 import { LoginComponent } from '../login/login.component';
 import { LoginService } from '../../services/login.service';
 import { Router } from '@angular/router';
+import { ConfigService } from '../../config.service';
+import { OrderNoSQL } from '../../interfaces/ordernosql';
 
 @Component({
   selector: 'app-order',
@@ -16,23 +18,45 @@ import { Router } from '@angular/router';
   styleUrl: './order.component.css'
 })
 export class OrderComponent {
-  orders : Order[] = [];
+  orders: (Order | OrderNoSQL)[] = [];
+  constructor(private configService : ConfigService, private orderService : OrderService, private loginService : LoginService, private router : Router){
+    if(this.configService.useNoSQL == false){
+      const customerId = loginService.getCustomerID();
+      this.orderService.getOrdersByCustomerIdFromSQL(customerId).subscribe(
+        (response) => {
+          this.orders = response;
+          console.log('Successfully fetched order list', this.orders);
+        },
+        (error : any) => {
+          console.log('Error fetching order list: ', error);
+        }
+      )
+    }else{
+      const customerId = loginService.getCustomerIDFromNoSQL();
+      this.orderService.getOrdersByCustomerIdFromNoSQL(customerId!).subscribe(
+        (response) => {
+          this.orders = response;
+          console.log('Successfully fetched order list', this.orders);
+        },
+        (error : any) => {
+          console.log('Error fetching order list: ', error);
+        }
+      )
+    }
 
-  constructor(private orderService : OrderService, private loginService : LoginService, private router : Router){
-    const customerId = loginService.getCustomerID();
-    this.orderService.getOrdersByCustomerIdFromSQL(customerId).subscribe(
-      (repsonse) => {
-        this.orders = repsonse;
-        console.log('Successfully fetched order list', this.orders);
-      },
-      (error : any) => {
-        console.log('Error fetching order list: ', error);
-      }
-    )
     
   }
 
-  navigateToOrderDetails(orderId : number) : void{
+  getUseNoSQL() : boolean{
+    return this.configService.useNoSQL;
+  }
+
+  navigateToOrderDetailsFromSQL(orderId : number) : void{
+    this.router.navigate(['/order', orderId]);
+  }
+
+  
+  navigateToOrderDetailsFromNoSQL(orderId : string) : void{
     this.router.navigate(['/order', orderId]);
   }
 

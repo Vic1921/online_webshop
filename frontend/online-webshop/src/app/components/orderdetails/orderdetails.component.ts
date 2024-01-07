@@ -8,6 +8,7 @@ import { FooterComponent } from '../footer/footer.component';
 import { LoginService } from '../../services/login.service';
 import { CustomerService } from '../../services/customer.service';
 import { ConfigService } from '../../config.service';
+import { OrderNoSQL } from '../../interfaces/ordernosql';
 
 
 @Component({
@@ -18,12 +19,15 @@ import { ConfigService } from '../../config.service';
   styleUrl: './orderdetails.component.css'
 })
 export class OrderdetailsComponent {
-  order : Order | undefined;
+  order: Order | OrderNoSQL = {} as Order | OrderNoSQL;
   private orderTotal: number = 0;
   paymentMethod!: string | null;
 
   constructor(private configService : ConfigService, private orderService : OrderService, private route : ActivatedRoute, private loginService : LoginService){
-    if(configService.useNoSQL == false){
+    const orderId = this.route.snapshot.paramMap.get('orderId');
+    console.log("THIS IS THE ORDER ID");
+    console.log(orderId);
+    if(this.configService.useNoSQL == false){
       this.getOrderSQL();
     }else{
       this.getOrderNoSQL();
@@ -52,6 +56,8 @@ export class OrderdetailsComponent {
 
   getOrderNoSQL(){
     const orderId = this.route.snapshot.paramMap.get('orderId');
+    console.log("THIS IS THE ORDER ID");
+    console.log(orderId);
     this.orderService.getOrderByIDFromNoSQL(orderId!).subscribe(
       (response) => {
         console.log('Order successfully fetched:', response);

@@ -2,6 +2,7 @@ package at.wst.online_webshop.nosql.services;
 
 import at.wst.online_webshop.dtos.OrderDTO;
 import at.wst.online_webshop.dtos.OrderItemDTO;
+import at.wst.online_webshop.dtos.OrderNoSqlDTO;
 import at.wst.online_webshop.exceptions.FailedOrderException;
 import at.wst.online_webshop.exceptions.OrderNotFoundException;
 import at.wst.online_webshop.nosql.convertors.OrderConvertorNoSQL;
@@ -48,34 +49,43 @@ public class OrderNoSQLService {
         this.mongoTemplate = mongoTemplate;
     }
 
-    public List<OrderDTO> getOrdersByCustomerId(Long customerId) {
+    public List<OrderNoSqlDTO> getOrdersByCustomerId(Long customerId) {
         List<OrderDocument> orders = this.orderNoSqlRepository.findByCustomerCustomerId(String.valueOf(customerId));
-        List<OrderDTO> orderDTOS = convertDocumentToDtoList(orders);
-        for (OrderDTO orderDTO : orderDTOS) {
+        List<OrderNoSqlDTO> orderDTOS = convertDocumentToDtoList(orders);
+        for (OrderNoSqlDTO orderDTO : orderDTOS) {
             logger.info("Order DTO details: {}", orderDTO.toString());
         }
         return orderDTOS;
     }
 
-    public OrderDTO getOrderById(String id) {
+    public OrderNoSqlDTO getOrderById(String id) {
+        logger.info("GETTING ORDER DETAILS BY ID" + id);
         OrderDocument order = orderNoSqlRepository.findById(id).orElseThrow(() -> new OrderNotFoundException(id));
-
-        OrderDTO orderDTO = OrderConvertorNoSQL.convertDocumentToDTO(order);
+        logger.info(order.toString());
+        try{
+        OrderNoSqlDTO orderDTO = OrderConvertorNoSQL.convertDocumentToDTO(order);
         List<OrderItemDTO> orderItemDTOS = OrderItemConvertorNoSQL.convertDocumentToDtoList(order.getOrderItems());
         orderDTO.setOrderItems(orderItemDTOS);
-        return orderDTO;
+
+        logger.info("THIS IS THE ORDERDTO " + orderDTO.toString());
+            return orderDTO;
+
+        } catch (Exception e) {
+            logger.error("Exception during logging", e);
+        }
+        return null;
     }
 
 
-    public OrderDTO getOrderByCustomerAndProduct(String customerId, Long productId) {
+    public OrderNoSqlDTO getOrderByCustomerAndProduct(String customerId, Long productId) {
         OrderDocument order = orderNoSqlRepository.findByCustomerCustomerIdAndOrderItems_Product_ProductId(customerId, String.valueOf(productId));
-        OrderDTO orderDTO = OrderConvertorNoSQL.convertDocumentToDTO(order);
+        OrderNoSqlDTO orderDTO = OrderConvertorNoSQL.convertDocumentToDTO(order);
 
         return orderDTO;
     }
 
     @Transactional
-    public OrderDTO placeOrder(String customerId, String paymentMethod, String shippingDetails) {
+    public OrderNoSqlDTO placeOrder(String customerId, String paymentMethod, String shippingDetails) {
         CustomerDocument customer = customerNoSqlRepository.findById(customerId).orElseThrow(() -> new FailedOrderException("Customer not found."));
         if (customer.getShoppingCart() == null) {
             throw new FailedOrderException("Shopping cart not found");
@@ -122,10 +132,10 @@ public class OrderNoSQLService {
         updateProductTotalSells(orderItems);
         orderNoSqlRepository.save(order);
         BigInteger customerIdBigInt = new BigInteger(customerId, 16);
-        OrderDTO newOrderDTO = new OrderDTO(order.getOrderDate().toString(), order.getOrderTotalMount(), customerIdBigInt.longValue(), orderItemDTOS);
-        newOrderDTO.setOrderId(new BigInteger(order.getId(), 16).longValue());
+        OrderNoSqlDTO newOrderDTO = new OrderNoSqlDTO(order.getOrderDate().toString(), order.getOrderTotalMount(), customerId, orderItemDTOS);
+        newOrderDTO.setOrderId(order.getOrderId());
+        logger.info("ORDER ID FOR NOSQL IS " + newOrderDTO.getOrderId());
 
-        mongoTemplate.remove(customer.getShoppingCart());
         customer.setShoppingCart(null);
         customerNoSqlRepository.save(customer);
 
