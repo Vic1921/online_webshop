@@ -23,7 +23,7 @@ services:
       MONGO_INITDB_DATABASE: online_shop
 
   backend:
-    image: wst2
+    image: wst
     ports:
       - "8089:8089"
     depends_on:
@@ -39,7 +39,6 @@ services:
     image: wstfe
     ports:
       - "4200:4200"
-      - "443:443"
     depends_on:
       - backend
 
