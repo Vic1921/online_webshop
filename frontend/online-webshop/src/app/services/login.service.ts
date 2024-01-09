@@ -41,17 +41,20 @@ export class LoginService {
   }
 
   loginNoSQL(credentials: any): Observable<any> {
-    const loginEndpoint = `${this.apiUrl}/api/nosql/customers/login`;
-
-    return this.http.post(loginEndpoint, credentials, { responseType: 'text' }).pipe(
-      tap((response: any) => {
-        this.loggedIn = true;
-        localStorage.setItem(this.tokenKey, 'your-authentication-token');
-        console.log('Login successful', response);
+    return this.http.post<any>(`${this.apiUrl}/api/nosql/customers/login`, credentials).pipe(
+      tap((response: {customerID: string; cartID: string; customerName: string; customerAddress: string }) => {
+        if (response) {
+          // Store the token and customer information in local storage
+          localStorage.setItem(this.tokenKey, 'your-authentication-token');
+          localStorage.setItem(this.customerKey, response.customerID);
+          localStorage.setItem(this.cartID, response.cartID);
+          localStorage.setItem(this.customerName, response.customerName);
+          localStorage.setItem(this.customerAddress, response.customerAddress);
+        }
       }),
-      catchError((error) => {
+      catchError(error => {
         console.error('Login failed', error);
-        throw error;
+        throw error; // Rethrow the error to propagate it to subscribers
       })
     );
   }
@@ -64,6 +67,10 @@ export class LoginService {
     const customerString = localStorage.getItem(this.customerKey);
     const customerId = customerString ? parseInt(customerString, 10) : 0;
     return customerId
+  }
+
+  getCustomerIDFromNoSQL(): string | null{
+    return localStorage.getItem(this.customerKey);
   }
 
   getCustomerName(): string | null {
@@ -99,10 +106,7 @@ export class LoginService {
   }
 
   isLoggedIn(): boolean {
-    if (this.configService.useNoSQL == false) {
-      return !!this.getToken();
-    }
-    return this.loggedIn;
+    return !!this.getToken();
   }
 
   logout(): void {

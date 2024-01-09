@@ -6,10 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -27,8 +26,36 @@ public class ProductDocument {
     private String productCategory;
     private String productDescription;
     private Integer productQuantity;
-    private String productImage;
+    private String productImageUrl;
+    private Integer productTotalSells = 0;
     private VendorDocument vendor;
-    @DBRef
-    private List<ReviewDocument> reviews;
+
+    @Override
+    public String toString() {
+        return "ProductDocument{" +
+                "id='" + id + '\'' +
+                ", productName='" + productName + '\'' +
+                ", productPrice=" + productPrice +
+                ", productSKU='" + productSKU + '\'' +
+                ", productCategory='" + productCategory + '\'' +
+                ", productDescription='" + productDescription + '\'' +
+                ", productQuantity=" + productQuantity +
+                ", productImageUrl='" + productImageUrl + '\'' +
+                ", productTotalSells=" + productTotalSells +
+                ", vendor=" + vendor +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProductDocument that = (ProductDocument) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

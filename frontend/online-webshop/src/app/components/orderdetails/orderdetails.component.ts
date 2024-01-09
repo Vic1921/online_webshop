@@ -7,6 +7,8 @@ import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
 import { LoginService } from '../../services/login.service';
 import { CustomerService } from '../../services/customer.service';
+import { ConfigService } from '../../config.service';
+import { OrderNoSQL } from '../../interfaces/ordernosql';
 
 
 @Component({
@@ -17,13 +19,46 @@ import { CustomerService } from '../../services/customer.service';
   styleUrl: './orderdetails.component.css'
 })
 export class OrderdetailsComponent {
-  order : Order | undefined;
+  order: Order | OrderNoSQL = {} as Order | OrderNoSQL;
   private orderTotal: number = 0;
   paymentMethod!: string | null;
 
-  constructor(private orderService : OrderService, private route : ActivatedRoute, private loginService : LoginService){
+  constructor(private configService : ConfigService, private orderService : OrderService, private route : ActivatedRoute, private loginService : LoginService){
+    const orderId = this.route.snapshot.paramMap.get('orderId');
+    console.log("THIS IS THE ORDER ID");
+    console.log(orderId);
+    if(this.configService.useNoSQL == false){
+      this.getOrderSQL();
+    }else{
+      this.getOrderNoSQL();
+    }
+  }
+
+  getOrderSQL(){
     const orderId = Number(this.route.snapshot.paramMap.get('orderId'));
-    this.orderService.getOrderByID(orderId).subscribe(
+    this.orderService.getOrderByIDFromSQL(orderId).subscribe(
+      (response) => {
+        console.log('Order successfully fetched:', response);
+        this.order = response;
+        this.order.orderItems = response.orderItems;
+        this.paymentMethod = this.route.snapshot.paramMap.get('paymentMethod');
+            
+        console.log(this.paymentMethod);
+        this.calculateOrderTotal();
+
+        console.log(this.order);
+      },
+      (error : any) =>{
+        console.error('Error fetching order:', error);
+      }
+    )
+  }
+
+  getOrderNoSQL(){
+    const orderId = this.route.snapshot.paramMap.get('orderId');
+    console.log("THIS IS THE ORDER ID");
+    console.log(orderId);
+    this.orderService.getOrderByIDFromNoSQL(orderId!).subscribe(
       (response) => {
         console.log('Order successfully fetched:', response);
         this.order = response;

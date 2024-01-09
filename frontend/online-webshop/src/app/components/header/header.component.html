@@ -143,8 +143,12 @@
             <!-- Responsive navbar-->
             <nav class="navbar navbar-expand-lg navbar-dark bg-*">
                 <div class="container px-5" style="width:100%; height:100px">
-                    <a class="navbar-brand" style="width:100px" href="#!">Icerberg Lounge</a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    <div *ngIf="configService.useNoSQL == true; else sqlContent">
+                        <a class="navbar-brand" style="width: 100px" href="#!">Iceberg Lounge (NoSQL)</a>
+                      </div>
+                      <ng-template #sqlContent>
+                        <a class="navbar-brand" style="width: 100px" href="#!">Iceberg Lounge (SQL)</a>
+                      </ng-template>                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation"><span
                             class="navbar-toggler-icon"></span></button>
@@ -256,8 +260,12 @@
             <!-- Responsive navbar-->
             <nav class="navbar navbar-expand-lg navbar-dark bg-* justify-content-center">
                 <div class="container px-5 justify-content-center" style="width:100%; height:100px">
-                    <a class="navbar-brand" style="width:100px" href="#!">Icerberg Lounge</a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    <div *ngIf="configService.useNoSQL == true; else sqlContent">
+                        <a class="navbar-brand" style="width: 100px" href="#!">Iceberg Lounge (NoSQL)</a>
+                      </div>
+                      <ng-template #sqlContent>
+                        <a class="navbar-brand" style="width: 100px" href="#!">Iceberg Lounge (SQL)</a>
+                      </ng-template>                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation"><span
                             class="navbar-toggler-icon"></span></button>
@@ -373,8 +381,12 @@
             <!-- Responsive navbar-->
             <nav class="navbar navbar-expand-lg navbar-dark bg-*">
                 <div class="container px-5" style="width:100%; height:100px">
-                    <a class="navbar-brand" style="width:100px" href="#!">Icerberg Lounge</a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    <div *ngIf="configService.useNoSQL == true; else sqlContent">
+                        <a class="navbar-brand" style="width: 100px" href="#!">Iceberg Lounge (NoSQL)</a>
+                      </div>
+                      <ng-template #sqlContent>
+                        <a class="navbar-brand" style="width: 100px" href="#!">Iceberg Lounge (SQL)</a>
+                      </ng-template>                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation"><span
                             class="navbar-toggler-icon"></span></button>

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, NavigationEnd, RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
@@ -19,7 +19,7 @@ import { ConfigService } from '../../config.service';
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
-export class HeaderComponent {
+export class HeaderComponent{
   private databaseFilled = false;
   @Input() isOrderComponent: boolean = false;
   @Input() isHomeComponent: boolean = false;
@@ -31,13 +31,22 @@ export class HeaderComponent {
 
   constructor(public configService : ConfigService, private router: Router, private activatedRouter : ActivatedRoute, private migrationService : MigrationNoSQLService,  public loginService : LoginService, private databaseFillerService: DbfillerService, private productService: ProductService, private shoppingCartService : ShoppingcartService) {
     console.log(configService.useNoSQL);
+
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        console.log('NavigationEnd event:', event);
+        console.log('Current useNoSQL value:', configService.useNoSQL);
+      }
+    });
+
     if (this.loginService.isLoggedIn()) {
       const cartId = Number(this.loginService.getCartID());
+      const customerId = this.loginService.getCustomerID();
 
       console.log(cartId);
 
       if(cartId != null && cartId != 0){
-        this.shoppingCartService.getCart(cartId).subscribe(
+        this.shoppingCartService.getCart(cartId, customerId).subscribe(
           (cart: ShoppingCart) => {
             this.cart = cart;
             console.log(this.cart); // Log inside the subscribe callback
@@ -58,7 +67,6 @@ export class HeaderComponent {
 
       return totalQuantity;
   }
-
 
   fillDatabaseAndFetchProducts(): void {
     // Fill the database and fetch products only if not filled yet
@@ -117,8 +125,8 @@ export class HeaderComponent {
   }
 
   logout(){
-    console.log("LOG OUT IS BEING CLICKED");
       this.loginService.logout();
+      localStorage.clear();
       this.router.navigate(['']);
 
   }

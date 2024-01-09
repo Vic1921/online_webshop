@@ -31,15 +31,19 @@
               <div class="row align-items-center m-auto" style="width: 100%;">
                 <div class="col-md-10">
                   <div class="d-flex justify-content-around mb-1" style="text-align: center !important;">
-                    <a href="" class="text-muted mt-1 mb-0 small ms-xl-5" style="font-weight: 600; font-size: 12px;white-space: nowrap;">Bestellungen</a>
-                    <a href="" class="text-muted mt-1 mb-0 small ms-xl-5" style="font-weight: 600; font-size: 12px;white-space: nowrap;">Versendete Bestellungen</a>
-                    <a href="" class="text-muted mt-1 mb-0 small ms-xl-5" style="font-weight: 600; font-size: 12px;white-space: nowrap;">Noch nicht versandt</a>
-                    <a href="" class="text-muted mt-1 mb-0 small ms-xl-5" style="font-weight: 600; font-size: 12px;white-space: nowrap;">Stornierte Bestellungen</a>
+                    <a href="" class="text-muted mt-1 mb-0 small ms-xl-5"
+                      style="font-weight: 600; font-size: 12px;white-space: nowrap;">Bestellungen</a>
+                    <a href="" class="text-muted mt-1 mb-0 small ms-xl-5"
+                      style="font-weight: 600; font-size: 12px;white-space: nowrap;">Versendete Bestellungen</a>
+                    <a href="" class="text-muted mt-1 mb-0 small ms-xl-5"
+                      style="font-weight: 600; font-size: 12px;white-space: nowrap;">Noch nicht versandt</a>
+                    <a href="" class="text-muted mt-1 mb-0 small ms-xl-5"
+                      style="font-weight: 600; font-size: 12px;white-space: nowrap;">Stornierte Bestellungen</a>
                   </div>
                 </div>
               </div>
             </div>
-            
+
 
             <div *ngFor="let order of orders" class="card-body p-4">
               <div class="row d-flex align-items-center">
@@ -47,22 +51,36 @@
                   <table class="table mx-xl-5" style="margin-left: 0px !important;">
                     <tr>
                       <th class="text-muted mt-1 mb-0 small ms-xl-5" style="white-space: nowrap;">BESTELLDATUM</th>
-                      <th class="text-muted mt-1 mb-0 small ms-xl-5" style="white-space: nowrap;padding-left: 60px;">SUMME</th>
-                      <th class="text-muted mt-1 mb-0 small ms-xl-5" style="white-space: nowrap;padding-left: 60px;">BESTELLNR</th>
-                      <th class="text-muted mt-1 mb-0 small ms-xl-5" style="white-space: nowrap;padding-left: 60px; ">BESTELLDETAILS</th>
+                      <th class="text-muted mt-1 mb-0 small ms-xl-5" style="white-space: nowrap;padding-left: 60px;">
+                        SUMME</th>
+                      <th class="text-muted mt-1 mb-0 small ms-xl-5" style="white-space: nowrap;padding-left: 60px;">
+                        BESTELLNR</th>
+                      <th class="text-muted mt-1 mb-0 small ms-xl-5" style="white-space: nowrap;padding-left: 60px; ">
+                        BESTELLDETAILS</th>
                     </tr>
                     <tr>
-                      <td  class="text-muted mt-1 mb-0 small ms-xl-5" >{{order.orderDate | date: 'MMM d, y' }}</td>
-                      <td  class="text-muted mt-1 mb-0 small ms-xl-5" style="white-space: nowrap;padding-left: 60px;">{{order.orderTotalMount}} €</td>
-                      <td  class="text-muted mt-1 mb-0 small ms-xl-5" style="white-space: nowrap;padding-left: 60px;">{{order.orderId}}</td>
-                      <td  class="text-muted mt-1 mb-0 small ms-xl-5" style="white-space: nowrap;padding-left: 52px;"><div style="cursor: pointer; font-weight: 600; white-space: nowrap;" (click)="navigateToOrderDetails(order.orderId)">
-                        Bestelldetails anzeigen
-                      </div></td>
+                      <td class="text-muted mt-1 mb-0 small ms-xl-5">{{order.orderDate | date: 'MMM d, y' }}</td>
+                      <td class="text-muted mt-1 mb-0 small ms-xl-5" style="white-space: nowrap;padding-left: 60px;">
+                        {{order.orderTotalMount}} €</td>
+                      <td class="text-muted mt-1 mb-0 small ms-xl-5" style="white-space: nowrap;padding-left: 60px;">
+                        {{order.orderId}}</td>
+                      <td class="text-muted mt-1 mb-0 small ms-xl-5" style="white-space: nowrap;padding-left: 52px;">
+                        <div *ngIf="!getUseNoSQL(); else nosql" style="cursor: pointer; font-weight: 600; white-space: nowrap;"
+                          (click)="navigateToOrderDetailsFromSQL(+order.orderId)">
+                          Bestelldetails anzeigen
+                        </div>
+                        <ng-template #nosql>
+                          <!-- Content to be rendered if configService.useNosql is true -->
+                          <div style="cursor: pointer; font-weight: 600; white-space: nowrap;" (click)="navigateToOrderDetailsFromNoSQL(order.orderId.toString())">
+                            Bestelldetails anzeigen
+                          </div>
+                        </ng-template>
+                      </td>
                     </tr>
                   </table>
                 </div>
               </div>
-            
+
               <div *ngFor="let orderItem of order?.orderItems" class="card shadow-0 border mb-4">
 
                 <div class="card-body">
@@ -78,13 +96,13 @@
                       <p class="text-muted mb-0 small">{{orderItem.productDTO.productCategory}}
                       </p>
                     </div>
-    
+
                     <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
                       <p class="text-muted mb-0 small">Menge: {{orderItem.orderItemQuantity}}</p>
                     </div>
                     <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
                       <p class="text-muted mb-0 small">{{orderItem.orderItemQuantity *
-                        orderItem.productDTO.productPrice}} €</p>
+                        orderItem.productDTO.productPrice | number:'1.2-2'}} €</p>
                     </div>
                   </div>
                 </div>

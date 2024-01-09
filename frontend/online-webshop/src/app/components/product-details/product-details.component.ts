@@ -9,6 +9,7 @@ import { ShoppingcartService } from '../../services/shoppingcart.service';
 import { CustomerService } from '../../services/customer.service';
 import { ProductDTO } from '../../interfaces/product';
 import { ReviewComponent } from '../review/review.component';
+import { ConfigService } from '../../config.service';
 
 @Component({
   selector: 'app-product-details',
@@ -22,11 +23,10 @@ export class ProductDetailsComponent {
   productId!: number;
   averageRating: number | undefined;
 
-  constructor(private route: ActivatedRoute, private productService: ProductService, private loginService: LoginService, private shoppingCartService: ShoppingcartService, private customerService: CustomerService) {
+  constructor(private configService: ConfigService, private route: ActivatedRoute, private productService: ProductService, private loginService: LoginService, private shoppingCartService: ShoppingcartService, private customerService: CustomerService) {
     this.productId = Number(this.route.snapshot.paramMap.get('id'));
 
     console.log("This is the product id from product details", this.productId);
-
     this.productService.getProduct(this.productId).subscribe((product) => {
       this.product = product;
       console.log('This are is the review length: ', this.product.reviewIds);
@@ -76,7 +76,72 @@ export class ProductDetailsComponent {
     }
 
     if (this.loginService.isLoggedIn()) {
-      const customerId = this.loginService.getCustomerID();
+      if (this.configService.useNoSQL == false) {
+        const customerId = this.loginService.getCustomerID();
+        // Check if the customer has an existing cart
+        let cartId: number | null = this.loginService.getCartID();
+        if (cartId == null) {
+          console.info("Cart id should be null" + cartId);
+        } else {
+          console.info("Cart id is not null" + cartId);
+        }
+
+        if (cartId !== null) {
+          // If the customer has an existing cart, add the product to the existing cart
+          console.info(cartId);
+          this.shoppingCartService.addToCartFromSQL(customerId, cartId, productId).subscribe(
+            (shoppingCart) => {
+              console.log('Product added to existing cart. Updated shopping cart:', shoppingCart);
+            },
+            (error: any) => {
+              console.log("this cart id si");
+              console.log(cartId);
+              console.error('Error adding product to cart:', error);
+            }
+          );
+        } else {
+          // If the customer does not have a cart, create a new cart and add the product
+          this.shoppingCartService.createCartFromSQL(this.loginService.getCustomerID()).subscribe(
+            (newCart) => {
+              this.customerService.updateCart(customerId, newCart.cartId).subscribe(
+
+                (ret) => {
+                  this.loginService.setCartID(newCart.cartId);
+                  console.log("Sucessfully updated the Customer with the new Cart ID");
+                },
+                (error: any) => {
+                  console.log(newCart.cartId);
+                  console.log(customerId);
+                  console.error("Couldnt update the Customer with the new ShoppingCart ID: ");
+                }
+              )
+              // Now that a new cart is created, add the product to the new cart
+              this.shoppingCartService.addToCartFromSQL(customerId, newCart.cartId, productId).subscribe(
+                (shoppingCart) => {
+                  console.log('Product added to new cart. Updated shopping cart:', shoppingCart);
+                },
+                (error: any) => {
+                  console.error('Error adding product to cart:', error);
+                }
+              );
+
+            },
+            (error: any) => {
+              console.log(this.loginService.getCustomerID());
+              console.error('Error creating a new cart:', error);
+            }
+          );
+
+        }
+      } else {
+        this.addToCartNoSQL(productId);
+      }
+    }
+  }
+
+  addToCartNoSQL(productId: number | undefined) {
+    if (this.configService.useNoSQL == true) {
+      const customerId = this.loginService.getCustomerIDFromNoSQL();
       // Check if the customer has an existing cart
       let cartId: number | null = this.loginService.getCartID();
       if (cartId == null) {
@@ -88,7 +153,7 @@ export class ProductDetailsComponent {
       if (cartId !== null) {
         // If the customer has an existing cart, add the product to the existing cart
         console.info(cartId);
-        this.shoppingCartService.addToCart(customerId, cartId, productId).subscribe(
+        this.shoppingCartService.addToCartFromNoSQL(customerId!, productId!).subscribe(
           (shoppingCart) => {
             console.log('Product added to existing cart. Updated shopping cart:', shoppingCart);
           },
@@ -100,22 +165,12 @@ export class ProductDetailsComponent {
         );
       } else {
         // If the customer does not have a cart, create a new cart and add the product
-        this.shoppingCartService.createCart(this.loginService.getCustomerID()).subscribe(
+        this.shoppingCartService.createCartFromNoSQL(customerId!).subscribe(
           (newCart) => {
-            this.customerService.updateCart(customerId, newCart.cartId).subscribe(
-
-              (ret) => {
-                this.loginService.setCartID(newCart.cartId);
-                console.log("Sucessfully updated the Customer with the new Cart ID");
-              },
-              (error: any) => {
-                console.log(newCart.cartId);
-                console.log(customerId);
-                console.error("Couldnt update the Customer with the new ShoppingCart ID: ");
-              }
-            )
+            //setting a fake cart id 
+            this.loginService.setCartID(1);
             // Now that a new cart is created, add the product to the new cart
-            this.shoppingCartService.addToCart(customerId, newCart.cartId, productId).subscribe(
+            this.shoppingCartService.addToCartFromNoSQL(customerId!, productId!).subscribe(
               (shoppingCart) => {
                 console.log('Product added to new cart. Updated shopping cart:', shoppingCart);
               },
@@ -130,11 +185,9 @@ export class ProductDetailsComponent {
             console.error('Error creating a new cart:', error);
           }
         );
-
       }
-    } else {
-      console.log('User is not logged in. Please log in to add items to the cart.');
     }
+
   }
 
   updateAverageRating(averageRating: number) {

@@ -10,6 +10,7 @@ import { OrderService } from '../../services/order.service';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CustomerService } from '../../services/customer.service';
+import { ConfigService } from '../../config.service';
 
 @Component({
   selector: 'app-shoppingcart',
@@ -34,8 +35,9 @@ export class ShoppingcartComponent {
     private shoppingCartService: ShoppingcartService,
     public loginService: LoginService,
     private productService: ProductService,
+    private configService: ConfigService,
     private orderService: OrderService,
-    private customerService : CustomerService,
+    private customerService: CustomerService,
     private cdr: ChangeDetectorRef,
     private router: Router
   ) {
@@ -46,15 +48,16 @@ export class ShoppingcartComponent {
       this.cartId = Number(this.loginService.getCartID());
 
       // Subscribe to getCart observable
-      if (this.cartId != null && this.cartId != 0) {
-        this.shoppingCartService.getCart(this.cartId).subscribe(
+      if (this.cartId != null && configService.useNoSQL == false) {
+        let customerId = this.loginService.getCustomerID();
+        this.shoppingCartService.getCart(this.cartId, customerId!).subscribe(
           (cart: ShoppingCart) => {
             this.cart = cart;
             console.log(cart);
 
             // Now, this.cart contains the shopping cart details including product details
             // Fetch product details based on productIds
-            this.shoppingCartService.getShoppingCartItems(cart.cartId).subscribe(
+            this.shoppingCartService.getShoppingCartItems(cart.cartId, customerId!).subscribe(
               (cartItems: Cartitem[] | null) => {
                 if (cartItems !== null) {
                   const productIds = cartItems.map((item) => item.productId);
@@ -91,11 +94,61 @@ export class ShoppingcartComponent {
             console.error('Error fetching shopping cart:', error);
           }
         );
+      } else {
+        this.getCartByNoSQL();
       }
     }
   }
 
-  addToCart(productId: number | undefined) : void {
+  getCartByNoSQL() {
+    const customerId = this.loginService.getCustomerIDFromNoSQL();
+    this.shoppingCartService.getCartNoSQL(customerId!).subscribe(
+      (cart: ShoppingCart) => {
+        this.cart = cart;
+        console.log(cart);
+
+        // Now, this.cart contains the shopping cart details including product details
+        // Fetch product details based on productIds
+        this.shoppingCartService.getShoppingCartItemsNoSQL(customerId!).subscribe(
+          (cartItems: Cartitem[] | null) => {
+            if (cartItems !== null) {
+              const productIds = cartItems.map((item) => item.productId);
+              this.cart.cartItemDTOS = cartItems;
+              console.log(this.cart.cartItemDTOS);
+
+              // Iterate through productIds and fetch products
+              productIds.forEach((productId) => {
+                this.productService.getProduct(productId).subscribe(
+                  (product) => {
+                    // Push the fetched product to the products array
+                    this.products.push(product);
+
+                    // Now, this.cart contains the shopping cart details including products
+                  },
+                  (error) => {
+                    console.error(`Error fetching product with ID ${productId}:`, error);
+                  }
+                );
+              });
+
+
+            } else {
+              console.log(this.cart);
+              console.error('Cart items are null.');
+            }
+          },
+          (error) => {
+            console.error('Error fetching shopping cart items:', error);
+          }
+        );
+      },
+      (error) => {
+        console.error('Error fetching shopping cart:', error);
+      }
+    );
+  }
+
+  addToCart(productId: number | undefined): void {
     if (productId == undefined) {
       console.error('Product Id is undefined');
       return;
@@ -105,9 +158,9 @@ export class ShoppingcartComponent {
       const customerId = this.loginService.getCustomerID();
       // Check if the customer has an existing cart
       let cartId: number | null = this.loginService.getCartID();
-      if(cartId == null) {
+      if (cartId == null) {
         console.info("Cart id should be null" + cartId);
-      }else{
+      } else {
         console.info("Cart id is not null" + cartId);
 
       }
@@ -120,7 +173,7 @@ export class ShoppingcartComponent {
             // Handle the success response
             this.cart = shoppingCart; // Updated shopping cart
             this.cdr.detectChanges();
-    
+
             console.log('Product added to existing cart. Updated shopping cart:', shoppingCart);
           },
           (error: any) => {
@@ -130,22 +183,59 @@ export class ShoppingcartComponent {
             console.error('Error adding product to cart:', error);
           }
         );
-      } 
+      }
     }
   }
 
   placeOrder() {
+    if (this.configService.useNoSQL == false) {
+      if (this.loginService.isLoggedIn()) {
+        const customerId = this.loginService.getCustomerID();
+        const shoppingCartId = this.loginService.getCartID() ?? 0;
+        const formValues = this.orderForm.value;
+        const paymentMethod = formValues.paymentMethod ?? '';
+        const shippingDetails = formValues.shippingDetails ?? '';  // Provide an empty string as the default value
+
+
+
+        // Call the service to place the order
+        this.orderService.placeOrderFromSQL(customerId, shoppingCartId, paymentMethod, shippingDetails).subscribe(
+          (response) => {
+            console.log('Order placed successfully:', response);
+            //redirect the customer to the order details component with the right order id
+            const orderId = response.orderId;
+            //delete the cart
+            this.loginService.setCartID(null);
+            console.log(orderId);
+            console.log(paymentMethod);
+            this.router.navigate(['/order', orderId, { paymentMethod: paymentMethod }]);
+
+          },
+          (error) => {
+            console.log(customerId);
+            console.log(shoppingCartId);
+            console.log(paymentMethod);
+            console.log(shippingDetails);
+
+            console.error('Error placing order:', error);
+          }
+        );
+      }
+    }else{
+      this.placeOrderNoSQL();
+    }
+  }
+
+  placeOrderNoSQL() {
+    console.log("placing order in nosql ");
     if (this.loginService.isLoggedIn()) {
-      const customerId = this.loginService.getCustomerID();
-      const shoppingCartId = this.loginService.getCartID() ?? 0;
+      const customerId = this.loginService.getCustomerIDFromNoSQL();
       const formValues = this.orderForm.value;
       const paymentMethod = formValues.paymentMethod ?? '';
       const shippingDetails = formValues.shippingDetails ?? '';  // Provide an empty string as the default value
 
-
-
       // Call the service to place the order
-      this.orderService.placeOrder(customerId, shoppingCartId, paymentMethod, shippingDetails).subscribe(
+      this.orderService.placeOrderFromNoSQL(customerId!, paymentMethod, shippingDetails).subscribe(
         (response) => {
           console.log('Order placed successfully:', response);
           //redirect the customer to the order details component with the right order id
@@ -154,12 +244,13 @@ export class ShoppingcartComponent {
           this.loginService.setCartID(null);
           console.log(orderId);
           console.log(paymentMethod);
-          this.router.navigate(['/order', orderId, { paymentMethod: paymentMethod }]);
+          setTimeout(() => {
+            this.router.navigate(['/order', orderId, { paymentMethod: paymentMethod }]);
+          }, 500);
 
         },
         (error) => {
           console.log(customerId);
-          console.log(shoppingCartId);
           console.log(paymentMethod);
           console.log(shippingDetails);
 
@@ -169,12 +260,12 @@ export class ShoppingcartComponent {
     }
   }
 
-  getTotalItems() : number{
+  getTotalItems(): number {
     const totalQuantity: number = this.cart?.cartItemDTOS?.reduce(
       (sum, cartItem) => sum + (cartItem.cartItemQuantity || 0),
       0) || 0;
 
-      return totalQuantity;
+    return totalQuantity;
   }
 
 

@@ -2,20 +2,17 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Order } from '../interfaces/order';
+import { ConfigService } from '../config.service';
+import { OrderNoSQL } from '../interfaces/ordernosql';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrderService {
   private apiUrl = 'http://localhost:8089';
-  constructor(private http : HttpClient) {}
-  
-  placeOrder(
-    customerId: number,
-    shoppingCartId: number,
-    paymentMethod: string,
-    shippingDetails: string
-  ): Observable<Order> {
+  constructor(private configService: ConfigService, private http: HttpClient) { }
+
+  placeOrderFromSQL(customerId: number, shoppingCartId: number, paymentMethod: string, shippingDetails: string): Observable<Order> {
     const request = {
       customerId,
       shoppingCartId,
@@ -23,28 +20,47 @@ export class OrderService {
       shippingDetails,
     };
 
-    return this.http.post<Order>(`${this.apiUrl}/api/orders/place`, request);
+    return this.http.post<Order>(`${this.apiUrl}/api/sql/orders/place`, request);
   }
 
-  getOrderByID(orderId : number) : Observable<Order>{
-    return this.http.get<Order>(`${this.apiUrl}/api/orders/${orderId}`);
+  placeOrderFromNoSQL(customerId: string, paymentMethod: string, shippingDetails: string): Observable<OrderNoSQL> {
+    const request = {
+      customerId,
+      paymentMethod,
+      shippingDetails
+    }
+
+    return this.http.post<OrderNoSQL>(`${this.apiUrl}/api/nosql/orders/place`, request);
   }
 
-  updateOrder(orderId : number, order: Order): Observable<Order> {
+  getOrderByIDFromSQL(orderId: number): Observable<Order> {
+    return this.http.get<Order>(`${this.apiUrl}/api/sql/orders/${orderId}`);
+  }
+
+  getOrderByIDFromNoSQL(orderId: string): Observable<OrderNoSQL> {
+    return this.http.get<OrderNoSQL>(`${this.apiUrl}/api/nosql/orders/${orderId}`);
+  }
+
+  updateOrder(orderId: number, order: Order): Observable<Order> {
     const url = `${this.apiUrl}/orders/${orderId}`;
     return this.http.put<Order>(url, order);
   }
 
-  getOrdersByCustomerId(customerId : number) : Observable<Order[]>{
-    const url = `${this.apiUrl}/api/orders/=${customerId}`;
-    return this.http.get<Order[]>(url);
 
+  getOrdersByCustomerIdFromSQL(customerId: number): Observable<Order[]> {
+    const url = `${this.apiUrl}/api/sql/orders/=${customerId}`;
+    return this.http.get<Order[]>(url);
+  }
+
+  getOrdersByCustomerIdFromNoSQL(customerId: string): Observable<OrderNoSQL[]> {
+    const url = `${this.apiUrl}/api/nosql/orders/=${customerId}`;
+    return this.http.get<OrderNoSQL[]>(url);
   }
 
   getOrderDetails(customerId: number, productId: number): Observable<Order> {
-    const url = `${this.apiUrl}/api/orders/order-details?customerId=${customerId}&productId=${productId}`;
+    const url = `${this.apiUrl}/api/sql/orders/order-details?customerId=${customerId}&productId=${productId}`;
 
     return this.http.get<Order>(url);
   }
-  
+
 }

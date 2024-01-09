@@ -25,7 +25,7 @@ export class LoginComponent {
   errorText: string | null = null;
 
 
-  constructor(private configService : ConfigService, private loginService: LoginService, private router: Router) { }
+  constructor(private loginService: LoginService, private router: Router) { }
 
   onSubmit(): void {
     if (this.loginForm.valid && !this.loading) {

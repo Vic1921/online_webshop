@@ -1,6 +1,5 @@
 package at.wst.online_webshop.services;
 
-import at.wst.online_webshop.dtos.CartItemDTO;
 import at.wst.online_webshop.entities.*;
 import at.wst.online_webshop.repositories.*;
 import com.github.javafaker.Faker;
@@ -12,11 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -89,6 +85,7 @@ public class DBFiller {
         System.out.println("Before clearing database...");
         logger.info("Before clearing database...");
         customerRepository.deleteAll();
+        orderItemRepository.deleteAll();
         orderRepository.deleteAll();
         productRepository.deleteAll();
         reviewRepository.deleteAll();
@@ -100,11 +97,11 @@ public class DBFiller {
         System.out.println("After clearing database...");
     }
 
-    public ProductRepository getProductRepository(){
+    public ProductRepository getProductRepository() {
         return this.productRepository;
     }
 
-    public List<String[]>  readFile(String filename) {
+    public List<String[]> readFile(String filename) {
         List<String[]> records = new ArrayList<>();
 
         try (CSVReader reader = new CSVReaderBuilder(new FileReader(filename))
@@ -121,6 +118,7 @@ public class DBFiller {
 
         return records;
     }
+
     public void fillCustomers() {
         var faker = Faker.instance();
         List<Customer> customers = IntStream.range(0, NUMBER_OF_CUSTOMERS)
@@ -161,6 +159,7 @@ public class DBFiller {
         logger.info(vendorRepository.findAll().toString());
         logger.info(String.valueOf(vendorRepository.findAll().size()));
     }
+
     public void fillProducts() {
         var faker = Faker.instance();
 
@@ -182,7 +181,6 @@ public class DBFiller {
                             .orElseThrow(() -> new RuntimeException("Vendor not found with the specified ID" + String.valueOf(number) + " " + vendorRepository.findAll().toString()));
 
 
-
                     return new Product(name, productDescription, category, price, sku, quantity, imageFile, vendor);
                 })
                 .collect(Collectors.toList());
@@ -190,7 +188,7 @@ public class DBFiller {
         productRepository.saveAll(products);
     }
 
-    private String getIMageFileSequentially(List<String> imageFiles, int idx){
+    private String getIMageFileSequentially(List<String> imageFiles, int idx) {
         int size = imageFiles.size();
 
         int sequentialIndex = idx % size;
@@ -201,14 +199,18 @@ public class DBFiller {
     private void fillOrders() {
         List<Order> orders = new ArrayList<>(NUMBER_OF_ORDERS);
         var faker = Faker.instance();
-
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss yyyy")
+                .withLocale(Locale.GERMAN);
         for (int i = 0; i < NUMBER_OF_ORDERS; i++) {
             Date orderDate = faker.date().between(
                     Date.from(LocalDate.of(2020, 1, 1).atStartOfDay(ZoneId.systemDefault()).toInstant()),
                     Date.from(LocalDate.of(2023, 12, 31).atStartOfDay(ZoneId.systemDefault()).toInstant())
             );
+
+            String formattedOrderDate = orderDate.toInstant().atZone(ZoneId.of("Europe/Berlin")).toLocalDateTime().format(formatter);
+
             var customer = customerRepository.findById((long) faker.number().numberBetween(1, NUMBER_OF_CUSTOMERS)).orElseThrow();
-            orders.add(new Order(orderDate, 0, customer, new ArrayList<>()));
+            orders.add(new Order(formattedOrderDate, 0, customer, new ArrayList<>()));
         }
         orderRepository.saveAll(orders);
     }
@@ -300,7 +302,6 @@ public class DBFiller {
             String formattedDateTime = localDate.format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
 
-
             reviews.add(new Review(product, customer, rating, comment, formattedDateTime));
         }
         reviewRepository.saveAll(reviews);
@@ -322,6 +323,7 @@ public class DBFiller {
             }
         }
     }
+
     private void fillShoppingCarts() {
         List<ShoppingCart> shoppingCarts = new ArrayList<>(NUMBER_OF_SHOPPING_CARTS);
         var faker = Faker.instance();
