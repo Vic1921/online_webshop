@@ -9,7 +9,7 @@ import { OrderNoSQL } from '../interfaces/ordernosql';
   providedIn: 'root'
 })
 export class OrderService {
-  private apiUrl = 'http://localhost:8089';
+  private apiUrl = 'https://localhost:8089';
   constructor(private configService: ConfigService, private http: HttpClient) { }
 
   placeOrderFromSQL(customerId: number, shoppingCartId: number, paymentMethod: string, shippingDetails: string): Observable<Order> {

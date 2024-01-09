@@ -9,9 +9,6 @@ import org.springframework.data.mongodb.repository.Query;
 import java.util.List;
 
 public interface ReviewNoSqlRepository extends MongoRepository<ReviewDocument, String> {
-    @Query(value = "{ 'product.id' : ?0 }")
-    List<ReviewDocument> findByProductId(String productId);
-
     @Aggregation(pipeline = {
             "{ $match: { _class: 'at.wst.online_webshop.nosql.documents' } }",
             "{ $project: { customerId: '$_id', name: 1, reviews: 1 } }",

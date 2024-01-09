@@ -8,19 +8,19 @@ import { Review } from '../interfaces/review';
   providedIn: 'root'
 })
 export class ReportService {
-  private apiUrl = 'http://localhost:8089';
+  private apiUrl = 'https://localhost:8089';
   constructor(private http : HttpClient) { }
 
   getBestsellers(minValue : number, maxValue : number, limit : number): Observable<ProductDTO[]>{
     const params = { minValue: String(minValue), maxValue: String(maxValue), limit: String(limit) };
 
-    return this.http.get<ProductDTO[]>(`${this.apiUrl}/api/reports/bestsellers`, {params});
+    return this.http.get<ProductDTO[]>(`${this.apiUrl}/api/sql/reports/bestsellers`, {params});
   }
 
   getTopReviewers(price : number, limit : number): Observable<Review[]>{
     const params = { price: String(price), limit: String(limit)};
 
-    return this.http.get<Review[]>(`${this.apiUrl}/api/reports/top-reviewers`, {params});
+    return this.http.get<Review[]>(`${this.apiUrl}/api/sql/reports/top-reviewers`, {params});
   }
 
 }

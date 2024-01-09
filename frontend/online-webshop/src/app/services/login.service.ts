@@ -8,7 +8,7 @@ import { ConfigService } from '../config.service';
   providedIn: 'root'
 })
 export class LoginService {
-  private apiUrl = 'http://localhost:8089';
+  private apiUrl = 'https://localhost:8089';
   private tokenKey = 'token';
   private customerKey = 'customerID';
   private cartID = 'cartID';

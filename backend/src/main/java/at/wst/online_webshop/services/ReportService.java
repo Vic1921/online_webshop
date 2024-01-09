@@ -45,15 +45,15 @@ public class ReportService {
      */
     public List<ProductDTO> generateTopProductsBetweenPriceRangeReport(double minPrice, double maxPrice, int limit) {
         Query query = entityManager.createNativeQuery(
-                "SELECT p.product_id, p.product_name, p.product_category, p.product_description, p.product_price, p.product_imageurl, p.product_total_sells, " +
+                "SELECT p.product_id, p.product_name, p.product_category, p.product_description, p.product_price, p.product_imageurl, COUNT(oi.order_item_quantity) as totalSells, " +
                         "v.vendor_id, v.vendor_name " +
                         "FROM products p " +
                         "JOIN order_items oi ON p.product_id = oi.product_id " +
                         "JOIN orders o ON o.order_id = oi.order_id " +
                         "JOIN vendors v ON v.vendor_id = p.vendor_id " +
                         "WHERE p.product_price BETWEEN :minPrice AND :maxPrice " +
-                        "GROUP BY p.product_id, p.product_name,p.product_category, p.product_description, p.product_price, p.product_imageurl, p.product_total_sells, v.vendor_id, v.vendor_name " +
-                        "ORDER BY p.product_total_sells DESC " +
+                        "GROUP BY p.product_id, p.product_name,p.product_category, p.product_description, p.product_price, p.product_imageurl, v.vendor_id, v.vendor_name " +
+                        "ORDER BY totalSells DESC " +
                         "LIMIT :limit");
 
         query.setParameter("minPrice", minPrice);
@@ -72,7 +72,8 @@ public class ReportService {
             productDTO.setProductDescription((String) row[3]);
             productDTO.setProductPrice((Double) row[4]);
             productDTO.setProductImageUrl((String) row[5]);
-            productDTO.setProductTotalSells((Integer) row[6]);
+            BigInteger productTotalSells = (BigInteger) row[6];
+            productDTO.setProductTotalSells(productTotalSells.intValue());
             productDTO.setVendorName((String) row[8]);
 
             productDTOList.add(productDTO);

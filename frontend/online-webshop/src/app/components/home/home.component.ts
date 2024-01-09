@@ -25,7 +25,7 @@ export class HomeComponent{
         this.bestsellers = response;
         console.log("Bestsellers successfully fetched: ", response);
 
-        this.reportService.getTopReviewers(50, 2).subscribe(
+        this.reportService.getTopReviewers(50, 5).subscribe(
           response => {
             this.topReviewers = response;
             console.log("Top Reviewers successfully fetched: ", response);
