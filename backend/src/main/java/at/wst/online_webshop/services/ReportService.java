@@ -45,7 +45,7 @@ public class ReportService {
      */
     public List<ProductDTO> generateTopProductsBetweenPriceRangeReport(double minPrice, double maxPrice, int limit) {
         Query query = entityManager.createNativeQuery(
-                "SELECT p.product_id, p.product_name, p.product_category, p.product_description, p.product_price, p.product_imageurl, COUNT(oi.order_item_quantity) as totalSells, " +
+                "SELECT p.product_id, p.product_name, p.product_category, p.product_description, p.product_price, p.product_imageurl, SUM(oi.order_item_quantity) as totalSells, " +
                         "v.vendor_id, v.vendor_name " +
                         "FROM products p " +
                         "JOIN order_items oi ON p.product_id = oi.product_id " +
