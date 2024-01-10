@@ -7,6 +7,7 @@ import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvException;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -38,13 +41,14 @@ public class DBFiller {
 
     private static final Logger logger = LoggerFactory.getLogger(DBFiller.class);
 
-    private static final String imageFiles = "src/main/csv/filenames.csv";
-    private static final String productNames = "src/main/csv/articlenames.csv";
-    private static final String productCategories = "src/main/csv/artikelkategorie.csv";
-    private static final String products = "src/main/csv/products.csv";
+    private static final String imageFiles = "csv/filenames.csv";
+    private static final String productNames = "csv/articlenames.csv";
+    private static final String productCategories = "csv/artikelkategorie.csv";
+    private static final String products = "csv/products.csv";
 
     private final CustomerRepository customerRepository;
     private final OrderRepository orderRepository;
+    @Getter
     private final ProductRepository productRepository;
     private final ReviewRepository reviewRepository;
     private final AddressRepository addressRepository;
@@ -97,18 +101,17 @@ public class DBFiller {
         System.out.println("After clearing database...");
     }
 
-    public ProductRepository getProductRepository() {
-        return this.productRepository;
-    }
 
     public List<String[]> readFile(String filename) {
         List<String[]> records = new ArrayList<>();
 
-        try (CSVReader reader = new CSVReaderBuilder(new FileReader(filename))
-                .withCSVParser(new CSVParserBuilder()
-                        .withSeparator(';')
-                        .build())
-                .build()) {
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream(filename);
+             InputStreamReader isr = new InputStreamReader(is);
+             CSVReader reader = new CSVReaderBuilder(isr)
+                     .withCSVParser(new CSVParserBuilder()
+                             .withSeparator(';')
+                             .build())
+                     .build()) {
 
             records = reader.readAll();
 
@@ -118,6 +121,7 @@ public class DBFiller {
 
         return records;
     }
+
 
     public void fillCustomers() {
         var faker = Faker.instance();
