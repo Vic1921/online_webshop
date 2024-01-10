@@ -1,33 +1,58 @@
 package at.wst.online_webshop.nosql.services;
 
 import at.wst.online_webshop.dtos.ProductDTO;
+import at.wst.online_webshop.dtos.ReviewDTO;
+import at.wst.online_webshop.nosql.documents.OrderDocument;
+import at.wst.online_webshop.nosql.documents.ReviewDocument;
 import at.wst.online_webshop.nosql.dtos.ProductNoSqlDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class ReportNoSQLService {
-    /*
-    public List<ProductNoSqlDTO> generateTopSellingProductsReport(double minPrice, double maxPrice, int limit) {
+    @Autowired
+    private MongoTemplate mongoTemplate;
+    private static final Logger logger = LoggerFactory.getLogger(ReportNoSQLService.class);
+
+
+    public List<ProductNoSqlDTO> generateTopProductsBetweenPriceRangeReport(double minPrice, double maxPrice, int limit) {
         Aggregation aggregation = Aggregation.newAggregation(
-                Aggregation.match(
-                        Criteria.where("productPrice").gte(minPrice).lte(maxPrice)
-                ),
-                Aggregation.lookup("orderItems", "id", "product.id", "orderItems"),
                 Aggregation.unwind("orderItems"),
-                Aggregation.group("id", "productName", "productCategory", "productDescription", "productPrice", "productImageUrl", "vendor")
-                        .count().as("totalSells")
-                        .addToSet("vendor").as("vendors"),
-                Aggregation.sort(Sort.by(Sort.Direction.DESC, "totalSells")),
-                Aggregation.limit(limit)
+                Aggregation.lookup("products", "orderItems.product.$id", "_id", "productDetails"),
+                Aggregation.unwind("productDetails"),
+                Aggregation.match(Criteria.where("productDetails.productPrice").gte(minPrice).lte(maxPrice)),
+                Aggregation.group("orderItems.product")
+                        .sum("orderItems.quantity").as("totalQuantitySold")
+                        .first("productDetails.vendor.vendorName").as("vendor")
+                        .first("productDetails.productCategory").as("productCategory")
+                        .first("productDetails.productDescription").as("productDescription")
+                        .first("productDetails.productPrice").as("productPrice")
+                        .first("productDetails.productImageUrl").as("productImageUrl"),
+                Aggregation.sort(Sort.Direction.DESC, ("totalQuantitySold")),
+                Aggregation.limit(limit),
+                Aggregation.project("productName", "totalQuantitySold", "totalRevenue",
+                        "productCategory", "productDescription", "productPrice", "productImageUrl", "vendor")
         );
 
-        AggregationResults<ReportResult> result = mongoTemplate.aggregate(aggregation, ProductDocument.class, ReportResult.class);
+      List<ProductNoSqlDTO> topSellersReport = mongoTemplate.aggregate(aggregation, "orders", ProductNoSqlDTO.class)
+                .getMappedResults();
 
-        return result.getMappedResults();
+      logger.info(topSellersReport.toString());
+
+      return topSellersReport;
     }
-    */
 
 
+    public List<ReviewDTO> generateTopReviewersReport(double price, int limit) {
+        //TODO
+        return null;
+    }
 }

@@ -33,7 +33,7 @@ public class DBFiller {
     private static final int NUMBER_OF_REVIEWS = 300;
     private static final int NUMBER_OF_SHOPPING_CARTS = 70;
     private static final int NUMBER_OF_VENDORS = 20;
-    private static final int NUMBER_OF_ORDER_ITEMS = 2;
+    private static final int NUMBER_OF_ORDER_ITEMS = 5;
     private static final int NUMBER_OF_CART_ITEMS = 5;
 
     private static final Logger logger = LoggerFactory.getLogger(DBFiller.class);
@@ -225,7 +225,7 @@ public class DBFiller {
 
             for (int i = 0; i < NUMBER_OF_ORDER_ITEMS; i++) {
                 Product product = productRepository.findById((long) faker.number().numberBetween(1, NUMBER_OF_PRODUCTS)).orElseThrow();
-                int quantity = faker.number().numberBetween(1, 2);
+                int quantity = faker.number().numberBetween(1, NUMBER_OF_ORDER_ITEMS);
 
                 // Check if an OrderItem with the same Product already exists in the Order
                 OrderItem existingOrderItem = getOrderItemByProduct(order, product);
