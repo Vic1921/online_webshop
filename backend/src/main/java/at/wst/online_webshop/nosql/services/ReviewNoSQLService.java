@@ -1,10 +1,14 @@
 package at.wst.online_webshop.nosql.services;
 
 import at.wst.online_webshop.dtos.ReviewDTO;
+import at.wst.online_webshop.exceptions.FailedReviewException;
+import at.wst.online_webshop.nosql.documents.ProductDocument;
 import at.wst.online_webshop.nosql.documents.ReviewDocument;
 import at.wst.online_webshop.nosql.repositories.CustomerNoSqlRepository;
 import at.wst.online_webshop.nosql.repositories.ProductNoSqlRepository;
 import at.wst.online_webshop.nosql.repositories.ReviewNoSqlRepository;
+import com.mongodb.DBRef;
+import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +18,12 @@ import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import static at.wst.online_webshop.nosql.convertors.ReviewConvertorNoSQL.convertDocumentToDTO;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 
 @Service
@@ -56,6 +64,49 @@ public class ReviewNoSQLService {
 
         return result;
 
+    }
+
+    public ReviewDTO addReview(Long customerId, Long productId, String comment, int rating) {
+        // Validate existence of customer and product
+        boolean customerExists = customerNoSqlRepository.existsById(customerId.toString());
+        boolean productExists = productNoSqlRepository.existsById(productId.toString());
+
+        if (!customerExists) {
+            throw new FailedReviewException("Customer not found.");
+        }
+        if (!productExists) {
+            throw new FailedReviewException("Product not found.");
+        }
+
+        // Validate rating and comment
+        if (rating < 1 || rating > 5) {
+            throw new FailedReviewException("Invalid rating. Must be between 1 and 5.");
+        }
+        if (comment == null || comment.isEmpty()) {
+            throw new FailedReviewException("Comment cannot be empty or null.");
+        }
+
+        // get the ProductDocument after confirming it exists
+        ProductDocument product = productNoSqlRepository.findById(productId.toString()).orElseThrow(() -> new FailedReviewException("Product could not be retrieved: " + productId.toString()));
+
+        // Create and save the review
+        ReviewDocument review = new ReviewDocument();
+        review.setReviewRating(rating);
+        review.setReviewComment(comment);
+
+        // Format date time
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String formattedDateTime = currentDateTime.format(formatter);
+        review.setReviewDate(LocalDate.parse(formattedDateTime));
+
+        // Set the product at last
+        review.setProduct(product);
+
+        ReviewDocument savedReview = reviewNoSqlRepository.save(review);
+
+        // Convert to DTO and return
+        return convertDocumentToDTO(savedReview);
     }
 
 
