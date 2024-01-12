@@ -81,7 +81,9 @@ public class ReportService {
 
         return productDTOList;
     }
-/*
+
+
+    /*
 SELECT
     c.customer_id,
     c.name AS customer_name,

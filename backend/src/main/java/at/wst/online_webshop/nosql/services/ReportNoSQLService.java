@@ -30,15 +30,16 @@ public class ReportNoSQLService {
                 Aggregation.match(Criteria.where("productDetails.productPrice").gte(minPrice).lte(maxPrice)),
                 Aggregation.group("orderItems.product")
                         .sum("orderItems.quantity").as("totalQuantitySold")
-                        .first("productDetails.vendor.vendorName").as("vendor")
+                        .first("productDetails.vendor.vendorName").as("vendorName")
                         .first("productDetails.productCategory").as("productCategory")
                         .first("productDetails.productDescription").as("productDescription")
                         .first("productDetails.productPrice").as("productPrice")
+                        .first("productDetails.productName").as("productName")
                         .first("productDetails.productImageUrl").as("productImageUrl"),
                 Aggregation.sort(Sort.Direction.DESC, ("totalQuantitySold")),
-                Aggregation.limit(limit),
-                Aggregation.project("productName", "totalQuantitySold", "totalRevenue",
-                        "productCategory", "productDescription", "productPrice", "productImageUrl", "vendor")
+                Aggregation.limit(limit),   
+                Aggregation.project("productName", "totalQuantitySold",
+                        "productCategory", "productDescription", "productPrice", "productImageUrl", "vendorName")
         );
 
         List<ProductNoSqlDTO> topSellersReport = mongoTemplate.aggregate(aggregation, "orders", ProductNoSqlDTO.class)
@@ -59,6 +60,7 @@ public class ReportNoSQLService {
                 Aggregation.group("reviews._id")
                         .first("reviews.customerId").as("customerId")
                         .first("reviews.product.$id").as("productId")
+                        .first("reviews.id").as("reviewId")
                         .first("name").as("customerName")
                         .first("reviews.date").as("reviewDate")
                         .first("reviews.rating").as("reviewRating")
