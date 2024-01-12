@@ -32,8 +32,8 @@ export class ReviewService {
   }
 
 
-  addReview(customerId : number, productId : number, comment : string, rating : number, orderId : number) : Observable<Review> {
-    const endpoint = `${this.apiUrl}/api/reviews`;
+  addReviewFromSQL(customerId : number, productId : number, comment : string, rating : number, orderId : number) : Observable<Review> {
+    const endpoint = `${this.apiUrl}/api/sql/reviews`;
     const request = {
       customerId: customerId,
       productId: productId,
@@ -45,7 +45,23 @@ export class ReviewService {
     this.eventEmitterService.reviewUpdated();
 
     return this.http.post<Review>(endpoint, request);
+  }
+
+  addReviewFromNoSQL(customerId : number, productId : number, comment : string, rating : number) : Observable<Review> {
+    const endpoint = `${this.apiUrl}/api/nosql/reviews`;
+    const request = {
+      customerId: customerId,
+      productId: productId,
+      comment : comment,
+      rating : rating,
+    };
+    this.eventEmitterService.reviewUpdated();
+
+    return this.http.post<Review>(endpoint, request);
 
   }
+
+
+
 
 }

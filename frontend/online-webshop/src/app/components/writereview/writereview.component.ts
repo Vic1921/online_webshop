@@ -7,6 +7,7 @@ import { OrderService } from '../../services/order.service';
 import { ReviewService } from '../../services/review.service';
 import { FooterComponent } from '../footer/footer.component';
 import { HeaderComponent } from '../header/header.component';
+import { ConfigService } from '../../config.service';
 
 @Component({
   selector: 'app-writereview',
@@ -25,14 +26,14 @@ export class WriteReviewComponent {
     rating: new FormControl<number>(0, [Validators.required, Validators.min(1), Validators.max(5)]),
   });
 
-  constructor(private reviewService: ReviewService, private loginService: LoginService, private orderService: OrderService) { }
+  constructor(private configService: ConfigService, private reviewService: ReviewService, private loginService: LoginService, private orderService: OrderService) { }
 
 
   onStarChange(rating: number): void {
-      console.log(rating);
-      console.log(this.reviewForm.get('rating')?.value);
-      this.reviewForm.get('rating')?.setValue(rating);
-      this.selectedRating = rating;
+    console.log(rating);
+    console.log(this.reviewForm.get('rating')?.value);
+    this.reviewForm.get('rating')?.setValue(rating);
+    this.selectedRating = rating;
   }
 
   onSubmit(): void {
@@ -43,41 +44,57 @@ export class WriteReviewComponent {
       const rating = formValues.rating !== undefined && formValues.rating !== null ? +formValues.rating : null;
 
       let orderId = 0;
-      this.orderService.getOrderDetails(customerId, this.productId).subscribe(
-        (order) => {
-          orderId = order.orderId;
-          this.reviewService.addReview(customerId, this.productId!, comment, rating!, orderId).subscribe(
-            response => {
-              // Handle success
-              this.reviewAdded.emit();
+      if (this.configService.useNoSQL == false) {
+        this.orderService.getOrderDetails(customerId, this.productId).subscribe(
+          (order) => {
+            orderId = order.orderId;
+            this.reviewService.addReviewFromSQL(customerId, this.productId!, comment, rating!, orderId).subscribe(
+              response => {
+                // Handle success
+                this.reviewAdded.emit();
 
-              console.log('Review added successfully', response);
-            },
-            error => {
-              console.log(customerId);
-              console.log(this.productId);
-              console.log(orderId);
-              console.log(rating);
-              console.log(comment);
-              console.error('Error adding review', error);
-            }
-          );
-          console.log('Fetching Order by customer and product successfully', orderId);
-        },
-        error => {
-          console.error('Fetching Order by customer and product failed', error);
-        }
-      );
-    }else{
-      console.log("nothing is happening");
-      console.log(this.productId);
+                console.log('Review added successfully', response);
+              },
+              error => {
+                console.log(customerId);
+                console.log(this.productId);
+                console.log(orderId);
+                console.log(rating);
+                console.log(comment);
+                console.error('Error adding review', error);
+              }
+            );
+            console.log('Fetching Order by customer and product successfully', orderId);
+          },
+          error => {
+            console.error('Fetching Order by customer and product failed', error);
+          }
+        );
+      } else {
+        this.reviewService.addReviewFromNoSQL(customerId, this.productId!, comment, rating!).subscribe(
+          response => {
+            // Handle success
+            this.reviewAdded.emit();
+
+            console.log('Review added successfully', response);
+          },
+          error => {
+            console.log(customerId);
+            console.log(this.productId);
+            console.log(orderId);
+            console.log(rating);
+            console.log(comment);
+            console.error('Error adding review', error);
+          }
+        )
+      }
     }
   }
 
   getStarRating(rating: number): string[] {
     const maxRating = 5;
     const filledStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 !== 0; 
+    const hasHalfStar = rating % 1 !== 0;
 
     const starRating: string[] = Array(maxRating).fill('fa fa-star');
 
