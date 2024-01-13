@@ -47,7 +47,7 @@ export class ReviewService {
     return this.http.post<Review>(endpoint, request);
   }
 
-  addReviewFromNoSQL(customerId : number, productId : number, comment : string, rating : number) : Observable<Review> {
+  addReviewFromNoSQL(customerId : string, productId : number, comment : string, rating : number) : Observable<Review> {
     const endpoint = `${this.apiUrl}/api/nosql/reviews`;
     const request = {
       customerId: customerId,

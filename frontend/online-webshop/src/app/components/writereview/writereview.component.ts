@@ -71,22 +71,25 @@ export class WriteReviewComponent {
           }
         );
       } else {
-        this.reviewService.addReviewFromNoSQL(customerId, this.productId!, comment, rating!).subscribe(
-          response => {
-            // Handle success
-            this.reviewAdded.emit();
+        const customerId = this.loginService.getCustomerIDFromNoSQL();
+        if (customerId !== null && customerId !== undefined) {
+          this.reviewService.addReviewFromNoSQL(customerId, this.productId!, comment, rating!).subscribe(
+            response => {
+              // Handle success
+              this.reviewAdded.emit();
 
-            console.log('Review added successfully', response);
-          },
-          error => {
-            console.log(customerId);
-            console.log(this.productId);
-            console.log(orderId);
-            console.log(rating);
-            console.log(comment);
-            console.error('Error adding review', error);
-          }
-        )
+              console.log('Review added successfully', response);
+            },
+            error => {
+              console.log(customerId);
+              console.log(this.productId);
+              console.log(orderId);
+              console.log(rating);
+              console.log(comment);
+              console.error('Error adding review', error);
+            }
+          )
+        }
       }
     }
   }
