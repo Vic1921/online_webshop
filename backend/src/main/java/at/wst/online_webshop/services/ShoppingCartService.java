@@ -23,7 +23,10 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 import static at.wst.online_webshop.convertors.ShoppingCartConvertor.convertToDto;
@@ -49,18 +52,23 @@ public class ShoppingCartService {
     public ShoppingCartDTO createShoppingCart(ShoppingCartDTO shoppingCartDTO) {
         Customer customer = customerRepository.findById(shoppingCartDTO.getCustomerId()).orElseThrow(() -> new CustomerNotFoundException("Customer not found"));
         ShoppingCart shoppingCart = convertToEntity(shoppingCartDTO);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss yyyy", Locale.GERMAN);
+        String formattedCartDate = LocalDateTime.now().format(formatter);
         shoppingCart.setCustomer(customer);
-        ShoppingCart savedShoppingCart = shoppingCartRepository.save(shoppingCart);
-        return convertToDto(savedShoppingCart);
+        shoppingCart.setCartDate(formattedCartDate);
+        shoppingCartRepository.save(shoppingCart);
+        logger.info("After saving shoppingCart: " + shoppingCart.toString());
+
+        return convertToDto(shoppingCart);
     }
 
+    @Transactional
     public ShoppingCartDTO getShoppingCartById(Long id) {
         ShoppingCart shoppingCart = shoppingCartRepository.findById(id).orElseThrow(() -> new ShoppingCartNotFoundException(id));
         ShoppingCartDTO shoppingCartDTO = convertToDto(shoppingCart);
         List<CartItemDTO> cartItemDTOList = CartItemConverter.convertToDtoList(shoppingCart.getCartItems());
         shoppingCartDTO.setCartItemDTOS(cartItemDTOList);
         shoppingCartDTO.setTotalPrice(calculateTotalPriceShoppingCart(shoppingCart).doubleValue());
-        logger.info("DTO IS BEFORE: " + shoppingCartDTO.toString());
         return shoppingCartDTO;
     }
 
@@ -93,6 +101,7 @@ public class ShoppingCartService {
     public ShoppingCartDTO addItemToShoppingCart(Long customerId, Long shoppingCartId, Long productId) {
         ShoppingCart shoppingCart = shoppingCartRepository.findById(shoppingCartId)
                 .orElseThrow(() -> new ShoppingCartNotFoundException(shoppingCartId));
+        logger.info(shoppingCart.toString());
 
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new CustomerNotFoundException("Customer not found."));
@@ -106,8 +115,8 @@ public class ShoppingCartService {
             throw new InsufficientProductQuantityException("Not enough quantity available for the product.");
         }
 
-        updateOrCreateCartItem(shoppingCart, product, quantityToAdd);
 
+        updateOrCreateCartItem(shoppingCart, product, quantityToAdd);
         //update product and shopping cart
         productRepository.save(product);
         shoppingCartRepository.save(shoppingCart);

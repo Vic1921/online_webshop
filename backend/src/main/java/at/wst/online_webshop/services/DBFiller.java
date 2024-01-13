@@ -41,10 +41,9 @@ public class DBFiller {
 
     private static final Logger logger = LoggerFactory.getLogger(DBFiller.class);
 
-    private static final String imageFiles = "csv/filenames.csv";
-    private static final String productNames = "csv/articlenames.csv";
-    private static final String productCategories = "csv/artikelkategorie.csv";
+
     private static final String products = "csv/products.csv";
+    private final List<String> paymentMethod = List.of("Paypal", "Sofortüberweisung", "Kreditkarte");
 
     private final CustomerRepository customerRepository;
     private final OrderRepository orderRepository;
@@ -210,11 +209,14 @@ public class DBFiller {
                     Date.from(LocalDate.of(2020, 1, 1).atStartOfDay(ZoneId.systemDefault()).toInstant()),
                     Date.from(LocalDate.of(2023, 12, 31).atStartOfDay(ZoneId.systemDefault()).toInstant())
             );
+            int number = faker.number().numberBetween(0, 2);
+            String payment = this.paymentMethod.get(number);
+            String shippingDetails = faker.address().streetAddress();
 
             String formattedOrderDate = orderDate.toInstant().atZone(ZoneId.of("Europe/Berlin")).toLocalDateTime().format(formatter);
 
             var customer = customerRepository.findById((long) faker.number().numberBetween(1, NUMBER_OF_CUSTOMERS)).orElseThrow();
-            orders.add(new Order(formattedOrderDate, 0, customer, new ArrayList<>()));
+            orders.add(new Order(formattedOrderDate, 0, customer, new ArrayList<>(), payment, shippingDetails));
         }
         orderRepository.saveAll(orders);
     }
@@ -331,10 +333,16 @@ public class DBFiller {
     private void fillShoppingCarts() {
         List<ShoppingCart> shoppingCarts = new ArrayList<>(NUMBER_OF_SHOPPING_CARTS);
         var faker = Faker.instance();
-
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss yyyy")
+                .withLocale(Locale.GERMAN);
         for (long customerId = 1; customerId < NUMBER_OF_SHOPPING_CARTS; customerId++) {
             Customer customer = customerRepository.findById(customerId).orElseThrow();
-            ShoppingCart shoppingCart = new ShoppingCart(customer, new ArrayList<>());
+            Date cartDate = faker.date().between(
+                    Date.from(LocalDate.of(2020, 1, 1).atStartOfDay(ZoneId.systemDefault()).toInstant()),
+                    Date.from(LocalDate.of(2023, 12, 31).atStartOfDay(ZoneId.systemDefault()).toInstant())
+            );
+            String formattedCartDate = cartDate.toInstant().atZone(ZoneId.of("Europe/Berlin")).toLocalDateTime().format(formatter);
+            ShoppingCart shoppingCart = new ShoppingCart(customer, new ArrayList<>(), formattedCartDate);
             customer.setShoppingCart(shoppingCart);
             shoppingCarts.add(shoppingCart);
         }

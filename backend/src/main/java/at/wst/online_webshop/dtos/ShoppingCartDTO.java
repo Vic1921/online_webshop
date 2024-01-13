@@ -19,6 +19,7 @@ public class ShoppingCartDTO {
         private Long cartId;
         private Double totalPrice;
         private Long customerId;
+        private String cartDate;
         private List<CartItemDTO> cartItemDTOS = new ArrayList<>();;
 
         public void addProduct(CartItemDTO cartItemDTO){
@@ -41,6 +42,8 @@ public class ShoppingCartDTO {
                         ", totalPrice=" + totalPrice +
                         ", customerId=" + customerId +
                         ", cartItemDTOS=" + cartItemDTOS +
+                        ", cartCreation=" + cartDate +
+
                         '}';
         }
 }

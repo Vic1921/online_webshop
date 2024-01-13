@@ -28,6 +28,12 @@ public class Order {
     @Column(name = "order_total_mount", nullable = false)
     private Double orderTotalMount;
 
+    @Column(name = "order_payment", nullable = false)
+    private String orderPayment;
+
+    @Column(name = "order_shippingdetails", nullable = false)
+    private String orderShippingDetails;
+
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
@@ -37,11 +43,13 @@ public class Order {
     @Size(min = 1)
     private List<OrderItem> orderItems;
 
-    public Order(String orderDate, double totalPrice, Customer customer, List<OrderItem> orderItems) {
+    public Order(String orderDate, double totalPrice, Customer customer, List<OrderItem> orderItems, String orderPayment, String orderShippingDetails) {
         this.orderDate = orderDate;
         this.orderTotalMount = totalPrice;
         this.customer = customer;
         this.orderItems = orderItems;
+        this.orderPayment = orderPayment;
+        this.orderShippingDetails = orderShippingDetails;
     }
 
     @Override

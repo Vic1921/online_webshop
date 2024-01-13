@@ -135,6 +135,8 @@ public class OrderService {
         order.setOrderDate(formattedOrderDate);
         order.setOrderTotalMount(roundedTotalAmount.doubleValue());
         order.setCustomer(customer);
+        order.setOrderPayment(paymentMethod);
+        order.setOrderShippingDetails(shippingDetails);
 
         //reference Order
         final Order referenceOrder = order;
