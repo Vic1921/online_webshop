@@ -31,8 +31,8 @@ class ReviewNoSQLServiceTest {
 
     @Test
     public void testAddReview() {
-        Long customerId = 1L;
-        Long productId = 100L;
+        String customerId = "123123";
+        String productId = "100213";
         String comment = "Great product!";
         int rating = 5;
 

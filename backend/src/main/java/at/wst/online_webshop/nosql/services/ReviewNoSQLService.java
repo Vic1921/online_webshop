@@ -7,8 +7,6 @@ import at.wst.online_webshop.nosql.documents.ReviewDocument;
 import at.wst.online_webshop.nosql.repositories.CustomerNoSqlRepository;
 import at.wst.online_webshop.nosql.repositories.ProductNoSqlRepository;
 import at.wst.online_webshop.nosql.repositories.ReviewNoSqlRepository;
-import com.mongodb.DBRef;
-import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,10 +64,10 @@ public class ReviewNoSQLService {
 
     }
 
-    public ReviewDTO addReview(Long customerId, Long productId, String comment, int rating) {
+    public ReviewDTO addReview(String customerId, String productId, String comment, int rating) {
         // Validate existence of customer and product
-        boolean customerExists = customerNoSqlRepository.existsById(customerId.toString());
-        boolean productExists = productNoSqlRepository.existsById(productId.toString());
+        boolean customerExists = customerNoSqlRepository.existsById(customerId);
+        boolean productExists = productNoSqlRepository.existsById(productId);
 
         if (!customerExists) {
             throw new FailedReviewException("Customer not found.");
@@ -87,7 +85,7 @@ public class ReviewNoSQLService {
         }
 
         // get the ProductDocument after confirming it exists
-        ProductDocument product = productNoSqlRepository.findById(productId.toString()).orElseThrow(() -> new FailedReviewException("Product could not be retrieved: " + productId.toString()));
+        ProductDocument product = productNoSqlRepository.findById(productId).orElseThrow(() -> new FailedReviewException("Product could not be retrieved: " + productId));
 
         // Create and save the review
         ReviewDocument review = new ReviewDocument();

@@ -3,6 +3,7 @@ package at.wst.online_webshop.nosql.controller;
 
 import at.wst.online_webshop.dtos.ReviewDTO;
 import at.wst.online_webshop.dtos.requests.CreateReviewRequest;
+import at.wst.online_webshop.nosql.request.CreateReviewNoSQLRequest;
 import at.wst.online_webshop.nosql.services.ReviewNoSQLService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,14 +33,22 @@ public class ReviewNoSQLController {
     }
 
     @PostMapping
-    public ResponseEntity<ReviewDTO> addReview(@RequestBody CreateReviewRequest request) {
-        ReviewDTO result = reviewNoSQLService.addReview(
-                request.getCustomerId(),
-                request.getProductId(),
-                request.getComment(),
-                request.getRating());
+    public ResponseEntity<ReviewDTO> addReview(@RequestBody CreateReviewNoSQLRequest request) {
+        logger.info("WRITING REVIEW -> " + request.toString());
 
-        return ResponseEntity.ok(result);
+        try {
+            ReviewDTO result = reviewNoSQLService.addReview(
+                    request.getCustomerId(),
+                    request.getProductId(),
+                    request.getComment(),
+                    request.getRating());
+
+            return ResponseEntity.ok(result);
+        } catch (Exception e){
+            logger.warn("Failed to add review");
+            return ResponseEntity.badRequest().body(null);
+        }
+
     }
 
 
