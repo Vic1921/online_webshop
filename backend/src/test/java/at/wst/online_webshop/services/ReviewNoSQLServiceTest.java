@@ -1,6 +1,7 @@
 package at.wst.online_webshop.services;
 
 import at.wst.online_webshop.dtos.ReviewDTO;
+import at.wst.online_webshop.nosql.dtos.ReviewNoSqlDTO;
 import at.wst.online_webshop.nosql.repositories.CustomerNoSqlRepository;
 import at.wst.online_webshop.nosql.repositories.ProductNoSqlRepository;
 import at.wst.online_webshop.nosql.repositories.ReviewNoSqlRepository;
@@ -39,7 +40,7 @@ class ReviewNoSQLServiceTest {
         Mockito.when(mockProductRepository.existsById(Mockito.anyString())).thenReturn(true);
         Mockito.when(mockCustomerRepository.existsById(Mockito.anyString())).thenReturn(true);
 
-        ReviewDTO result = reviewNoSQLService.addReview(customerId, productId, comment, rating);
+        ReviewNoSqlDTO result = reviewNoSQLService.addReview(customerId, productId, comment, rating);
 
         assertNotNull(result);
         assertEquals(comment, result.getReviewComment());

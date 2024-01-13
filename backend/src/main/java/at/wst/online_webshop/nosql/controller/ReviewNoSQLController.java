@@ -1,8 +1,7 @@
 package at.wst.online_webshop.nosql.controller;
 
 
-import at.wst.online_webshop.dtos.ReviewDTO;
-import at.wst.online_webshop.dtos.requests.CreateReviewRequest;
+import at.wst.online_webshop.nosql.dtos.ReviewNoSqlDTO;
 import at.wst.online_webshop.nosql.request.CreateReviewNoSQLRequest;
 import at.wst.online_webshop.nosql.services.ReviewNoSQLService;
 import org.slf4j.Logger;
@@ -26,23 +25,24 @@ public class ReviewNoSQLController {
     }
 
     @GetMapping("/product/{productId}")
-    public ResponseEntity<List<ReviewDTO>> getReviewsByProductId(@PathVariable Long productId) {
-        List<ReviewDTO> reviews = reviewNoSQLService.getReviewsWithCustomerByProductId(String.valueOf(productId));
+    public ResponseEntity<List<ReviewNoSqlDTO>> getReviewsByProductId(@PathVariable Long productId) {
+        List<ReviewNoSqlDTO> reviews = reviewNoSQLService.getReviewsWithCustomerByProductId(String.valueOf(productId));
         logger.info(reviews.toString());
         return ResponseEntity.ok(reviews);
     }
 
     @PostMapping
-    public ResponseEntity<ReviewDTO> addReview(@RequestBody CreateReviewNoSQLRequest request) {
+    public ResponseEntity<ReviewNoSqlDTO> addReview(@RequestBody CreateReviewNoSQLRequest request) {
         logger.info("WRITING REVIEW -> " + request.toString());
 
         try {
-            ReviewDTO result = reviewNoSQLService.addReview(
+            ReviewNoSqlDTO result = reviewNoSQLService.addReview(
                     request.getCustomerId(),
                     request.getProductId(),
                     request.getComment(),
                     request.getRating());
 
+            logger.info("Review added successfully");
             return ResponseEntity.ok(result);
         } catch (Exception e){
             logger.warn("Failed to add review");
