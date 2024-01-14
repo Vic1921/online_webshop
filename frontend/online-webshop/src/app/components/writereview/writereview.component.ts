@@ -75,9 +75,6 @@ export class WriteReviewComponent {
         if (customerId !== null && customerId !== undefined) {
           this.reviewService.addReviewFromNoSQL(customerId, this.productId!, comment, rating!).subscribe(
             response => {
-              // Handle success
-              this.reviewAdded.emit();
-
               console.log('Review added successfully', response);
             },
             error => {

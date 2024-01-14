@@ -49,8 +49,8 @@ public class OrderNoSQLService {
         this.mongoTemplate = mongoTemplate;
     }
 
-    public List<OrderNoSqlDTO> getOrdersByCustomerId(Long customerId) {
-        List<OrderDocument> orders = this.orderNoSqlRepository.findByCustomerCustomerId(String.valueOf(customerId));
+    public List<OrderNoSqlDTO> getOrdersByCustomerId(String customerId) {
+        List<OrderDocument> orders = this.orderNoSqlRepository.findByCustomerCustomerId(customerId);
         List<OrderNoSqlDTO> orderDTOS = convertDocumentToDtoList(orders);
         for (OrderNoSqlDTO orderDTO : orderDTOS) {
             logger.info("Order DTO details: {}", orderDTO.toString());

@@ -5,5 +5,7 @@ export interface Order {
     orderDate: string;
     orderTotalMount: number;
     customerId: number;
+    orderPayment: string;
+    orderShippingDetails: string;
     orderItems: OrderItem[];
 }

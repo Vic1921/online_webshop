@@ -106,7 +106,7 @@
             <div class="row gx-5 justify-content-center">
                 <!-- Pricing card free-->
                 <div *ngFor="let product of bestsellers" class="col-lg-6 col-xl-4">
-                    <div class="card mb-5 mb-xl-0">
+                    <div class="card mb-5 mb-xl-0" style="height:1000px">
                         <div class="card-body p-5" style="width:auto;">
                             <div class="text-uppercase fw-bold" style="font-size: 20px; height: fit-content; ">
                                 <i class="bi bi-star-fill text-warning"></i>
@@ -116,15 +116,15 @@
                                 <img [src]="'./assets/images/products/' + product?.productImageUrl" alt="Top seller"
                                     width="100%" style="height:300px; 
                                     object-fit:scale-down;">
-                                <span class=" display-4 fw-bold justify-content-center" style="text-align: center; font-size: 36px; margin-left: 25%; margin-top: 10px;
-                                    margin-bottom: 10px;">{{product.productPrice}}
+                                <span class=" display-4 fw-bold justify-content-center" style="text-align: center; font-size: 36px; margin-left: 15%;  top: 550px;
+                                    margin-bottom: 10px; position: absolute;">{{product.productPrice}}
                                     €</span>
                             </div>
-                            <ul class="list-unstyled mb-4" style="height: 300px;">
-                                <li class="mb-2 text-uppercase" style="font-size: 23px; white-space: nowrap;">
-                                    <strong>{{product.vendorName}}</strong>
+                            <ul class="list-unstyled mb-4" style="height: 300px; position: absolute; left: 10px; top: 600px;">
+                                <li class="mb-2 text-uppercase" style="font-size: 23px; text-align: center;">
+                                    <strong class="vendor-name">{{product.vendorName}}</strong>
                                 </li>
-                                <li class="mb-2 text-uppercase fw-bold" style="font-size: 18px; white-space: nowrap;">
+                                <li class="mb-2 text-uppercase fw-bold" style="font-size: 18px; white-space: nowrap; text-align: center;">
                                     {{product.productCategory}}
                                 </li>
                                 <li class="mb-2">
@@ -148,7 +148,7 @@
                                     geringes Packmaß
                                 </li>
                             </ul>
-                            <div class="d-grid justify-content-center"><a class="btn btn-outline-primary" href="#!">Zum
+                            <div class="d-grid justify-content-center"><a class="btn btn-outline-primary" style="position: absolute; top: 500px;"href="#!">Zum
                                     Einkaufswagen
                                     hinzufügen</a></div>
                         </div>

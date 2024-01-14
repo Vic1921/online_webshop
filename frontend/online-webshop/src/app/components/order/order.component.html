@@ -62,7 +62,7 @@
                       <td class="text-muted mt-1 mb-0 small ms-xl-5">{{order.orderDate | date: 'MMM d, y' }}</td>
                       <td class="text-muted mt-1 mb-0 small ms-xl-5" style="white-space: nowrap;padding-left: 60px;">
                         {{order.orderTotalMount}} €</td>
-                      <td class="text-muted mt-1 mb-0 small ms-xl-5" style="white-space: nowrap;padding-left: 60px;">
+                      <td class="text-muted mt-1 mb-0 small ms-xl-5" style="padding-left: 60px;">
                         {{order.orderId}}</td>
                       <td class="text-muted mt-1 mb-0 small ms-xl-5" style="white-space: nowrap;padding-left: 52px;">
                         <div *ngIf="!getUseNoSQL(); else nosql" style="cursor: pointer; font-weight: 600; white-space: nowrap;"

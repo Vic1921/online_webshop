@@ -28,7 +28,15 @@
     margin-bottom: 2px;
 }
 
-    .custom-icon {
-        font-size: 1rem; /* Adjust the size as needed */
-        /* Add other styling properties if necessary */
-    }
+.custom-icon {
+    font-size: 1rem;
+    /* Adjust the size as needed */
+    /* Add other styling properties if necessary */
+}
+
+.vendor-name {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
