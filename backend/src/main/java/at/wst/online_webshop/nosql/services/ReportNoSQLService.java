@@ -1,8 +1,7 @@
 package at.wst.online_webshop.nosql.services;
 
-import at.wst.online_webshop.dtos.ReviewDTO;
 import at.wst.online_webshop.nosql.dtos.ProductNoSqlDTO;
-import at.wst.online_webshop.nosql.repositories.ReviewNoSqlRepository;
+import at.wst.online_webshop.nosql.dtos.ReviewNoSqlDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,28 +49,27 @@ public class ReportNoSQLService {
         return topSellersReport;
     }
 
-    public List<ReviewDTO> generateTopReviewersReport(double price, int limit) {
+    public List<ReviewNoSqlDTO> generateTopReviewersReport(double price, int limit) {
         Aggregation aggregation = Aggregation.newAggregation(
                 Aggregation.unwind("reviews"),
                 Aggregation.lookup("products", "reviews.product.$id", "_id", "productDetails"),
                 Aggregation.unwind("productDetails"),
                 Aggregation.match(Criteria.where("productDetails.price").gt(price)),
-                Aggregation.sort(Sort.Direction.DESC, "reviews.rating"), // Sorting by review rating in descending order
+                Aggregation.sort(Sort.Direction.DESC, "reviews.rating"),
                 Aggregation.group("reviews._id")
                         .first("reviews.customerId").as("customerId")
                         .first("reviews.product.$id").as("productId")
-                        .first("reviews.id").as("reviewId")
                         .first("name").as("customerName")
                         .first("reviews.date").as("reviewDate")
                         .first("reviews.rating").as("reviewRating")
                         .first("reviews.comment").as("reviewComment"),
-                Aggregation.project(ReviewDTO.class)
-                        .andInclude("reviewId", "customerId", "productId", "customerName", "reviewDate", "reviewRating", "reviewComment"),
+                Aggregation.project(ReviewNoSqlDTO.class)
+                        .andInclude("reviewId", "reviewDate", "reviewRating", "reviewComment", "productId"),
                 Aggregation.limit(limit)
         );
 
 
-        List<ReviewDTO> topCustomerReviews = mongoTemplate.aggregate(aggregation, "customers", ReviewDTO.class)
+        List<ReviewNoSqlDTO> topCustomerReviews = mongoTemplate.aggregate(aggregation, "customers", ReviewNoSqlDTO.class)
                 .getMappedResults();
 
         logger.info(topCustomerReviews.toString());
