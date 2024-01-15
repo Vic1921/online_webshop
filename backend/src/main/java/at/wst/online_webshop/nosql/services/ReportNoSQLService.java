@@ -51,22 +51,23 @@ public class ReportNoSQLService {
 
     public List<ReviewNoSqlDTO> generateTopReviewersReport(double price, int limit) {
         Aggregation aggregation = Aggregation.newAggregation(
-                Aggregation.unwind("reviews"),
-                Aggregation.lookup("products", "reviews.product.$id", "_id", "productDetails"),
-                Aggregation.unwind("productDetails"),
-                Aggregation.match(Criteria.where("productDetails.price").gt(price)),
-                Aggregation.sort(Sort.Direction.DESC, "reviews.rating"),
-                Aggregation.group("reviews._id")
-                        .first("reviews.customerId").as("customerId")
-                        .first("reviews.product.$id").as("productId")
-                        .first("name").as("customerName")
-                        .first("reviews.date").as("reviewDate")
-                        .first("reviews.rating").as("reviewRating")
-                        .first("reviews.comment").as("reviewComment"),
-                Aggregation.project(ReviewNoSqlDTO.class)
-                        .andInclude("reviewId", "reviewDate", "reviewRating", "reviewComment", "productId"),
-                Aggregation.limit(limit)
-        );
+                Aggregation.lookup("reviews", "reviews .$id", "_id", "reviewObjects"),
+                        Aggregation.unwind("reviewObjects"),
+                        Aggregation.lookup("products", "reviewObjects.product", "_id", "productDetails"),
+                        Aggregation.unwind("productDetails"),
+                        Aggregation.match(Criteria.where("productDetails.productPrice").gt(price)),
+                        Aggregation.sort(Sort.by(Sort.Direction.DESC, "reviewObjects.reviewRating")),
+                        Aggregation.group("reviewObjects._id")
+                                .first("reviewObjects._id").as("reviewId")
+                                .first("reviewObjects.reviewRating").as("reviewRating")
+                                .first("reviewObjects.reviewComment").as("reviewComment")
+                                .first("reviewObjects.reviewDate").as("reviewDate")
+                                .first("productDetails._id").as("productId"),
+                        Aggregation.project()
+                                .andExclude("_id")
+                                .andInclude("reviewId", "productId", "reviewDate", "reviewRating", "reviewComment"),
+                        Aggregation.limit(limit)
+                );
 
 
         List<ReviewNoSqlDTO> topCustomerReviews = mongoTemplate.aggregate(aggregation, "customers", ReviewNoSqlDTO.class)
