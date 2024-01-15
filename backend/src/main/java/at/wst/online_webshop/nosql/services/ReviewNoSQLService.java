@@ -1,7 +1,9 @@
 package at.wst.online_webshop.nosql.services;
 
 import at.wst.online_webshop.dtos.ReviewDTO;
+import at.wst.online_webshop.entities.Customer;
 import at.wst.online_webshop.exceptions.FailedReviewException;
+import at.wst.online_webshop.nosql.documents.CustomerDocument;
 import at.wst.online_webshop.nosql.documents.ProductDocument;
 import at.wst.online_webshop.nosql.documents.ReviewDocument;
 import at.wst.online_webshop.nosql.dtos.ReviewNoSqlDTO;
@@ -17,10 +19,13 @@ import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static at.wst.online_webshop.nosql.convertors.ReviewConvertorNoSQL.convertDocumentToDTO;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
@@ -43,32 +48,32 @@ public class ReviewNoSQLService {
     }
 
     public List<ReviewNoSqlDTO> getReviewsWithCustomerByProductId(String productId) {
-        Aggregation aggregation = newAggregation(
-                match(Criteria.where("product.$id").is(productId)),
-                lookup("products", "product.$id", "_id", "product"),
-                unwind("product"),
-                lookup("customers", "customer.customerId", "customerId", "customer"),
-                unwind("customer"),
-                project("reviewRating", "reviewComment", "reviewDate")
+        Aggregation aggregation = Aggregation.newAggregation(
+                Aggregation.match(Criteria.where("product.$id").is(productId)),
+                Aggregation.lookup("customers", "_id", "reviews.$id", "customerDetails"),
+                Aggregation.unwind("customerDetails"),
+                Aggregation.project("reviewRating", "reviewComment", "reviewDate")
+                        .andExclude("_id")
+                        .and("customerDetails._id").as("customerId")
+                        .and("customerDetails.name").as("customerName")
                         .and("product.productName").as("productName")
-                        .and("customer.name").as("customerName")
         );
 
-        logger.info(mongoTemplate.aggregate(aggregation, "reviews", ReviewDocument.class)
-                .getMappedResults().toString());
-
+        logger.info("Aggregation pipeline: " + aggregation.toString());
         AggregationResults<ReviewNoSqlDTO> aggregationResults = mongoTemplate.aggregate(aggregation, "reviews", ReviewNoSqlDTO.class);
-
-        List<ReviewNoSqlDTO> result = aggregationResults.getMappedResults();
-
-        return result;
-
+        logger.info("Raw results: " + aggregationResults.getRawResults());
+        logger.info("Mapped results: " + aggregationResults.getMappedResults());
+        return aggregationResults.getMappedResults();
     }
 
+
+        @Transactional
     public ReviewNoSqlDTO addReview(String customerId, String productId, String comment, int rating) {
         // Validate existence of customer and product
         boolean customerExists = customerNoSqlRepository.existsById(customerId);
         boolean productExists = productNoSqlRepository.existsById(productId);
+
+        Optional<CustomerDocument> customerDocument = customerNoSqlRepository.findById(customerId);
 
         if (!customerExists) {
             throw new FailedReviewException("Customer not found.");
@@ -106,9 +111,14 @@ public class ReviewNoSQLService {
         review.setProduct(product);
 
         logger.info("Saving review: " + review.toString());
+
         ReviewDocument savedReview = reviewNoSqlRepository.save(review);
 
         logger.info("Saved review: " + savedReview.toString());
+
+            CustomerDocument customer = customerDocument.get();
+            customer.getReviews().add(review);
+            customerNoSqlRepository.save(customer);
 
         // Convert to DTO and return
         return convertDocumentToDTO(savedReview);

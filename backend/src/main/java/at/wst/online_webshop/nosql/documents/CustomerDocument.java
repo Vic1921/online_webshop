@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -26,7 +27,7 @@ public class CustomerDocument {
     private String password;
     private ShoppingCartDocument shoppingCart;
     @DBRef
-    private List<ReviewDocument> reviews;
+    private List<ReviewDocument> reviews = new ArrayList<>();
     private CustomerDocument recommendedBy;
 
     @Override

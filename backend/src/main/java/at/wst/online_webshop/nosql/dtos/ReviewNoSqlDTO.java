@@ -13,4 +13,5 @@ public class ReviewNoSqlDTO {
     private String reviewComment;
     private String reviewDate;
     private String productId;
+    private String customerName;
 }
