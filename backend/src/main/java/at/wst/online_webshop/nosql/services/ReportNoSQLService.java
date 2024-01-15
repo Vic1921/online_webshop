@@ -24,21 +24,18 @@ public class ReportNoSQLService {
     public List<ProductNoSqlDTO> generateTopProductsBetweenPriceRangeReport(double minPrice, double maxPrice, int limit) {
         Aggregation aggregation = Aggregation.newAggregation(
                 Aggregation.unwind("orderItems"),
-                Aggregation.lookup("products", "orderItems.product.$id", "_id", "productDetails"),
+                Aggregation.group("orderItems.product.$id")
+                        .sum("orderItems.quantity").as("totalQuantitySold"),
+                Aggregation.sort(Sort.Direction.DESC, "totalQuantitySold"),
+                Aggregation.limit(limit),
+                Aggregation.lookup("products", "_id", "_id", "productDetails"),
                 Aggregation.unwind("productDetails"),
                 Aggregation.match(Criteria.where("productDetails.productPrice").gte(minPrice).lte(maxPrice)),
-                Aggregation.group("orderItems.product")
-                        .sum("orderItems.quantity").as("totalQuantitySold")
-                        .first("productDetails.vendor.vendorName").as("vendorName")
-                        .first("productDetails.productCategory").as("productCategory")
-                        .first("productDetails.productDescription").as("productDescription")
-                        .first("productDetails.productPrice").as("productPrice")
-                        .first("productDetails.productName").as("productName")
-                        .first("productDetails.productImageUrl").as("productImageUrl"),
-                Aggregation.sort(Sort.Direction.DESC, ("totalQuantitySold")),
-                Aggregation.limit(limit),   
-                Aggregation.project("productName", "totalQuantitySold",
-                        "productCategory", "productDescription", "productPrice", "productImageUrl", "vendorName")
+                Aggregation.project("productDetails.productName", "totalQuantitySold",
+                        "productDetails.vendor.vendorName", "productDetails.productCategory",
+                        "productDetails.productDescription", "productDetails.productPrice",
+                        "productDetails.productImageUrl"),
+                Aggregation.project().andExclude("_id")
         );
 
         List<ProductNoSqlDTO> topSellersReport = mongoTemplate.aggregate(aggregation, "orders", ProductNoSqlDTO.class)
@@ -48,6 +45,7 @@ public class ReportNoSQLService {
 
         return topSellersReport;
     }
+
 
     public List<ReviewNoSqlDTO> generateTopReviewersReport(double price, int limit) {
         Aggregation aggregation = Aggregation.newAggregation(
