@@ -49,9 +49,9 @@ public class ReportNoSQLService {
 
     public List<ReviewNoSqlDTO> generateTopReviewersReport(double price, int limit) {
         Aggregation aggregation = Aggregation.newAggregation(
-                Aggregation.lookup("reviews", "reviews .$id", "_id", "reviewObjects"),
+                Aggregation.lookup("reviews", "reviews.$id", "_id", "reviewObjects"),
                         Aggregation.unwind("reviewObjects"),
-                        Aggregation.lookup("products", "reviewObjects.product", "_id", "productDetails"),
+                        Aggregation.lookup("products", "reviewObjects._id", "_id", "productDetails"),
                         Aggregation.unwind("productDetails"),
                         Aggregation.match(Criteria.where("productDetails.productPrice").gt(price)),
                         Aggregation.sort(Sort.by(Sort.Direction.DESC, "reviewObjects.reviewRating")),
@@ -61,9 +61,7 @@ public class ReportNoSQLService {
                                 .first("reviewObjects.reviewComment").as("reviewComment")
                                 .first("reviewObjects.reviewDate").as("reviewDate")
                                 .first("productDetails._id").as("productId"),
-                        Aggregation.project()
-                                .andExclude("_id")
-                                .andInclude("reviewId", "productId", "reviewDate", "reviewRating", "reviewComment"),
+                        Aggregation.project("reviewId", "reviewRating", "reviewComment", "reviewDate", "productId"),
                         Aggregation.limit(limit)
                 );
 
@@ -71,7 +69,7 @@ public class ReportNoSQLService {
         List<ReviewNoSqlDTO> topCustomerReviews = mongoTemplate.aggregate(aggregation, "customers", ReviewNoSqlDTO.class)
                 .getMappedResults();
 
-        logger.info(topCustomerReviews.toString());
+        logger.info("HERE GOES THE RESULT OF THE AGGREGATION" + topCustomerReviews);
 
         return topCustomerReviews;
     }
