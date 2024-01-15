@@ -23,6 +23,8 @@ public class OrderDocument {
     @Indexed
     private LocalDateTime orderDate;
     private Double orderTotalMount;
+    private String orderPayment;
+    private String orderShippingDetails;
 
     @DBRef
     private CustomerDocument customer;

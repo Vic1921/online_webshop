@@ -155,34 +155,46 @@ export class ShoppingcartComponent {
     }
 
     if (this.loginService.isLoggedIn()) {
-      const customerId = this.loginService.getCustomerID();
-      // Check if the customer has an existing cart
-      let cartId: number | null = this.loginService.getCartID();
-      if (cartId == null) {
-        console.info("Cart id should be null" + cartId);
+      if (this.configService.useNoSQL == false) {
+        const customerId = this.loginService.getCustomerID();
+        // Check if the customer has an existing cart
+        let cartId: number | null = this.loginService.getCartID();
+
+        if (cartId !== null) {
+          // If the customer has an existing cart, add the product to the existing cart
+          console.info(cartId);
+          this.shoppingCartService.addToCartFromSQL(customerId, cartId, productId).subscribe(
+            (shoppingCart) => {
+              // Handle the success response
+              this.cart = shoppingCart; // Updated shopping cart
+              this.cdr.detectChanges();
+
+              console.log('Product added to existing cart. Updated shopping cart:', shoppingCart);
+            },
+            (error: any) => {
+              console.log("this cart id si");
+              console.log(cartId);
+              console.error('Error adding product to cart: `{$cartId}`', error);
+            }
+          );
+        }
       } else {
-        console.info("Cart id is not null" + cartId);
+        //NOSQL PART
+        const customerId = this.loginService.getCustomerIDFromNoSQL();
 
-      }
-
-      if (cartId !== null) {
-        // If the customer has an existing cart, add the product to the existing cart
-        console.info(cartId);
-        this.shoppingCartService.addToCart(customerId, cartId, productId).subscribe(
+        this.shoppingCartService.addToCartFromNoSQL(customerId!, productId).subscribe(
           (shoppingCart) => {
-            // Handle the success response
-            this.cart = shoppingCart; // Updated shopping cart
+            this.cart = shoppingCart; 
             this.cdr.detectChanges();
 
             console.log('Product added to existing cart. Updated shopping cart:', shoppingCart);
           },
           (error: any) => {
-            // Handle the error response
             console.log("this cart id si");
-            console.log(cartId);
             console.error('Error adding product to cart:', error);
           }
         );
+
       }
     }
   }
@@ -221,7 +233,7 @@ export class ShoppingcartComponent {
           }
         );
       }
-    }else{
+    } else {
       this.placeOrderNoSQL();
     }
   }

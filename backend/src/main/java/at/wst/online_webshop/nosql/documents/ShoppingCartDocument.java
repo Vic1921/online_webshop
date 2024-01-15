@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -13,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ShoppingCartDocument {
     private List<CartItemDocument> cartItems;
+    private LocalDateTime cartDate;
 
     @Override
     public String toString() {

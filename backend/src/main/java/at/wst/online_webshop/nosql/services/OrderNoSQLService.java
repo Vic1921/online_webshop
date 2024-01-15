@@ -119,6 +119,8 @@ public class OrderNoSQLService {
         order.setOrderTotalMount(roundedTotalMount.doubleValue());
         order.setCustomer(customer);
         order.setOrderItems(orderItems);
+        order.setOrderPayment(paymentMethod);
+        order.setOrderShippingDetails(shippingDetails);
 
         //update product quantities
         productsToUpdate.forEach(product -> {

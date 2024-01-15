@@ -18,6 +18,8 @@ public class OrderNoSqlDTO {
     private String orderDate;
     private Double orderTotalMount;
     private String customerId;
+    private String orderPayment;
+    private String orderShippingDetails;
     private List<OrderItemDTO> orderItems;
 
     public OrderNoSqlDTO(String orderDate, Double orderTotalMount, String customerId, List<OrderItemDTO> orderItems) {
