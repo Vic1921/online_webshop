@@ -30,11 +30,11 @@ import java.util.stream.IntStream;
 @Service
 @Transactional
 public class DBFiller {
-    private static final int NUMBER_OF_CUSTOMERS = 100;
-    private static final int NUMBER_OF_ORDERS = 100;
+    private static final int NUMBER_OF_CUSTOMERS = 800;
+    private static final int NUMBER_OF_ORDERS = 500;
     private static final int NUMBER_OF_PRODUCTS = 36;
     private static final int NUMBER_OF_REVIEWS = 300;
-    private static final int NUMBER_OF_SHOPPING_CARTS = 70;
+    private static final int NUMBER_OF_SHOPPING_CARTS = 30;
     private static final int NUMBER_OF_VENDORS = 20;
     private static final int NUMBER_OF_ORDER_ITEMS = 5;
     private static final int NUMBER_OF_CART_ITEMS = 5;
@@ -262,8 +262,6 @@ public class DBFiller {
             order.setOrderTotalMount(orderTotalMount.doubleValue());
         }
         orderItemRepository.saveAll(orderItems);
-
-        updateProductTotalSells(orderItems);
     }
 
     private OrderItem getOrderItemByProduct(Order order, Product product) {
@@ -271,25 +269,6 @@ public class DBFiller {
                 .filter(orderItem -> orderItem.getProduct().equals(product))
                 .findFirst()
                 .orElse(null);
-    }
-
-    private void updateProductTotalSells(List<OrderItem> orderItems) {
-        Map<Product, Integer> productQuantityMap = new HashMap<>();
-
-        for (OrderItem orderItem : orderItems) {
-            Product orderedProduct = orderItem.getProduct();
-            int orderQuantity = orderItem.getOrderItemQuantity();
-            productQuantityMap.put(orderedProduct, productQuantityMap.getOrDefault(orderedProduct, 0) + orderQuantity);
-        }
-
-        //batch update product total sells
-        for (Map.Entry<Product, Integer> entry : productQuantityMap.entrySet()) {
-            Product product = entry.getKey();
-            int newTotalSells = product.getProductTotalSells() + entry.getValue();
-            product.setProductTotalSells(newTotalSells);
-        }
-
-        productRepository.saveAll(productQuantityMap.keySet());
     }
 
     private void fillReviews() {

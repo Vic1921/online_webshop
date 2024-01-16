@@ -152,7 +152,6 @@ public class OrderService {
         List<OrderItemDTO> orderItemDTOS = OrderItemConvertor.convertToDtoList(order.getOrderItems());
 
         // Save order to database
-        updateProductTotalSells(orderItems);
         orderRepository.save(order);
         orderItemRepository.saveAll(orderItems);
         OrderDTO newOrderDTO = new OrderDTO(order.getOrderDate(), order.getOrderTotalMount(), order.getCustomer().getCustomerId(), orderItemDTOS);
@@ -160,18 +159,6 @@ public class OrderService {
         // Delete shopping cart and save
         this.shoppingCartService.deleteShoppingCart(shoppingCartId);
         return newOrderDTO;
-    }
-
-    private void updateProductTotalSells(List<OrderItem> orderItems) {
-        for (OrderItem orderItem : orderItems) {
-            Product orderedProduct = orderItem.getProduct();
-            int orderQuantity = orderItem.getOrderItemQuantity();
-
-            int newTotalSells = orderedProduct.getProductTotalSells() + orderQuantity;
-
-            orderedProduct.setProductTotalSells(newTotalSells);
-            productRepository.save(orderedProduct);
-        }
     }
 
     private void validateCart(ShoppingCart shoppingCart) {

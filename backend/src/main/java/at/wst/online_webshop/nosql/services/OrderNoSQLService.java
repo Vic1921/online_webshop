@@ -131,7 +131,6 @@ public class OrderNoSQLService {
         List<OrderItemDTO> orderItemDTOS = OrderItemConvertorNoSQL.convertDocumentToDtoList(order.getOrderItems());
 
         //save order to database
-        updateProductTotalSells(orderItems);
         orderNoSqlRepository.save(order);
         BigInteger customerIdBigInt = new BigInteger(customerId, 16);
         OrderNoSqlDTO newOrderDTO = new OrderNoSqlDTO(order.getOrderDate().toString(), order.getOrderTotalMount(), customerId, orderItemDTOS);
@@ -144,16 +143,7 @@ public class OrderNoSQLService {
         return newOrderDTO;
     }
 
-    private void updateProductTotalSells(List<OrderItemDocument> orderItems) {
-        for (OrderItemDocument orderItem : orderItems) {
-            ProductDocument orderedProduct = orderItem.getProduct();
-            int orderQuantity = orderItem.getQuantity();
 
-            int newTotalSells = orderedProduct.getProductTotalSells() + orderQuantity;
-            orderedProduct.setProductTotalSells(newTotalSells);
-            productNoSqlRepository.save(orderedProduct);
-        }
-    }
 
     private void validateShoppingCart(ShoppingCartDocument shoppingCartDocument) {
         List<String> productsIds = shoppingCartDocument.getCartItems().stream().map(cartItemDocument -> cartItemDocument.getProductDocument().getId()).collect(Collectors.toList());

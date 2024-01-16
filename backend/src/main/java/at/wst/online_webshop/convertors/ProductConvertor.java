@@ -19,7 +19,6 @@ public class ProductConvertor {
         List<Long> reviewIds = product.getReviews().stream().map(Review::getReviewId).collect(Collectors.toList());
         productDTO.setVendorName(product.getVendor().getVendorName());
         productDTO.setReviewIds(reviewIds);
-        productDTO.setProductTotalSells(product.getProductTotalSells());
         return productDTO;
     }
 

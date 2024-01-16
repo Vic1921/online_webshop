@@ -27,7 +27,6 @@ public class ProductDocument {
     private String productDescription;
     private Integer productQuantity;
     private String productImageUrl;
-    private Integer productTotalSells = 0;
     private VendorDocument vendor;
 
     @Override
@@ -41,7 +40,6 @@ public class ProductDocument {
                 ", productDescription='" + productDescription + '\'' +
                 ", productQuantity=" + productQuantity +
                 ", productImageUrl='" + productImageUrl + '\'' +
-                ", productTotalSells=" + productTotalSells +
                 ", vendor=" + vendor +
                 '}';
     }

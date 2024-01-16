@@ -46,8 +46,6 @@ public class Product {
     @Column(name = "product_imageurl", nullable = false)
     private String productImageUrl;
 
-    @Column(name = "product_total_sells")
-    private Integer productTotalSells = 0;
 
     //JsonIgnore to handle the bidirectional relationship between reviews and products, because there is infinite recursion during serialization
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)

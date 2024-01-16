@@ -31,16 +31,19 @@ public class ReportNoSQLService {
                 Aggregation.lookup("products", "_id", "_id", "productDetails"),
                 Aggregation.unwind("productDetails"),
                 Aggregation.match(Criteria.where("productDetails.productPrice").gte(minPrice).lte(maxPrice)),
-                Aggregation.project("productDetails.productName", "totalQuantitySold",
-                        "productDetails.vendor.vendorName", "productDetails.productCategory",
-                        "productDetails.productDescription", "productDetails.productPrice",
-                        "productDetails.productImageUrl"),
-                Aggregation.project().andExclude("_id")
+                Aggregation.project()
+                        .and("productDetails.productName").as("productName")
+                        .and("totalQuantitySold").as("totalQuantitySold")
+                        .and("productDetails.vendor.vendorName").as("vendorName")
+                        .and("productDetails.productCategory").as("productCategory")
+                        .and("productDetails.productDescription").as("productDescription")
+                        .and("productDetails.productPrice").as("productPrice")
+                        .and("productDetails.productImageUrl").as("productImageUrl")
+                        .andExclude("_id")
         );
 
         List<ProductNoSqlDTO> topSellersReport = mongoTemplate.aggregate(aggregation, "orders", ProductNoSqlDTO.class)
                 .getMappedResults();
-
         logger.info(topSellersReport.toString());
 
         return topSellersReport;
