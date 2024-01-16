@@ -4,6 +4,7 @@ import at.wst.online_webshop.dtos.CartItemDTO;
 import at.wst.online_webshop.dtos.ProductDTO;
 import at.wst.online_webshop.dtos.ShoppingCartDTO;
 import at.wst.online_webshop.dtos.requests.ShoppingCartItemRequest;
+import at.wst.online_webshop.nosql.request.ShoppingCartItemRequestNoSQL;
 import at.wst.online_webshop.services.ShoppingCartService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,5 +70,19 @@ public class ShoppingCartController {
     public ResponseEntity<Void> deleteShoppingCart(@RequestParam Long id) {
         shoppingCartService.deleteShoppingCart(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/delete-cart-item")
+    public ResponseEntity<ShoppingCartDTO> subtractOrDeleteCartItemFromShoppingCart(@RequestBody ShoppingCartItemRequest request) {
+        ShoppingCartDTO shoppingCartDTO = shoppingCartService.updateBySubtractingCartItem(request.getCustomerId(), request.getShoppingCartId(), request.getProductId());
+        logger.info("SUBTRACTING OR DELETING ITEM: " + shoppingCartDTO.toString());
+        return ResponseEntity.ok(shoppingCartDTO);
+    }
+
+    @PostMapping("/delete-cart-product")
+    public ResponseEntity<ShoppingCartDTO> deleteCartItemFromShoppingCart(@RequestBody ShoppingCartItemRequest request) {
+        ShoppingCartDTO shoppingCartDTO = shoppingCartService.deleteCartItem(request.getCustomerId(), request.getShoppingCartId(), request.getProductId());
+        logger.info("DELETING ITEM: " + shoppingCartDTO.toString());
+        return ResponseEntity.ok(shoppingCartDTO);
     }
 }

@@ -3,6 +3,7 @@ package at.wst.online_webshop.nosql.controller;
 
 import at.wst.online_webshop.dtos.CartItemDTO;
 import at.wst.online_webshop.dtos.ShoppingCartDTO;
+import at.wst.online_webshop.dtos.requests.ShoppingCartItemRequest;
 import at.wst.online_webshop.nosql.request.ShoppingCartItemRequestNoSQL;
 import at.wst.online_webshop.nosql.services.ShoppingCartNoSQLService;
 import org.slf4j.Logger;
@@ -51,5 +52,19 @@ public class ShoppingCartNoSQLController {
         logger.info("ADDING: " + shoppingCartDTO.toString());
         return ResponseEntity.ok(shoppingCartDTO);
     }
-}
 
+    @PostMapping("/delete-cart-item")
+    public ResponseEntity<ShoppingCartDTO> deleteItemFromShoppingCart(@RequestBody ShoppingCartItemRequestNoSQL request) {
+        ShoppingCartDTO shoppingCartDTO = shoppingCartNoSQLService.updateBySubtractingCartItem(request.getCustomerId(), request.getProductId());
+        logger.info("SUBTRACTING OR DELETING ITEM: " + shoppingCartDTO.toString());
+        return ResponseEntity.ok(shoppingCartDTO);
+    }
+
+
+    @PostMapping("/delete-cart-product")
+    public ResponseEntity<ShoppingCartDTO> deleteCartItemFromShoppingCart(@RequestBody ShoppingCartItemRequestNoSQL request) {
+        ShoppingCartDTO shoppingCartDTO = shoppingCartNoSQLService.deleteCartItem(request.getCustomerId(), request.getProductId());
+        logger.info("DELETING ITEM: " + shoppingCartDTO.toString());
+        return ResponseEntity.ok(shoppingCartDTO);
+    }
+}

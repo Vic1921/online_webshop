@@ -148,6 +148,120 @@ export class ShoppingcartComponent {
     );
   }
 
+  deleteBySubtractingOrCompleteDeleteFromCart(productId: number | undefined): void {
+    if (productId == undefined) {
+      console.error('Product Id is undefined');
+      return;
+    }
+
+    if (this.loginService.isLoggedIn()) {
+      if (this.configService.useNoSQL == false) {
+        const customerId = this.loginService.getCustomerID();
+        // Check if the customer has an existing cart
+        let cartId: number | null = this.loginService.getCartID();
+
+        if (cartId !== null) {
+          // If the customer has an existing cart, add the product to the existing cart
+          console.info(cartId);
+          this.shoppingCartService.deleteOrSubtractFromCartSQL(customerId, cartId, productId).subscribe(
+            (shoppingCart) => {
+              // Handle the success response
+              this.cart = shoppingCart; // Updated shopping cart
+              this.cdr.detectChanges();
+
+              console.log('Product subtracted or deleted from existing cart. Updated shopping cart:', shoppingCart);
+            },
+            (error: any) => {
+              console.log("this cart id si");
+              console.log(cartId);
+              console.error('Error adding product to cart: `{$cartId}`', error);
+            }
+          );
+        }
+      } else {
+        const customerId = this.loginService.getCustomerID();
+        // Check if the customer has an existing cart
+        let cartId: number | null = this.loginService.getCartID();
+
+        if (cartId !== null) {
+          // If the customer has an existing cart, add the product to the existing cart
+          console.info(cartId);
+          const customerId = this.loginService.getCustomerIDFromNoSQL();
+          this.shoppingCartService.deleteOrSubtractFromCartNoSQL(customerId!, productId).subscribe(
+            (shoppingCart) => {
+              // Handle the success response
+              this.cart = shoppingCart; // Updated shopping cart
+              this.cdr.detectChanges();
+
+              console.log('Product subtracted or deleted from existing cart. Updated shopping cart:', shoppingCart);
+            },
+            (error: any) => {
+              console.log("this cart id si");
+              console.log(cartId);
+              console.error('Error adding product to cart: `{$cartId}`', error);
+            }
+          );
+        }
+      }
+    }
+  }
+
+  deleteFromCart(productId: number | undefined): void {
+    if (productId == undefined) {
+      console.error('Product Id is undefined');
+      return;
+    }
+    if (this.loginService.isLoggedIn()) {
+      if (this.configService.useNoSQL == false) {
+        const customerId = this.loginService.getCustomerID();
+        // Check if the customer has an existing cart
+        let cartId: number | null = this.loginService.getCartID();
+
+        if (cartId !== null) {
+          // If the customer has an existing cart, add the product to the existing cart
+          console.info(cartId);
+          this.shoppingCartService.deleteFromCartSQL(customerId, cartId, productId).subscribe(
+            (shoppingCart) => {
+              // Handle the success response
+              this.cart = shoppingCart; // Updated shopping cart
+              this.cdr.detectChanges();
+
+              console.log('Product removed from existing cart. Updated shopping cart:', shoppingCart);
+            },
+            (error: any) => {
+              console.log("this cart id si");
+              console.log(cartId);
+              console.error('Error adding product to cart: `{$cartId}`', error);
+            }
+          );
+        }
+      } else {
+        const customerId = this.loginService.getCustomerIDFromNoSQL();
+        let cartId: number | null = this.loginService.getCartID();
+
+        // Check if the customer has an existing cart
+
+        if (cartId !== null) {
+          // If the customer has an existing cart, add the product to the existing cart
+          console.info(cartId);
+          this.shoppingCartService.deleteFromCartNoSQL(customerId!, productId).subscribe(
+            (shoppingCart) => {
+              // Handle the success response
+              this.cart = shoppingCart; // Updated shopping cart
+              this.cdr.detectChanges();
+
+              console.log('Product removed from existing cart. Updated shopping cart:', shoppingCart);
+            },
+            (error: any) => {
+              console.log("this cart id si");
+              console.log(cartId);
+              console.error('Error adding product to cart: `{$cartId}`', error);
+            }
+          );
+        }
+      }
+    }
+  }
   addToCart(productId: number | undefined): void {
     if (productId == undefined) {
       console.error('Product Id is undefined');
@@ -184,7 +298,7 @@ export class ShoppingcartComponent {
 
         this.shoppingCartService.addToCartFromNoSQL(customerId!, productId).subscribe(
           (shoppingCart) => {
-            this.cart = shoppingCart; 
+            this.cart = shoppingCart;
             this.cdr.detectChanges();
 
             console.log('Product added to existing cart. Updated shopping cart:', shoppingCart);

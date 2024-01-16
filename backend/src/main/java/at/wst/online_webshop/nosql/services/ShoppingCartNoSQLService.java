@@ -1,10 +1,17 @@
 package at.wst.online_webshop.nosql.services;
 
+import at.wst.online_webshop.convertors.CartItemConverter;
+import at.wst.online_webshop.convertors.ShoppingCartConvertor;
 import at.wst.online_webshop.dtos.CartItemDTO;
 import at.wst.online_webshop.dtos.ShoppingCartDTO;
+import at.wst.online_webshop.entities.CartItem;
+import at.wst.online_webshop.entities.Customer;
+import at.wst.online_webshop.entities.Product;
+import at.wst.online_webshop.entities.ShoppingCart;
 import at.wst.online_webshop.exceptions.CustomerNotFoundException;
 import at.wst.online_webshop.exceptions.InsufficientProductQuantityException;
 import at.wst.online_webshop.exceptions.ProductNotFoundException;
+import at.wst.online_webshop.exceptions.ShoppingCartNotFoundException;
 import at.wst.online_webshop.nosql.convertors.CartItemsConvertorNoSql;
 import at.wst.online_webshop.nosql.convertors.ShoppingCartConvertorNoSql;
 import at.wst.online_webshop.nosql.documents.CartItemDocument;
@@ -95,6 +102,74 @@ public class ShoppingCartNoSQLService {
         shoppingCartDTO.setTotalPrice(calculateTotalPriceShoppingCart(customer.getShoppingCart()).doubleValue());
         shoppingCartDTO.setCartItemDTOS(cartItemDTOS);
         return shoppingCartDTO;
+    }
+
+    @Transactional
+    public ShoppingCartDTO updateBySubtractingCartItem(String customerId, Long productId){
+        CustomerDocument customer = customerNoSqlRepository.findById(customerId)
+                .orElseThrow(() -> new CustomerNotFoundException("Customer not found."));
+
+        ProductDocument product = productNoSqlRepository.findById(String.valueOf(productId))
+                .orElseThrow(() -> new ProductNotFoundException("Product not found."));
+
+        Optional<CartItemDocument> existingCartItem = customer.getShoppingCart().getCartItems().stream()
+                .filter(cartItem -> cartItem.getProductDocument().equals(product))
+                .findFirst();
+        if (existingCartItem.isPresent()) {
+            CartItemDocument cartItem = existingCartItem.get();
+            cartItem.setCartItemQuantity(cartItem.getCartItemQuantity() - 1);
+            BigDecimal newSubprice = new BigDecimal(product.getProductPrice())
+                    .multiply(BigDecimal.valueOf(cartItem.getCartItemQuantity())).setScale(2, RoundingMode.HALF_UP);
+            cartItem.setCartItemSubprice(newSubprice);
+
+            if(cartItem.getCartItemQuantity() == 0){
+                customer.getShoppingCart().getCartItems().remove(cartItem);
+            }
+            customerNoSqlRepository.save(customer);
+
+            List<CartItemDTO> cartItemDTOS = CartItemsConvertorNoSql.convertDocumentToDtoList(customer.getShoppingCart().getCartItems());
+            ShoppingCartDTO shoppingCartDTO = ShoppingCartConvertorNoSql.convertDocumentToDTO(customer.getShoppingCart());
+            BigInteger customerIdBigInt = new BigInteger(customerId, 16);
+            shoppingCartDTO.setCustomerId(customerIdBigInt.longValue());
+            shoppingCartDTO.setTotalPrice(calculateTotalPriceShoppingCart(customer.getShoppingCart()).doubleValue());
+            shoppingCartDTO.setCartItemDTOS(cartItemDTOS);
+
+            return shoppingCartDTO;
+        }else{
+            throw new ProductNotFoundException("Cart item not found");
+        }
+    }
+
+    @Transactional
+    public ShoppingCartDTO deleteCartItem(String customerId , Long productId){
+        CustomerDocument customer = customerNoSqlRepository.findById(customerId)
+                .orElseThrow(() -> new CustomerNotFoundException("Customer not found."));
+
+        ProductDocument product = productNoSqlRepository.findById(String.valueOf(productId))
+                .orElseThrow(() -> new ProductNotFoundException("Product not found."));
+
+        Optional<CartItemDocument> existingCartItem = customer.getShoppingCart().getCartItems().stream()
+                .filter(cartItem -> cartItem.getProductDocument().equals(product))
+                .findFirst();
+
+        if (existingCartItem.isPresent()) {
+            CartItemDocument cartItem = existingCartItem.get();
+
+            customer.getShoppingCart().getCartItems().remove(cartItem);
+            customerNoSqlRepository.save(customer);
+
+
+            List<CartItemDTO> cartItemDTOS = CartItemsConvertorNoSql.convertDocumentToDtoList(customer.getShoppingCart().getCartItems());
+            ShoppingCartDTO shoppingCartDTO = ShoppingCartConvertorNoSql.convertDocumentToDTO(customer.getShoppingCart());
+            BigInteger customerIdBigInt = new BigInteger(customerId, 16);
+            shoppingCartDTO.setCustomerId(customerIdBigInt.longValue());
+            shoppingCartDTO.setTotalPrice(calculateTotalPriceShoppingCart(customer.getShoppingCart()).doubleValue());
+            shoppingCartDTO.setCartItemDTOS(cartItemDTOS);
+
+            return shoppingCartDTO;
+        }else{
+            throw new ProductNotFoundException("Cart item not found");
+        }
     }
 
 

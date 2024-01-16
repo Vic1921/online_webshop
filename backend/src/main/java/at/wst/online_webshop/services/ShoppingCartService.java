@@ -132,6 +132,85 @@ public class ShoppingCartService {
     }
 
     @Transactional
+    public ShoppingCartDTO updateBySubtractingCartItem(Long customerId, Long shoppingCartId, Long productId){
+        ShoppingCart shoppingCart = shoppingCartRepository.findById(shoppingCartId)
+                .orElseThrow(() -> new ShoppingCartNotFoundException(shoppingCartId));
+        logger.info(shoppingCart.toString());
+
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new CustomerNotFoundException("Customer not found."));
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException("Product not found."));
+
+        Optional<CartItem> cartItemOptional = shoppingCart.getCartItems().stream()
+                .filter(cartItem -> cartItem.getProduct().equals(product))
+                .findFirst();
+        if (cartItemOptional.isPresent()) {
+            CartItem cartItem = cartItemOptional.get();
+            cartItem.setCartItemQuantity(cartItem.getCartItemQuantity() - 1);
+
+            if(cartItem.getCartItemQuantity() == 0){
+                shoppingCart.getCartItems().remove(cartItem);
+                cartItemRepository.deleteById(cartItem.getCartItemId());
+                shoppingCartRepository.save(shoppingCart);
+            }else{
+                cartItem.setShoppingCart(shoppingCart);
+                cartItemRepository.save(cartItem);
+                shoppingCartRepository.save(shoppingCart);
+            }
+
+
+            List<CartItemDTO> cartItemDTOS = CartItemConverter.convertToDtoList(shoppingCart.getCartItems());
+            ShoppingCartDTO shoppingCartDTO = ShoppingCartConvertor.convertToDto(shoppingCart);
+            shoppingCartDTO.setCustomerId(customerId);
+            shoppingCartDTO.setTotalPrice(calculateTotalPriceShoppingCart(shoppingCart).doubleValue());
+
+            shoppingCartDTO.setCartItemDTOS(cartItemDTOS);
+
+            return shoppingCartDTO;
+        }else{
+            throw new ProductNotFoundException("Cart item not found");
+        }
+    }
+
+    @Transactional
+    public ShoppingCartDTO deleteCartItem(Long customerId, Long shoppingCartId, Long productId){
+        ShoppingCart shoppingCart = shoppingCartRepository.findById(shoppingCartId)
+                .orElseThrow(() -> new ShoppingCartNotFoundException(shoppingCartId));
+        logger.info(shoppingCart.toString());
+
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new CustomerNotFoundException("Customer not found."));
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException("Product not found."));
+
+        Optional<CartItem> cartItemOptional = shoppingCart.getCartItems().stream()
+                .filter(cartItem -> cartItem.getProduct().equals(product))
+                .findFirst();
+
+        if (cartItemOptional.isPresent()) {
+            CartItem cartItem = cartItemOptional.get();
+
+            shoppingCart.getCartItems().remove(cartItem);
+            cartItemRepository.deleteById(cartItem.getCartItemId());
+            shoppingCartRepository.save(shoppingCart);
+
+            List<CartItemDTO> cartItemDTOS = CartItemConverter.convertToDtoList(shoppingCart.getCartItems());
+            ShoppingCartDTO shoppingCartDTO = ShoppingCartConvertor.convertToDto(shoppingCart);
+            shoppingCartDTO.setCustomerId(customerId);
+            shoppingCartDTO.setTotalPrice(calculateTotalPriceShoppingCart(shoppingCart).doubleValue());
+
+            shoppingCartDTO.setCartItemDTOS(cartItemDTOS);
+
+            return shoppingCartDTO;
+        }else{
+            throw new ProductNotFoundException("Cart item not found");
+        }
+    }
+
+    @Transactional
     public CartItem updateOrCreateCartItem(ShoppingCart shoppingCart, Product product, int quantityToAdd) {
         Optional<CartItem> existingCartItem = shoppingCart.getCartItems().stream()
                 .filter(cartItem -> cartItem.getProduct().equals(product))

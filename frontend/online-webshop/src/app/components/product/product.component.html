@@ -94,8 +94,8 @@
                             </div><!-- card-body.// -->
                         </div>
                     </article> <!-- filter-group .// -->
-       
-                    
+
+
                 </div> <!-- card.// -->
 
             </aside>
@@ -132,7 +132,7 @@
                                             <ul>
                                                 <li><a [routerLink]="['/products', product.productId]"><i
                                                             class="fa fa-expand"></i></a></li>
-                                                <li><a [routerLink]="['/products', product.productId]"><i
+                                                <li><a (click)="addToCart(product.productId)"><i
                                                             class="fa fa-shopping-cart"></i></a></li>
                                             </ul>
                                         </div>

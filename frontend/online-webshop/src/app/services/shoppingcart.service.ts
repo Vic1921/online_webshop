@@ -74,6 +74,41 @@ export class ShoppingcartService {
     return this.http.post<ShoppingCart>(`${this.apiUrl}/api/nosql/shopping-cart/add-item/`, request);
   }
 
+  deleteOrSubtractFromCartSQL(customerId: number, shoppingCartId: number, productId: number) : Observable<ShoppingCart>{
+    const request = {
+      customerId: customerId,
+      shoppingCartId: shoppingCartId,
+      productId: productId
+    };
+    return this.http.post<ShoppingCart>(`${this.apiUrl}/api/sql/shopping-cart/delete-cart-item/`, request)
+  }
+
+  deleteOrSubtractFromCartNoSQL(customerId: string, productId: number) : Observable<ShoppingCart>{
+    const request = {
+      customerId: customerId,
+      productId: productId
+    };
+    return this.http.post<ShoppingCart>(`${this.apiUrl}/api/nosql/shopping-cart/delete-cart-item/`, request)
+  }
+
+
+  deleteFromCartSQL(customerId: number, shoppingCartId: number, productId: number) : Observable<ShoppingCart>{
+    const request = {
+      customerId: customerId,
+      shoppingCartId: shoppingCartId,
+      productId: productId
+    };
+    return this.http.post<ShoppingCart>(`${this.apiUrl}/api/sql/shopping-cart/delete-cart-product/`, request)
+  }
+
+  deleteFromCartNoSQL(customerId: string, productId: number) : Observable<ShoppingCart>{
+    const request = {
+      customerId: customerId,
+      productId: productId
+    };
+    return this.http.post<ShoppingCart>(`${this.apiUrl}/api/nosql/shopping-cart/delete-cart-product/`, request)
+  }
+
   getShoppingCartItems(cartID : number, customerId : number) : Observable<Cartitem[]>{
       const url = `${this.apiUrl}/api/sql/shopping-cart/get-items?id=${cartID}`;
       return this.http.get<Cartitem[]>(url);
