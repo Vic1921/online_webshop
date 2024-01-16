@@ -19,9 +19,9 @@ import java.time.LocalDate;
 public class ReviewDocument {
     @Id
     private String reviewId;
+    @Indexed
     private Integer reviewRating;
     private String reviewComment;
-    @Indexed
     private LocalDate reviewDate;
 
     @DBRef

@@ -20,6 +20,7 @@ public class ProductDocument {
     private String id;
     @Indexed
     private String productName;
+    @Indexed
     private Double productPrice;
     @Indexed(unique = true)
     private String productSKU;
