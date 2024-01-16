@@ -22,7 +22,7 @@ public class OrderNoSQLController {
     private OrderNoSQLService orderNoSQLService;
 
     @GetMapping("/={customerId}")
-    public ResponseEntity<List<OrderNoSqlDTO>> getOrdersByCustomerId(@PathVariable Long customerId) {
+    public ResponseEntity<List<OrderNoSqlDTO>> getOrdersByCustomerId(@PathVariable String customerId) {
         logger.info("ORDERS ARE BEING FETCHED FROM NOSQL");
         List<OrderNoSqlDTO> orders = orderNoSQLService.getOrdersByCustomerId(customerId);
 

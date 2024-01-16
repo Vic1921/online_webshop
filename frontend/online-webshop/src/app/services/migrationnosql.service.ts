@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class MigrationNoSQLService {
-  private apiUrl = 'http://localhost:8089';
+  private apiUrl = 'https://localhost:8089';
   constructor(private http : HttpClient) { }
 
   

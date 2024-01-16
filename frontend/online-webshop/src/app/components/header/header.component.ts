@@ -45,17 +45,32 @@ export class HeaderComponent{
 
       console.log(cartId);
 
-      if(cartId != null && cartId != 0){
-        this.shoppingCartService.getCart(cartId, customerId).subscribe(
-          (cart: ShoppingCart) => {
-            this.cart = cart;
-            console.log(this.cart); // Log inside the subscribe callback
-          },
-          (error) => {
-            console.error('Error fetching shopping cart:', error);
-          }
-        );
+      if(configService.useNoSQL == false){
+        if(cartId != null && cartId != 0){
+          this.shoppingCartService.getCart(cartId, customerId).subscribe(
+            (cart: ShoppingCart) => {
+              this.cart = cart;
+              console.log(this.cart); // Log inside the subscribe callback
+            },
+            (error) => {
+              console.error('Error fetching shopping cart:', error);
+            }
+          );
+        }
+      }else{
+       let customerIdNoSQL = this.loginService.getCustomerIDFromNoSQL();
+       
+          this.shoppingCartService.getCartNoSQL(customerIdNoSQL!).subscribe(
+            (cart: ShoppingCart) => {
+              this.cart = cart;
+              console.log(this.cart); // Log inside the subscribe callback
+            },
+            (error) => {
+              console.error('Error fetching shopping cart:', error);
+            }
+          );
       }
+      
     }
    
   }

@@ -8,7 +8,7 @@ import { ConfigService } from '../config.service';
   providedIn: 'root'
 })
 export class ProductService {
-  private apiUrl = 'http://localhost:8089';
+  private apiUrl = 'https://localhost:8089';
   products : ProductDTO[] = [];
   constructor(private configService : ConfigService, private http : HttpClient) { }
 

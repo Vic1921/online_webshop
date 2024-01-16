@@ -12,7 +12,7 @@ import { ConfigService } from '../config.service';
   providedIn: 'root'
 })
 export class ShoppingcartService {
-  private apiUrl = 'http://localhost:8089';
+  private apiUrl = 'https://localhost:8089';
   constructor(private configService : ConfigService, private http : HttpClient, private eventEmitterService : EventEmitterService) { }
 
   getCart(cartID : number, customerId : number) : Observable<ShoppingCart>{

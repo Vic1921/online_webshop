@@ -7,6 +7,7 @@ import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvException;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -33,18 +36,18 @@ public class DBFiller {
     private static final int NUMBER_OF_REVIEWS = 300;
     private static final int NUMBER_OF_SHOPPING_CARTS = 70;
     private static final int NUMBER_OF_VENDORS = 20;
-    private static final int NUMBER_OF_ORDER_ITEMS = 2;
+    private static final int NUMBER_OF_ORDER_ITEMS = 5;
     private static final int NUMBER_OF_CART_ITEMS = 5;
 
     private static final Logger logger = LoggerFactory.getLogger(DBFiller.class);
 
-    private static final String imageFiles = "src/main/csv/filenames.csv";
-    private static final String productNames = "src/main/csv/articlenames.csv";
-    private static final String productCategories = "src/main/csv/artikelkategorie.csv";
-    private static final String products = "src/main/csv/products.csv";
+
+    private static final String products = "csv/products.csv";
+    private final List<String> paymentMethod = List.of("Paypal", "Sofortüberweisung", "Kreditkarte");
 
     private final CustomerRepository customerRepository;
     private final OrderRepository orderRepository;
+    @Getter
     private final ProductRepository productRepository;
     private final ReviewRepository reviewRepository;
     private final AddressRepository addressRepository;
@@ -97,18 +100,17 @@ public class DBFiller {
         System.out.println("After clearing database...");
     }
 
-    public ProductRepository getProductRepository() {
-        return this.productRepository;
-    }
 
     public List<String[]> readFile(String filename) {
         List<String[]> records = new ArrayList<>();
 
-        try (CSVReader reader = new CSVReaderBuilder(new FileReader(filename))
-                .withCSVParser(new CSVParserBuilder()
-                        .withSeparator(';')
-                        .build())
-                .build()) {
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream(filename);
+             InputStreamReader isr = new InputStreamReader(is);
+             CSVReader reader = new CSVReaderBuilder(isr)
+                     .withCSVParser(new CSVParserBuilder()
+                             .withSeparator(';')
+                             .build())
+                     .build()) {
 
             records = reader.readAll();
 
@@ -118,6 +120,7 @@ public class DBFiller {
 
         return records;
     }
+
 
     public void fillCustomers() {
         var faker = Faker.instance();
@@ -206,11 +209,14 @@ public class DBFiller {
                     Date.from(LocalDate.of(2020, 1, 1).atStartOfDay(ZoneId.systemDefault()).toInstant()),
                     Date.from(LocalDate.of(2023, 12, 31).atStartOfDay(ZoneId.systemDefault()).toInstant())
             );
+            int number = faker.number().numberBetween(0, 2);
+            String payment = this.paymentMethod.get(number);
+            String shippingDetails = faker.address().streetAddress();
 
             String formattedOrderDate = orderDate.toInstant().atZone(ZoneId.of("Europe/Berlin")).toLocalDateTime().format(formatter);
 
             var customer = customerRepository.findById((long) faker.number().numberBetween(1, NUMBER_OF_CUSTOMERS)).orElseThrow();
-            orders.add(new Order(formattedOrderDate, 0, customer, new ArrayList<>()));
+            orders.add(new Order(formattedOrderDate, 0, customer, new ArrayList<>(), payment, shippingDetails));
         }
         orderRepository.saveAll(orders);
     }
@@ -225,7 +231,7 @@ public class DBFiller {
 
             for (int i = 0; i < NUMBER_OF_ORDER_ITEMS; i++) {
                 Product product = productRepository.findById((long) faker.number().numberBetween(1, NUMBER_OF_PRODUCTS)).orElseThrow();
-                int quantity = faker.number().numberBetween(1, 2);
+                int quantity = faker.number().numberBetween(1, NUMBER_OF_ORDER_ITEMS);
 
                 // Check if an OrderItem with the same Product already exists in the Order
                 OrderItem existingOrderItem = getOrderItemByProduct(order, product);
@@ -327,10 +333,16 @@ public class DBFiller {
     private void fillShoppingCarts() {
         List<ShoppingCart> shoppingCarts = new ArrayList<>(NUMBER_OF_SHOPPING_CARTS);
         var faker = Faker.instance();
-
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss yyyy")
+                .withLocale(Locale.GERMAN);
         for (long customerId = 1; customerId < NUMBER_OF_SHOPPING_CARTS; customerId++) {
             Customer customer = customerRepository.findById(customerId).orElseThrow();
-            ShoppingCart shoppingCart = new ShoppingCart(customer, new ArrayList<>());
+            Date cartDate = faker.date().between(
+                    Date.from(LocalDate.of(2020, 1, 1).atStartOfDay(ZoneId.systemDefault()).toInstant()),
+                    Date.from(LocalDate.of(2023, 12, 31).atStartOfDay(ZoneId.systemDefault()).toInstant())
+            );
+            String formattedCartDate = cartDate.toInstant().atZone(ZoneId.of("Europe/Berlin")).toLocalDateTime().format(formatter);
+            ShoppingCart shoppingCart = new ShoppingCart(customer, new ArrayList<>(), formattedCartDate);
             customer.setShoppingCart(shoppingCart);
             shoppingCarts.add(shoppingCart);
         }

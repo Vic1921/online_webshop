@@ -17,6 +17,8 @@ public class OrderDTO {
     private String orderDate;
     private Double orderTotalMount;
     private Long customerId;
+    private String orderPayment;
+    private String orderShippingDetails;
     private List<OrderItemDTO> orderItems;
 
     public OrderDTO(String orderDate, Double orderTotalMount, Long customerId, List<OrderItemDTO> orderItems) {

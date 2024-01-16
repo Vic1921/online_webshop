@@ -4,6 +4,8 @@ import { Review } from '../../interfaces/review';
 import { ReviewService } from '../../services/review.service';
 import { Router } from '@angular/router';
 import { WriteReviewComponent } from '../writereview/writereview.component';
+import { ConfigService } from '../../config.service';
+import { ReviewNoSQL } from '../../interfaces/reviewnosql';
 
 @Component({
   selector: 'app-review',
@@ -14,14 +16,15 @@ import { WriteReviewComponent } from '../writereview/writereview.component';
 })
 export class ReviewComponent implements OnChanges{
 
-  reviews: Review[] = [];
+  reviews: (Review | ReviewNoSQL)[] = [];
+
   @Input() productId: number | undefined;
   averageReviewRating: number | undefined;
 
   @Output() averageRatingEmitter: EventEmitter<number> = new EventEmitter<number>();
 
 
-  constructor(private reviewService: ReviewService, private router : Router) {}
+  constructor(private configService : ConfigService, private reviewService: ReviewService, private router : Router) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['productId'] && this.productId) {
@@ -60,19 +63,36 @@ export class ReviewComponent implements OnChanges{
   }
 
   updateReviews() {
-    if (this.productId) {
-      this.reviewService.getReviewsByProductId(this.productId).subscribe(
-        (reviews: Review[]) => {
-          this.reviews = reviews;
-          this.averageReviewRating = this.calculateAverageRating();
-          this.averageRatingEmitter.emit(this.averageReviewRating);
-          console.log('Reviews successfully updated:', this.reviews);
-        },
-        (error: any) => {
-          console.error('Error updating reviews:', error);
-        }
-      );
+    if(this.configService.useNoSQL == false){
+      if (this.productId) {
+        this.reviewService.getReviewsByProductIdFromSQL(this.productId).subscribe(
+          (reviews: Review[]) => {
+            this.reviews = reviews;
+            this.averageReviewRating = this.calculateAverageRating();
+            this.averageRatingEmitter.emit(this.averageReviewRating);
+            console.log('Reviews successfully updated:', this.reviews);
+          },
+          (error: any) => {
+            console.error('Error updating reviews:', error);
+          }
+        );
+      }
+    }else{
+      if (this.productId) {
+        this.reviewService.getReviewsByProductIdFromNoSQL(this.productId).subscribe(
+          (reviews: ReviewNoSQL[]) => {
+            this.reviews = reviews;
+            this.averageReviewRating = this.calculateAverageRating();
+            this.averageRatingEmitter.emit(this.averageReviewRating);
+            console.log('Reviews successfully updated:', this.reviews);
+          },
+          (error: any) => {
+            console.error('Error updating reviews:', error);
+          }
+        );
+      }
     }
+    
   }
 
   getReviewSize(){

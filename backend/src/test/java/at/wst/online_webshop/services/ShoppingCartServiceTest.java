@@ -2,7 +2,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Optional;
 
 import at.wst.online_webshop.OnlineWebshopApplication;
@@ -48,8 +51,9 @@ class ShoppingCartServiceTest {
         Long productId = 3L;
 
         Address address = new Address("Währingerstraße 29", "Vienna", "1010", "Austria", new ArrayList<>());
-
-        ShoppingCart existingShoppingCart = new ShoppingCart(null, new ArrayList<CartItem>());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss yyyy", Locale.GERMAN);
+        String formattedCartDate = LocalDateTime.now().format(formatter);
+        ShoppingCart existingShoppingCart = new ShoppingCart(null, new ArrayList<CartItem>(), formattedCartDate);
         Customer existingCustomer = new Customer("John Doe", "john@example.com", "password", address);
         Product existingProduct = new Product("Product", "Description", "Category", 10.0, "SKU", 20, "image.jpg", null);
         address.getCustomers().add(existingCustomer);

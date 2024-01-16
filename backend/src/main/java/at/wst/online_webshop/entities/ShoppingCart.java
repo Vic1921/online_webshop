@@ -25,12 +25,16 @@ public class ShoppingCart {
     @OneToOne(mappedBy = "shoppingCart")
     private Customer customer;
 
+    @Column(name = "cart_creation")
+    private String cartDate;
+
     @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItem> cartItems = new ArrayList<>();
 
-    public ShoppingCart(Customer customer, List<CartItem> cartItems) {
+    public ShoppingCart(Customer customer, List<CartItem> cartItems, String cartDate) {
         this.customer = customer;
         this.cartItems = cartItems;
+        this.cartDate = cartDate;
     }
 
     @Override
@@ -39,6 +43,7 @@ public class ShoppingCart {
                 "cartId=" + cartId +
                 ", customer=" + customer +
                 ", products=" + cartItems +
+                ", cartCreation=" + cartDate +
                 '}';
     }
 }

@@ -12,6 +12,6 @@ public class ProductNoSqlDTO {
     private String productCategory;
     private String productDescription;
     private Integer productQuantity;
-    private String productImage;
+    private String productImageUrl;
     private String vendorName;
 }

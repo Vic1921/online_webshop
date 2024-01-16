@@ -10,5 +10,6 @@ import java.util.List;
 public class ShoppingCartNoSqlDTO {
     private List<CartItemNoSqlDTO> cartItems;
     private double totalPrice;
+    private String cartDate;
 
 }

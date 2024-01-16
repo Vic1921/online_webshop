@@ -172,6 +172,8 @@ public class NoSQLMigrationService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss yyyy", Locale.GERMAN);
         LocalDateTime orderDate = LocalDateTime.parse(rdbmsOrder.getOrderDate(), formatter);
         orderDocument.setOrderDate(orderDate);
+        orderDocument.setOrderPayment(rdbmsOrder.getOrderPayment());
+        orderDocument.setOrderShippingDetails(rdbmsOrder.getOrderShippingDetails());
         Optional<CustomerDocument> optionalCustomerDocument = customerNoSqlRepository.findById(String.valueOf(rdbmsOrder.getCustomer().getCustomerId()));
         if (optionalCustomerDocument.isPresent()) {
             CustomerDocument customerdocument = optionalCustomerDocument.get();
@@ -246,6 +248,9 @@ public class NoSQLMigrationService {
     private ShoppingCartDocument transformShoppingCart(ShoppingCart rdbmsShoppingCart) {
         ShoppingCartDocument nosqlShoppingCart = new ShoppingCartDocument();
         List<CartItemDocument> cartItemDocuments = transformCartItems(rdbmsShoppingCart.getCartItems());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss yyyy", Locale.GERMAN);
+        LocalDateTime cartDate = LocalDateTime.parse(rdbmsShoppingCart.getCartDate(), formatter);
+        nosqlShoppingCart.setCartDate(cartDate);
         nosqlShoppingCart.setCartItems(cartItemDocuments);
         return nosqlShoppingCart;
     }

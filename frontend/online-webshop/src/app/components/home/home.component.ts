@@ -18,27 +18,54 @@ import { ConfigService } from '../../config.service';
 export class HomeComponent{
   bestsellers: ProductDTO[] = [];
   topReviewers: Review[] = [];
-  constructor(private reportService: ReportService) {
+  constructor(private configService : ConfigService, private reportService: ReportService) {
+    console.log("THIS IS THE CONFIG RIGHT NOW");
+    console.log(configService.useNoSQL);
+    
+    if(this.configService.useNoSQL == false){
+      this.reportService.getBestsellersFromSQL(0, 1000, 3).subscribe(
+        response => {
+          this.bestsellers = response;
+          console.log("Bestsellers successfully fetched: ", response);
+        },
+        error => {
+          console.log("Error fetching bestsellers: ", error);
+        }
+      )
+    }else{
+      this.reportService.getBestsellersFromNoSQL(0, 1000, 3).subscribe(
+        response => {
+          this.bestsellers = response;
+          console.log("Bestsellers successfully fetched: ", response);
+        },
+        error => {
+          console.log("Error fetching bestsellers: ", error);
+        }
+      )
+    }
 
-    this.reportService.getBestsellers(0, 1000, 3).subscribe(
-      response => {
-        this.bestsellers = response;
-        console.log("Bestsellers successfully fetched: ", response);
-
-        this.reportService.getTopReviewers(50, 2).subscribe(
-          response => {
-            this.topReviewers = response;
-            console.log("Top Reviewers successfully fetched: ", response);
-          },
-          error => {
-            console.log("Error fetching top reviewers: ", error);
-          }
-        )
-      },
-      error => {
-        console.log("Error fetching bestsellers: ", error);
-      }
-    )
+    
+    if(this.configService.useNoSQL == false){
+      this.reportService.getTopReviewersFromSQL(50, 5).subscribe(
+        response => {
+          this.topReviewers = response;
+          console.log("Top Reviewers successfully fetched: ", response);
+        },
+        error => {
+          console.log("Error fetching top reviewers: ", error);
+        }
+      )
+    }else{
+      this.reportService.getTopReviewersFromNoSQL(50, 5).subscribe(
+        response => {
+          this.topReviewers = response;
+          console.log("Top Reviewers successfully fetched: ", response);
+        },
+        error => {
+          console.log("Error fetching top reviewers: ", error);
+        }
+      )
+    }
   }
 
   getStarRating(rating: number): string[] {

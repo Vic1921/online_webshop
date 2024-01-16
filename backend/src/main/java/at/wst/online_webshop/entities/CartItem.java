@@ -47,7 +47,6 @@ public class CartItem {
     public String toString() {
         return "CartItem{" +
                 "cartItemId=" + cartItemId +
-                ", shoppingCart=" + shoppingCart +
                 ", product=" + product +
                 ", cartItemQuantity=" + cartItemQuantity +
                 ", cartItemSubprice=" + cartItemSubprice +

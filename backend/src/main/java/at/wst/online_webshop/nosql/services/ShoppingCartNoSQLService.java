@@ -22,8 +22,11 @@ import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 import static at.wst.online_webshop.nosql.convertors.CartItemsConvertorNoSql.convertDocumentToDtoList;
@@ -47,7 +50,10 @@ public class ShoppingCartNoSQLService {
     @Transactional
     public ShoppingCartDTO createShoppingCart(String customerId) {
         CustomerDocument customerDocument = customerNoSqlRepository.findById(customerId).orElseThrow(() -> new CustomerNotFoundException("Customer not found"));
-        ShoppingCartDocument shoppingCartDocument = new ShoppingCartDocument(new ArrayList<>());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss yyyy", Locale.GERMAN);
+        String formattedCartDate = LocalDateTime.now().format(formatter);
+        LocalDateTime cartDate = LocalDateTime.parse(formattedCartDate, formatter);
+        ShoppingCartDocument shoppingCartDocument = new ShoppingCartDocument(new ArrayList<>(), cartDate);
         customerDocument.setShoppingCart(shoppingCartDocument);
         customerNoSqlRepository.save(customerDocument);
 
